@@ -15,14 +15,14 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 ##################################################################
 
 # To test this script, run the following commands from Vivado Tcl console:
-# source div_gen.tcl
+# source gty_evr.tcl
 # If there is no project opened, this script will create a
 # project, but make sure you do not have an existing project
 # in the current working folder.
 
 set list_projs [get_projects -quiet]
 if { $list_projs eq "" } {
-  create_project vivado vivado -part xczu6eg-ffvb1156-1-e
+  create_project rfsoc-dfe_hw rfsoc-dfe_hw -part xczu47dr-ffvg1517-1-e
   set_property target_language VHDL [current_project]
   set_property simulator_language Mixed [current_project]
 }
@@ -34,7 +34,7 @@ if { $list_projs eq "" } {
 set bCheckIPs 1
 set bCheckIPsPassed 1
 if { $bCheckIPs == 1 } {
-  set list_check_ips { xilinx.com:ip:div_gen:5.1 }
+  set list_check_ips { xilinx.com:ip:gtwizard_ultrascale:1.7 }
   set list_ips_missing ""
   common::send_msg_id "IPS_TCL-1001" "INFO" "Checking if the following IPs exist in the project's IP catalog: $list_check_ips ."
 
@@ -57,24 +57,36 @@ if { $bCheckIPsPassed != 1 } {
 }
 
 ##################################################################
-# CREATE IP div_gen
+# CREATE IP gty_evr
 ##################################################################
 
-set div_gen [create_ip -name div_gen -vendor xilinx.com -library ip -version 5.1 -module_name div_gen]
+set gty_evr [create_ip -name gtwizard_ultrascale -vendor xilinx.com -library ip -version 1.7 -module_name gty_evr]
 
 # User Parameters
 set_property -dict [list \
-  CONFIG.dividend_and_quotient_width {32} \
-  CONFIG.divisor_width {32} \
-  CONFIG.fractional_width {32} \
-  CONFIG.latency {68} \
-  CONFIG.remainder_type {Fractional} \
-] [get_ips div_gen]
+  CONFIG.ENABLE_OPTIONAL_PORTS {rxpolarity_in cpllfbclklost_out cplllock_out cpllrefclklost_out} \
+  CONFIG.FREERUN_FREQUENCY {100} \
+  CONFIG.RX_COMMA_ALIGN_WORD {2} \
+  CONFIG.RX_COMMA_M_ENABLE {true} \
+  CONFIG.RX_COMMA_P_ENABLE {true} \
+  CONFIG.RX_DATA_DECODING {8B10B} \
+  CONFIG.RX_LINE_RATE {2.4984} \
+  CONFIG.RX_PLL_TYPE {CPLL} \
+  CONFIG.RX_REFCLK_FREQUENCY {312.3} \
+  CONFIG.RX_REFCLK_SOURCE {X0Y4 clk0+2} \
+  CONFIG.RX_USER_DATA_WIDTH {16} \
+  CONFIG.TX_DATA_ENCODING {8B10B} \
+  CONFIG.TX_LINE_RATE {2.4984} \
+  CONFIG.TX_PLL_TYPE {CPLL} \
+  CONFIG.TX_REFCLK_FREQUENCY {312.3} \
+  CONFIG.TX_REFCLK_SOURCE {X0Y4 clk0+2} \
+  CONFIG.TX_USER_DATA_WIDTH {16} \
+] [get_ips gty_evr]
 
 # Runtime Parameters
 set_property -dict { 
   GENERATE_SYNTH_CHECKPOINT {1}
-} $div_gen
+} $gty_evr
 
 ##################################################################
 

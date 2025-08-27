@@ -27,23 +27,21 @@ entity ps_io is
      sa_data         : in t_sa_data;
      
 	 reg_o_dsa       : out t_reg_o_dsa;
-	 reg_o_therm     : out t_reg_o_therm;
-	 reg_i_therm     : in  t_reg_i_therm;
 	 reg_o_pll       : out t_reg_o_pll;
 	 reg_i_pll       : in  t_reg_i_pll;
 	 reg_o_tbt       : out t_reg_o_tbt;	
+     reg_i_rfadcfifo : in  t_reg_i_rfadc_fifo_rdout;
+     reg_o_rfadcfifo : out t_reg_o_rfadc_fifo_rdout;	 
+	 
 	 reg_o_adcfifo   : out t_reg_o_adc_fifo_rdout;
 	 reg_i_adcfifo   : in  t_reg_i_adc_fifo_rdout; 
 	 reg_o_tbtfifo   : out t_reg_o_tbt_fifo_rdout;
 	 reg_i_tbtfifo   : in  t_reg_i_tbt_fifo_rdout; 	
 	 reg_o_dma       : out t_reg_o_dma; 
 	 reg_i_dma       : in  t_reg_i_dma;
-	 reg_o_adc       : out t_reg_o_adc_cntrl;
-	 reg_i_adc       : in  t_reg_i_adc_status; 
 	 reg_o_evr       : out t_reg_o_evr;
 	 reg_i_evr       : in  t_reg_i_evr;
-	 reg_o_swrffe    : out t_reg_o_swrffe;
-     ioc_access_led  : out std_logic;
+ 
      fp_leds         : out std_logic_vector(7 downto 0)
   );
 end ps_io;
@@ -56,7 +54,6 @@ architecture behv of ps_io is
   
   signal reg_i        : t_addrmap_pl_regs_in;
   signal reg_o        : t_addrmap_pl_regs_out;
-  signal ioc_access   : std_logic;
 
   --attribute mark_debug     : string;
   --attribute mark_debug of reg_o: signal is "true";
@@ -66,37 +63,39 @@ architecture behv of ps_io is
 begin
 
 fp_leds <= reg_o.FP_LEDS.val.data;
-ioc_access <= reg_o.ioc_access.data.data(0);
-
-reg_o_therm.spi_we <= reg_o.therm_spi.data.swmod;
-reg_o_therm.spi_wdata <= reg_o.therm_spi.data.data;
-reg_o_therm.sel <= reg_o.therm_sel.data.data;
-reg_i.therm_spi.data.data <= 24d"0" & reg_i_therm.spi_rdata;
 
 
-reg_o_adc.spi_we <= reg_o.adc_spi.data.swmod; 
-reg_o_adc.spi_wdata <= reg_o.adc_spi.data.data; 
-reg_i.adc_spi.data.data <= reg_i_adc.spi_rdata;    
-reg_o_adc.idly_wval <= reg_o.adc_idlyval.data.data;  
-reg_o_adc.idly_wstr <= reg_o.adc_idlystr.data.data; 
-reg_o_adc.fco_dlystr <= reg_o.adc_mmcmdlystr.data.data;  
-reg_i.adc_idlychardval.data.data <= reg_i_adc.idlycha_rval;   
-reg_i.adc_idlychbrdval.data.data <= reg_i_adc.idlychb_rval; 
-reg_i.adc_idlychcrdval.data.data <= reg_i_adc.idlychc_rval; 
-reg_i.adc_idlychdrdval.data.data <= reg_i_adc.idlychd_rval; 
+
+reg_o_rfadcfifo.enb <= reg_o.rfadcfifo_trig.data.data(0); 
+reg_o_rfadcfifo.rst <= reg_o.rfadcfifo_reset.data.data(0);
+
+reg_o_rfadcfifo.adc0_rdstr <= reg_o.rfadc0fifo_dout.data.swacc;
+reg_i.rfadc0fifo_dout.data.data <= reg_i_rfadcfifo.adc0_dout;  
+reg_i.rfadc0fifo_wdcnt.data.data <= reg_i_rfadcfifo.adc0_rdcnt; 
+
+reg_o_rfadcfifo.adc1_rdstr <= reg_o.rfadc1fifo_dout.data.swacc;
+reg_i.rfadc1fifo_dout.data.data <= reg_i_rfadcfifo.adc1_dout;  
+reg_i.rfadc1fifo_wdcnt.data.data <= reg_i_rfadcfifo.adc1_rdcnt; 
+
+reg_o_rfadcfifo.adc2_rdstr <= reg_o.rfadc0fifo_dout.data.swacc;
+reg_i.rfadc2fifo_dout.data.data <= reg_i_rfadcfifo.adc2_dout;  
+reg_i.rfadc2fifo_wdcnt.data.data <= reg_i_rfadcfifo.adc2_rdcnt; 
+
+reg_o_rfadcfifo.adc3_rdstr <= reg_o.rfadc1fifo_dout.data.swacc;
+reg_i.rfadc3fifo_dout.data.data <= reg_i_rfadcfifo.adc3_dout;  
+reg_i.rfadc3fifo_wdcnt.data.data <= reg_i_rfadcfifo.adc3_rdcnt; 
 
 
-reg_o_pll.str <= reg_o.pll_spi.data.swmod;                
-reg_o_pll.data <= reg_o.pll_spi.data.data;
-reg_i.pll_locked.data.data(0) <= reg_i_pll.locked;
 
-reg_o_dsa.str <= reg_o.dsa_spi.data.swmod;
-reg_o_dsa.data <= reg_o.dsa_spi.data.data;
 
-reg_i.adc_cha.data.data <= adc_data(0);
-reg_i.adc_chb.data.data <= adc_data(1);
-reg_i.adc_chc.data.data <= adc_data(2);
-reg_i.adc_chd.data.data <= adc_data(3);
+--reg_o_dsa.str <= reg_o.dsa_spi.data.swmod;
+--reg_o_dsa.data <= reg_o.dsa_spi.data.data;
+
+--reg_i.adc_cha.data.data <= adc_data(0);
+--reg_i.adc_chb.data.data <= adc_data(1);
+--reg_i.adc_chc.data.data <= adc_data(2);
+--reg_i.adc_chd.data.data <= adc_data(3);
+
 
 reg_o_tbt.kx <= reg_o.kx.data.data;
 reg_o_tbt.ky <= reg_o.ky.data.data;
@@ -108,7 +107,6 @@ reg_o_tbt.xpos_offset <= reg_o.xpos_offset.data.data;
 reg_o_tbt.ypos_offset <= reg_o.ypos_offset.data.data;
 reg_o_tbt.gate_delay <= reg_o.gate_delay.data.data;
 reg_o_tbt.gate_width <= reg_o.gate_width.data.data;
-reg_o_tbt.ddc_lpfilt_sel <= reg_o.ddc_lpfilt_sel.data.data(0);
 
 reg_o_adcfifo.enb <= reg_o.adcfifo_streamenb.data.swmod;
 reg_o_adcfifo.rst <= reg_o.adcfifo_reset.data.data(0);
@@ -131,7 +129,6 @@ reg_o_dma.tbt_enb <= reg_o.dma_tbt_enb.data.data(0);
 reg_o_dma.tbt_len <= reg_o.dma_tbt_len.data.data;
 reg_o_dma.fa_enb <= reg_o.dma_fa_enb.data.data(0); 
 reg_o_dma.fa_len <= reg_o.dma_fa_len.data.data;
-reg_o_dma.txtoioc_done <= reg_o.dma_txtoioc_done.data.data(0);
 
 reg_i.dma_trigcnt.data.data <= reg_i_dma.trig_cnt;
 reg_i.dma_status.data.data <= reg_i_dma.status; 
@@ -156,12 +153,6 @@ reg_i.sa_xpos.data.data <= std_logic_vector(sa_data.xpos);
 reg_i.sa_ypos.data.data <= std_logic_vector(sa_data.ypos);
 
 
-reg_o_swrffe.enb <= reg_o.swrffe_enb.data.data;
-reg_o_swrffe.trigdly <= reg_o.swrffe_trigdly.data.data;
-reg_o_swrffe.demuxdly <= reg_o.swrffe_demuxdly.data.data;
-reg_o_swrffe.adcdma_sel <= reg_o.swrffe_adcdma_sel.data.data(0);
-
-
 
 
 regs: pl_regs
@@ -177,15 +168,6 @@ regs: pl_regs
   );
 
 
---stretch the signal so can be seen on LED
-iocaccess_stretch : entity work.stretch
-  port map (
-	clk => pl_clock,
-	reset => pl_reset, 
-	sig_in => ioc_access, 
-	len => 3000000, -- ~25ms;
-	sig_out => ioc_access_led
-);	 
 
 
 

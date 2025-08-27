@@ -76,165 +76,7 @@ addrmap pl_regs {
   } PRJ_TIMESTAMP @0x1C;
 
  
- 
-
- 
-
-reg {
-    desc="ADC IDLY value";
-    default sw = rw;
-    default hw = r;
-    default swacc=true;
-    default swmod=true;
-    field {} data[9];
-  } adc_idlyval @0x20;
-
-
-reg {
-    desc="ADC IDLY strobe";
-    default sw = rw;
-    default hw = r;
-    default swacc=true;
-    default swmod=true;
-    field {} data[16];
-  } adc_idlystr @0x24;
-
-reg {
-    desc="ADC IDLY chA readback";
-    default sw = r;
-    default hw = w;
-    field {} data[9];
-  } adc_idlychardval @0x28;
-
-reg {
-    desc="ADC IDLY chB readback";
-    default sw = r;
-    default hw = w;
-    field {} data[9];
-  } adc_idlychbrdval @0x2C;
-
-reg {
-    desc="ADC IDLY chC readback";
-    default sw = r;
-    default hw = w;
-    field {} data[9];
-  } adc_idlychcrdval @0x30;
-
-reg {
-    desc="ADC IDLY chD readback";
-    default sw = r;
-    default hw = w;
-    field {} data[9];
-  } adc_idlychdrdval @0x34;
-
-
-
-reg {
-    desc="ADC FCO MMCM dly strobe";
-    default sw = rw;
-    default hw = rw;
-    default swacc=true;
-    default swmod=true;
-    field {} data[2];
-  } adc_mmcmdlystr @0x38;
-
-reg {
-    desc="AD9510 PLL Locked";
-    default sw = r;
-    default hw = w;
-    field {} data[1];
-  } pll_locked @0x3C;
- 
-
-
-
-reg {
-    desc="AD9510 SPI PLL";
-    default sw = rw;
-    default hw = rw;
-    default swmod=true;
-    field {} data[32];
-  } pll_spi @0x40;
- 
- 
- reg {
-    desc="DSA SPI";
-    default sw = rw;
-    default hw = r;
-    default swmod=true;
-    field {} data[8];
-  } dsa_spi @0x44;
-
-
-reg {
-    desc="ADC SPI access";
-    default sw = rw;
-    default hw = rw;
-    default swacc=true;
-    default swmod=true;
-    field {} data[32];
-  } adc_spi @0x48;
-
-
-reg {
-    desc="ADC ChA Raw Data";
-    default sw = r;
-    default hw = w;
-    field {} data[16];
-  } adc_cha @0x50;
-
-reg {
-    desc="ADC ChB Raw Data";
-    default sw = r;
-    default hw = w;
-    field {} data[16];
-  } adc_chb @0x54;
   
-reg {
-    desc="ADC ChC Raw Data";
-    default sw = r;
-    default hw = w;
-    field {} data[16];
-  } adc_chc @0x58;
-  
-reg {
-    desc="ADC ChD Raw Data";
-    default sw = r;
-    default hw = w;
-    field {} data[16];
-  } adc_chd @0x5C;
-  
-  
-reg {
-    desc="LTC2986 Thermistor Controller SPI data";
-    default sw = rw;
-    default hw = rw;
-    default swacc=true;
-    default swmod=true;
-    field {} data[32];
-  } therm_spi @0x60;
-
-reg {
-    desc="LTC2986 Thermistor Controller SPI data";
-    default sw = rw;
-    default hw = r;
-    field {} data[2];
-  } therm_sel @0x64;
-
-
-reg {
-    desc="TBT DDC LP Filt Sel 0=tap, 1=100tap";
-    default sw = rw;
-    default hw = r;
-    field {} data[1];
-  } ddc_lpfilt_sel @0x68;
-
-reg {
-    desc="IOC Access";
-    default sw = rw;
-    default hw = r;
-    field {} data[1];
-  } ioc_access @0x70;  
   
   
 
@@ -326,9 +168,10 @@ reg {
   } evr_reset @0xBC;
   
  
- 
- 
- /* 10Hz Position Registers */
+
+  
+
+/* 10Hz Position Registers */
  
  reg {
     desc="SA Counter";
@@ -479,15 +322,6 @@ reg {
     field {} data[5];
   } dma_status @0x12C;
 
- reg {
-    desc="DMA TX to IOC Done";
-    default sw = rw;
-    default hw = r;
-    field {} data[1];
-  } dma_txtoioc_done @0x130;
-
-
-
 
  reg {
     desc="FP LED outputs";
@@ -495,6 +329,9 @@ reg {
     default hw = r;
     field {} val[8];
   } FP_LEDS @0x140;
+
+
+
 
 
 
@@ -548,6 +385,8 @@ reg {
     default hw = r;
     field {} val[1];
   } event_src_sel @0x168;  
+ 
+ 
  
  
  
@@ -615,35 +454,93 @@ reg {
   } tbtfifo_rdcnt @0x21C;
    
 
-/* RFFE Switching Registers */
 
-reg {
-    desc="Switching Enable 0=static,1=static switched, 2=switching";
-    default sw = rw;
-    default hw = r;
-    field {} data[2];
-  } swrffe_enb @0x250;
+/* RfSOC raw ADC FIFO registers */
 
-reg {
-    desc="Switching Trigger Delay.  Delay Switch to anywhere in Turn";
-    default sw = rw;
+  reg {
+    desc="ADC FIFO Reset";
+    default sw = w;
     default hw = r;
-    field {} data[16];
-  } swrffe_trigdly @0x254;
-
-reg {
-    desc="Switching Demux Delay.  Delay to compensate for switch prop delay";
-    default sw = rw;
-    default hw = r;
-    field {} data[9];
-  } swrffe_demuxdly @0x258;
-
-reg {
-    desc="Switching ADC DMA Source.  0=ADC data before switch, 1=ADC data after switch";
-    default sw = rw;
-    default hw = r;
+    default swacc=true;
+    default swmod=true;
     field {} data[1];
-  } swrffe_adcdma_sel @0x25C;
+  } rfadcfifo_reset @0x400;
+
+  reg {
+    desc="ADC FIFO Trig";
+    default sw = w;
+    default hw = r;
+    default swacc=true;
+    default swmod=true;
+    field {} data[1];
+  } rfadcfifo_trig @0x404;
+
+
+  reg {
+    desc="ADC0 FIFO Data";
+    default sw = rw;
+    default hw = w;
+    default swacc=true;
+    default swmod=true;
+    field {} data[32];
+  } rfadc0fifo_dout @0x450;
+
+   reg {
+    desc="ADC0 FIFO Word Count";
+    default sw = r;
+    default hw = w;
+    field {} data[32];
+  } rfadc0fifo_wdcnt @0x454;
+
+ reg {
+    desc="ADC1 FIFO Data";
+    default sw = rw;
+    default hw = w;
+    default swacc=true;
+    default swmod=true;
+    field {} data[32];
+  } rfadc1fifo_dout @0x460;
+
+   reg {
+    desc="ADC1 FIFO Word Count";
+    default sw = r;
+    default hw = w;
+    field {} data[32];
+  } rfadc1fifo_wdcnt @0x464;
+  
+ reg {
+    desc="ADC2 FIFO Data";
+    default sw = rw;
+    default hw = w;
+    default swacc=true;
+    default swmod=true;
+    field {} data[32];
+  } rfadc2fifo_dout @0x470;
+
+   reg {
+    desc="ADC2 FIFO Word Count";
+    default sw = r;
+    default hw = w;
+    field {} data[32];
+  } rfadc2fifo_wdcnt @0x474;
+
+ reg {
+    desc="ADC3 FIFO Data";
+    default sw = rw;
+    default hw = w;
+    default swacc=true;
+    default swmod=true;
+    field {} data[32];
+  } rfadc3fifo_dout @0x480;
+
+   reg {
+    desc="ADC3 FIFO Word Count";
+    default sw = r;
+    default hw = w;
+    field {} data[32];
+  } rfadc3fifo_wdcnt @0x484;
+
+
 
 
 
