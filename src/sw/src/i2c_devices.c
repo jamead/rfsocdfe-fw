@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include "FreeRTOS.h"
 #include "task.h"
-#include "zubpm.h"
+
+#include "rfbpm.h"
 
 
 extern XIicPs IicPsInstance;			/* Instance of the IIC Device */
@@ -555,6 +556,8 @@ void i2c_configure_ltc2991() {
     txBuf[1] = 0x11;
     i2c_write(txBuf, 3, 0x49);
     i2c_write(txBuf, 3, 0x4A);
+    i2c_write(txBuf, 3, 0x4B);
+    i2c_write(txBuf, 3, 0x4C);
 
     // reg 8 bit 4 controls one-shot or continuous measurement (1 = cont)
     txBuf[0] = 0x08;
@@ -562,6 +565,8 @@ void i2c_configure_ltc2991() {
     i2c_write(txBuf,2,0x48);
     i2c_write(txBuf,2,0x49);
     i2c_write(txBuf,2,0x4A);
+    i2c_write(txBuf,2,0x4B);
+    i2c_write(txBuf,2,0x4C);
 
     // reg 1 is status/control, 0xF0 enables ch 1-8 measurements
     txBuf[0] = 0x01;
@@ -569,6 +574,9 @@ void i2c_configure_ltc2991() {
     i2c_write(txBuf,2,0x48);
     i2c_write(txBuf,2,0x49);
     i2c_write(txBuf,2,0x4A);
+    i2c_write(txBuf,2,0x4B);
+    i2c_write(txBuf,2,0x4C);
+
 
 }
 
@@ -629,9 +637,14 @@ float i2c_ltc2991_reg3_temp() {
     return (0.650 - (conv_volts_se * i2c_ltc2991_voltage(0x48, 2))) / 0.002;
 }
 
+float i2c_ltc2991_reg4_temp() {
+    return (0.650 - (conv_volts_se * i2c_ltc2991_voltage(0x48, 3))) / 0.002;
+}
+
+
 float i2c_ltc2991_vcc_vin() {
 	//scale by 2 because of voltage divider on schematic
-    return 2 * conv_volts_se * i2c_ltc2991_voltage(0x48, 6);
+    return 11 * conv_volts_se * i2c_ltc2991_voltage(0x48, 6);
 }
 
 float i2c_ltc2991_vcc_vin_current() {
@@ -702,6 +715,52 @@ float i2c_ltc2991_vcc_0v85() {
 float i2c_ltc2991_vcc_0v85_current() {
     return (conv_volts_diff / conv_r_sense) * i2c_ltc2991_voltage(0x49, 6);
 }
+
+
+float i2c_ltc2991_vadc_avcc() {
+    return conv_volts_se * i2c_ltc2991_voltage(0x4B, 0);
+}
+
+float i2c_ltc2991_vadc_avcc_current() {
+    return (conv_volts_diff / conv_r_sense) * i2c_ltc2991_voltage(0x4B, 1);
+}
+
+float i2c_ltc2991_vadc_avcc_aux() {
+    return conv_volts_se * i2c_ltc2991_voltage(0x4B, 2);
+}
+
+float i2c_ltc2991_vadc_avcc_aux_current() {
+    return (conv_volts_diff / conv_r_sense) * i2c_ltc2991_voltage(0x4B, 3);
+}
+
+
+
+float i2c_ltc2991_vdac_avcc() {
+    return conv_volts_se * i2c_ltc2991_voltage(0x4C, 0);
+}
+
+float i2c_ltc2991_vdac_avcc_current() {
+    return (conv_volts_diff / conv_r_sense) * i2c_ltc2991_voltage(0x4C, 1);
+}
+
+float i2c_ltc2991_vdac_avcc_aux() {
+    return conv_volts_se * i2c_ltc2991_voltage(0x4C, 2);
+}
+
+float i2c_ltc2991_vdac_avcc_aux_current() {
+    return (conv_volts_diff / conv_r_sense) * i2c_ltc2991_voltage(0x4C, 3);
+}
+
+float i2c_ltc2991_vdac_avtt() {
+    return conv_volts_se * i2c_ltc2991_voltage(0x4C, 4);
+}
+
+float i2c_ltc2991_vdac_avtt_current() {
+    return (conv_volts_diff / conv_r_sense) * i2c_ltc2991_voltage(0x4C, 5);
+}
+
+
+
 
 /*
 u16 iic_ltc2991_read16(u8 index, u8 addr){

@@ -12,9 +12,9 @@
 #include "task.h"
 
 /* Hardware support includes */
-#include "zubpm.h"
 #include "pl_regs.h"
 #include "psc_msg.h"
+#include "rfbpm.h"
 
 
 
@@ -148,8 +148,7 @@ void set_dmalen(u32 channel, u32 msgVal) {
 	    break;
     }
 
-  //now need to re-arm the DMA engine with the new length
-  dma_arm();
+
 
 }
 

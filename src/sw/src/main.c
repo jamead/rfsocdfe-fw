@@ -18,7 +18,7 @@
 
 #include "local.h"
 #include "pl_regs.h"
-#include "zubpm.h"
+#include "rfbpm.h"
 
 
 
@@ -173,11 +173,6 @@ static void on_startup(void *pvt, psc_key *key)
     (void)key;
     lstats_setup();
     brdstats_setup();
-    sadata_setup();
-    livedata_setup();
-    dmadata_setup();
-    gendata_setup();
-    thermistor_setup();
     console_setup();
 }
 
@@ -220,16 +215,12 @@ static void realmain(void *arg)
 int main()
 {
 
-
-
     u32 ts_s, ts_ns;
-    float temp1, temp2;
 
-	xil_printf("zuBPM ...\r\n");
+	xil_printf("rfSOC DFE ...\r\n");
     print_firmware_version();
 
 
-	prog_ad9510();
 	xil_printf("Init I2c...\r\n");
 	init_i2c();
 	xil_printf("Init Sysmon...\r\n");
@@ -238,64 +229,10 @@ int main()
 
     i2c_set_port_expander(I2C_PORTEXP1_ADDR,0x40);
     //voltage and current readback device on AFE
-    ina226_init();
-    usleep(10000);
-
-    xil_printf("Programming Si569 VCXO via i2c\r\n");
-    read_si569();
-    sleep(1);
-    prog_si569();
-    sleep(1);
-    read_si569();
-    sleep(1);
 
 	xil_printf("Init lmk1e2...\r\n");
     write_lmk61e2();
 
-    /*
-    ina226_init();
-    u16 reg_val;
-    float val, v, i, p;
-
-    while (1) {
-    	ina226_read_reg(0x00,&reg_val);
-    	printf("Config Reg: %x\n",reg_val);
-    	ina226_read_reg(0x05,&reg_val);
-    	printf("Calib Reg: %x\n",reg_val);
-    	ina226_read_reg(0xFE,&reg_val);
-    	printf("Manufacturer ID: %x\n",reg_val);
-        v = ina226_read_bus_voltage();
-        i = ina226_read_current();
-        p = ina226_read_power();
-        printf("INA226: V=%f   I=%f   P=%f\n",v,i,p);
-    	sleep(1);
-
-
-
-       //sleep(1);
-    }
-    */
-
-    // Disable Switching
-    Xil_Out32(XPAR_M_AXI_BASEADDR + SWRFFE_ENB_REG, 0);
-
-    // Enable 101Tap DDC FP Filt
-	Xil_Out32(XPAR_M_AXI_BASEADDR + DDC_LPFILT_SEL_REG, 0);
-
-
-
-
-    //read AFE temperature from i2c bus
-    i2c_set_port_expander(I2C_PORTEXP1_ADDR,0x40);
-    temp1 = read_i2c_temp(BRDTEMP0_ADDR);
-    temp2 = read_i2c_temp(BRDTEMP2_ADDR);
-    printf("AFE:  = %5.3f  %5.3f  \r\n",temp1,temp2);
-    sleep(1);
-    i2c_set_port_expander(I2C_PORTEXP1_ADDR,0x0);
-
-
-    xil_printf("Initializing ADC...\r\n");
-	ltc2195_init();
 
 	//EVR reset
 	Xil_Out32(XPAR_M_AXI_BASEADDR + EVR_RST_REG, 1);
@@ -307,15 +244,6 @@ int main()
     ts_ns = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_NS_REG);
     xil_printf("ts= %d    %d\r\n",ts_s,ts_ns);
 
-    // Initialize DMA lengths to initial values
-	Xil_Out32(XPAR_M_AXI_BASEADDR + DMA_ADCBURSTLEN_REG, 10000);
-	Xil_Out32(XPAR_M_AXI_BASEADDR + DMA_TBTBURSTLEN_REG, 10000);
-	Xil_Out32(XPAR_M_AXI_BASEADDR + DMA_FABURSTLEN_REG, 1000);
-
-    // TODO:  This doesn't work
-    //xil_printf("System is about to reset...\n");
-    // Perform the system reset
-    //XPm_ResetAssert(XILPM_RESET_SOFT,XILPM_RESET_ACTION_PULSE);
 
 
     sys_thread_new("main", realmain, NULL, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
