@@ -1,6 +1,6 @@
-## ZuBPM Hardware Platform 
+## rfSOC DFE  Hardware Platform 
 
-This is a custom designed hardware platform for the next gen rfBPM electroncs from the NSLS2 Diagnostics Group Using the Xilinx UltraScale+ technology.
+This is a custom designed hardware platform using the Xilinx rfSOC chip for various applications from the NSLS2 Diagnostics Group.
 
 Uses the DESY FWK FPGA Firmware Framework https://fpgafw.pages.desy.de/docs-pub/fwk/index.html
 
