@@ -22,6 +22,7 @@
 
 #define I2C_PORTEXP0_ADDR 0x70
 #define I2C_PORTEXP1_ADDR 0x71
+#define I2C_PORTEXP2_ADDR 0x72
 
 
 typedef struct {
@@ -30,6 +31,13 @@ typedef struct {
   u8 ipgw[4];
 } ip_t;
 
+
+
+
+
+u32 InitRFdc(void);
+void GetRFdc_Status(void);
+void WriteLMK04828(void);
 
 void setup_thermistors(u8);
 void trig_thermistors(u8);

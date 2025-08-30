@@ -31,7 +31,9 @@ end rf_adc_fifos;
 
 architecture behv of rf_adc_fifos is
 
-
+  attribute mark_debug     : string;
+  attribute mark_debug of reg_i: signal is "true"; 
+  attribute mark_debug of reg_o: signal is "true"; 
 
 begin
 

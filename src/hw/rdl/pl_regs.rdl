@@ -76,6 +76,40 @@ addrmap pl_regs {
   } PRJ_TIMESTAMP @0x1C;
 
  
+reg {
+    desc="Freq Measure Clk0";
+    default sw = r;
+    default hw = w;  
+    field {} val[32];
+  } freq_clk0 @0x20; 
+  
+reg {
+    desc="Freq Measure Clk1";
+    default sw = r;
+    default hw = w;  
+    field {} val[32];
+  } freq_clk1 @0x24;   
+  
+reg {
+    desc="Freq Measure Clk2";
+    default sw = r;
+    default hw = w;  
+    field {} val[32];
+  } freq_clk2 @0x28; 
+  
+reg {
+    desc="Freq Measure Clk3";
+    default sw = r;
+    default hw = w;  
+    field {} val[32];
+  } freq_clk3 @0x2C;    
+  
+reg {
+    desc="Freq Measure Clk4";
+    default sw = r;
+    default hw = w;  
+    field {} val[32];
+  } freq_clk4 @0x30;  
   
   
   
@@ -459,7 +493,7 @@ reg {
 
   reg {
     desc="ADC FIFO Reset";
-    default sw = w;
+    default sw = rw;
     default hw = r;
     default swacc=true;
     default swmod=true;
@@ -468,7 +502,7 @@ reg {
 
   reg {
     desc="ADC FIFO Trig";
-    default sw = w;
+    default sw = rw;
     default hw = r;
     default swacc=true;
     default swmod=true;
@@ -478,7 +512,7 @@ reg {
 
   reg {
     desc="ADC0 FIFO Data";
-    default sw = rw;
+    default sw = r;
     default hw = w;
     default swacc=true;
     default swmod=true;
@@ -494,7 +528,7 @@ reg {
 
  reg {
     desc="ADC1 FIFO Data";
-    default sw = rw;
+    default sw = r;
     default hw = w;
     default swacc=true;
     default swmod=true;
@@ -510,7 +544,7 @@ reg {
   
  reg {
     desc="ADC2 FIFO Data";
-    default sw = rw;
+    default sw = r;
     default hw = w;
     default swacc=true;
     default swmod=true;
@@ -526,7 +560,7 @@ reg {
 
  reg {
     desc="ADC3 FIFO Data";
-    default sw = rw;
+    default sw = r;
     default hw = w;
     default swacc=true;
     default swmod=true;

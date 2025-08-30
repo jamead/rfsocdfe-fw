@@ -18,17 +18,17 @@
 
 #include "local.h"
 #include "pl_regs.h"
-#include "rfbpm.h"
-
-
+#include "xrfdc.h"
+#include "rfdfe.h"
 
 
 
 #define PLATFORM_EMAC_BASEADDR XPAR_XEMACPS_0_BASEADDR
 #define SYSMON_DEVICE_ID XPAR_XSYSMONPSU_0_DEVICE_ID
 
-XIicPs IicPsInstance;	    // Instance of the IIC Device
-XSysMonPsu SysMonInstance;  // Instance of the Sysmon Device
+XIicPs IicPsInstance;	    // I2C Device
+XSysMonPsu SysMonInstance;  // Sysmon Device
+XRFdc RFdcInst;             // RFDC Device
 
 
 #define PLATFORM_ZYNQMP
@@ -36,36 +36,12 @@ XSysMonPsu SysMonInstance;  // Instance of the Sysmon Device
 
 psc_key* the_server;
 
-//static sys_thread_t main_thread_handle;
 
 
-
-//global buffers
-char msgid30_buf[1024];
-char msgid31_buf[1024];
-char msgid32_buf[1024];
-
-float thermistors[6];
 
 uint32_t git_hash;
 
-//ip_t ip_settings;
 
-
-
-XIicPs IicPsInstance;	    // Instance of the IIC Device
-XSysMonPsu SysMonInstance;  // Instance of the Sysmon Device
-
-
-//TimerHandle_t xUptimeTimer;  // Timer handle
-//u32 UptimeCounter = 0;  // Uptime counter
-
-
-
-// Timer callback function
-//void vUptimeTimerCallback(TimerHandle_t xTimer) {
-//    UptimeCounter++;  // Increment uptime counter
-//}
 
 
 
@@ -173,6 +149,7 @@ static void on_startup(void *pvt, psc_key *key)
     (void)key;
     lstats_setup();
     brdstats_setup();
+    rfstats_setup();
     console_setup();
 }
 
@@ -215,7 +192,7 @@ static void realmain(void *arg)
 int main()
 {
 
-    u32 ts_s, ts_ns;
+    u32 i, j, ts_s, ts_ns;
 
 	xil_printf("rfSOC DFE ...\r\n");
     print_firmware_version();
@@ -230,8 +207,59 @@ int main()
     i2c_set_port_expander(I2C_PORTEXP1_ADDR,0x40);
     //voltage and current readback device on AFE
 
-	xil_printf("Init lmk1e2...\r\n");
+	xil_printf("Init lmk61e2 Oscillator for EVR...\r\n");
     write_lmk61e2();
+
+    // Program the CLK104 PLL
+    xil_printf("Init LMK04828 PLL for ADC's...\r\n");
+    WriteLMK04828();
+    sleep(1);
+
+    // Initialize the RFdc subsystem
+    InitRFdc();
+    sleep(2);
+
+    //Reset & Trigger the ADC0 FIFO
+      u32 wdcnt;
+
+      while (1) {
+          Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RST_REG, 1);
+          usleep(10);
+          Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RST_REG, 0);
+          sleep(1);
+
+          wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_WDCNT_REG);
+          xil_printf("FIFO Wdcnt = %d\r\n",wdcnt);
+          //Trigger
+          xil_printf("Triggering...\r\n");
+          Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIG_REG, 1);
+          sleep(1);
+          Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIG_REG, 0);
+          wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_WDCNT_REG);
+          xil_printf("FIFO Wdcnt = %d\r\n",wdcnt);
+
+      u32 data;
+      s16 adcval;
+      //read out the fifo
+      for (i=0;i<10;i++) {
+      	for (j=0;j<8;j++) {
+      	    if (j<6) {
+      	        data = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_DOUT_REG);
+     	            adcval = (s16) ((data & 0xFFFF0000) >> 16);
+     	            xil_printf("%d\r\n",adcval>>2);
+     	            adcval = (s16) (data & 0xFFFF);
+                  xil_printf("%d\r\n",adcval>>2);
+      	    }
+              else
+         	        data = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_DOUT_REG);
+          }
+      }
+
+      wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_WDCNT_REG);
+       xil_printf("FIFO Wdcnt = %d\r\n",wdcnt);
+      }
+
+
 
 
 	//EVR reset
@@ -243,6 +271,8 @@ int main()
     ts_s = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_S_REG);
     ts_ns = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_NS_REG);
     xil_printf("ts= %d    %d\r\n",ts_s,ts_ns);
+
+
 
 
 

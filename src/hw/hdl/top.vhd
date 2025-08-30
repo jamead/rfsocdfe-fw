@@ -74,8 +74,9 @@ architecture behv of top is
   signal reg_i      : t_addrmap_pl_regs_in;
   signal reg_o      : t_addrmap_pl_regs_out;
   
-  signal clk104_pl_clkin : std_logic;
-  signal clk104_pl_clk   : std_logic;
+  signal clk104_lmkin0_clk      : std_logic;
+  signal clk104_pl_clkin        : std_logic;
+  signal clk104_pl_clk          : std_logic;
   
   signal adc_data        : t_adc_raw; 
   
@@ -115,6 +116,7 @@ architecture behv of top is
   signal reg_i_evr       : t_reg_i_evr;
   signal reg_o_therm     : t_reg_o_therm;
   signal reg_i_therm     : t_reg_i_therm;
+  signal reg_i_freq      : t_reg_i_freq;
   
   signal tbt_data        : t_tbt_data;    
   signal sa_data         : t_sa_data;
@@ -175,7 +177,7 @@ fp_led  <= ps_leds;
 pl_reset <= not pl_resetn;
 
 --drive the CLK104 PLL with 100MHz for now
-lmk_clkout : OBUFDS port map (O => clk104_lmkin0_clk_p, OB => clk104_lmkin0_clk_n, I => pl_clk0);   
+lmk_clkout : OBUFDS port map (O => clk104_lmkin0_clk_p, OB => clk104_lmkin0_clk_n, I => clk104_lmkin0_clk);   
 
 
 lmk_pl_clkin  : IBUFDS port map (O => clk104_pl_clkin, I => clk104_pl_clk_p, IB => clk104_pl_clk_n);
@@ -187,11 +189,21 @@ rfadc_bufg    : BUFG   port map (O => rfadc_axis_clk, I => rfadc_axis_mmcm_clk);
 
 axisclk_adc: entity work.rfadc_clk_pll  
   port map (
-    reset => not pl_resetn, 
-    clk_in1 => rfadc_out_clk,   --125MHz
-    clk_out1 => rfadc_axis_mmcm_clk, 
-    locked => open  --adc_axis_pll_locked  
+    reset => pl_reset, 
+    clk_in1 => rfadc_out_clk,   --146.686MHz
+    clk_out1 => rfadc_axis_mmcm_clk,  --391.164MHz
+    locked => open  
 );
+
+
+lmkclk_pll: entity work.lmk_clk_pll
+  port map (
+    reset => pl_reset, 
+    clk_in1 => pl_clk0,   --100MHz
+    clk_out1 => clk104_lmkin0_clk, --124.92MHz
+    locked => open  
+);
+
 
 
 
@@ -218,7 +230,8 @@ ps_pl: entity work.ps_io
 	reg_o_pll => reg_o_pll,
 	reg_i_pll => reg_i_pll,
 	reg_o_evr => reg_o_evr, 
-	reg_i_evr => reg_i_evr
+	reg_i_evr => reg_i_evr,
+	reg_i_freq => reg_i_freq
           
   );
 
@@ -334,6 +347,23 @@ system_i: component system
     m32_axis_0_tdata => adc3_axis_tdata, 
     m32_axis_0_tvalid => adc3_axis_tvalid       
     );
+
+
+clk_meas: entity work.clk_meas_freq
+  port map (
+    pl_clk0 => pl_clk0,
+    reset => pl_reset,
+    clk0 => pl_clk0,           --100MHz
+    clk1 => clk104_lmkin0_clk, --124.92MHz 
+    clk2 => clk104_pl_clk,     --426.724MHz
+    clk3 => rfadc_out_clk,     --146.686MHz
+    clk4 => rfadc_axis_clk,    --391.164MHz
+    reg_i => reg_i_freq
+  );
+  
+
+
+
 
 
 

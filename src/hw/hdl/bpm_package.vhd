@@ -36,8 +36,6 @@ type t_reg_o_rfadc_fifo_rdout is record
 end record t_reg_o_rfadc_fifo_rdout;
 
 
-
-
 type t_reg_i_adc_fifo_rdout is record
    dout     : std_logic_vector(31 downto 0);
    rdcnt    : std_logic_vector(31 downto 0); 
@@ -77,6 +75,15 @@ type t_reg_i_evr is record
    ts_ns      : std_logic_vector(31 downto 0);
    ts_s       : std_logic_vector(31 downto 0);
 end record t_reg_i_evr;
+
+
+type t_reg_i_freq is record
+   clk0_freq  : std_logic_vector(31 downto 0);
+   clk1_freq  : std_logic_vector(31 downto 0);
+   clk2_freq  : std_logic_vector(31 downto 0);
+   clk3_freq  : std_logic_vector(31 downto 0);   
+   clk4_freq  : std_logic_vector(31 downto 0);            
+end record t_reg_i_freq;
 
 
 type t_reg_o_pll is record

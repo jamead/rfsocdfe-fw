@@ -41,6 +41,7 @@ entity ps_io is
 	 reg_i_dma       : in  t_reg_i_dma;
 	 reg_o_evr       : out t_reg_o_evr;
 	 reg_i_evr       : in  t_reg_i_evr;
+	 reg_i_freq      : in  t_reg_i_freq;
  
      fp_leds         : out std_logic_vector(7 downto 0)
   );
@@ -55,8 +56,8 @@ architecture behv of ps_io is
   signal reg_i        : t_addrmap_pl_regs_in;
   signal reg_o        : t_addrmap_pl_regs_out;
 
-  --attribute mark_debug     : string;
-  --attribute mark_debug of reg_o: signal is "true";
+  attribute mark_debug     : string;
+  attribute mark_debug of reg_o: signal is "true";
 
 
 
@@ -64,6 +65,13 @@ begin
 
 fp_leds <= reg_o.FP_LEDS.val.data;
 
+
+
+reg_i.freq_clk0.val.data <= reg_i_freq.clk0_freq;
+reg_i.freq_clk1.val.data <= reg_i_freq.clk1_freq;
+reg_i.freq_clk2.val.data <= reg_i_freq.clk2_freq;
+reg_i.freq_clk3.val.data <= reg_i_freq.clk3_freq;
+reg_i.freq_clk4.val.data <= reg_i_freq.clk4_freq;
 
 
 reg_o_rfadcfifo.enb <= reg_o.rfadcfifo_trig.data.data(0); 

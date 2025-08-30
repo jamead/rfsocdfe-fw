@@ -15,7 +15,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 ##################################################################
 
 # To test this script, run the following commands from Vivado Tcl console:
-# source rfadc_clk_pll.tcl
+# source lmk_clk_pll.tcl
 # If there is no project opened, this script will create a
 # project, but make sure you do not have an existing project
 # in the current working folder.
@@ -57,29 +57,29 @@ if { $bCheckIPsPassed != 1 } {
 }
 
 ##################################################################
-# CREATE IP rfadc_clk_pll
+# CREATE IP lmk_clk_pll
 ##################################################################
 
-set rfadc_clk_pll [create_ip -name clk_wiz -vendor xilinx.com -library ip -version 6.0 -module_name rfadc_clk_pll]
+set lmk_clk_pll [create_ip -name clk_wiz -vendor xilinx.com -library ip -version 6.0 -module_name lmk_clk_pll]
 
 # User Parameters
 set_property -dict [list \
-  CONFIG.CLKIN1_JITTER_PS {64.04} \
-  CONFIG.CLKOUT1_JITTER {104.807} \
-  CONFIG.CLKOUT1_PHASE_ERROR {151.718} \
-  CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {416.4} \
-  CONFIG.MMCM_CLKFBOUT_MULT_F {23.000} \
-  CONFIG.MMCM_CLKIN1_PERIOD {6.404} \
-  CONFIG.MMCM_CLKIN2_PERIOD {10.0} \
-  CONFIG.MMCM_CLKOUT0_DIVIDE_F {2.875} \
-  CONFIG.MMCM_DIVCLK_DIVIDE {3} \
-  CONFIG.PRIM_IN_FREQ {156.15} \
-] [get_ips rfadc_clk_pll]
+  CONFIG.CLKIN1_JITTER_PS {100.0} \
+  CONFIG.CLKOUT1_JITTER {245.352} \
+  CONFIG.CLKOUT1_PHASE_ERROR {297.189} \
+  CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {124.91803} \
+  CONFIG.MMCM_CLKFBOUT_MULT_F {47.625} \
+  CONFIG.MMCM_CLKIN1_PERIOD {10.000} \
+  CONFIG.MMCM_CLKIN2_PERIOD {10.000} \
+  CONFIG.MMCM_CLKOUT0_DIVIDE_F {7.625} \
+  CONFIG.MMCM_DIVCLK_DIVIDE {5} \
+  CONFIG.PRIM_IN_FREQ {100} \
+] [get_ips lmk_clk_pll]
 
 # Runtime Parameters
 set_property -dict { 
   GENERATE_SYNTH_CHECKPOINT {1}
-} $rfadc_clk_pll
+} $lmk_clk_pll
 
 ##################################################################
 

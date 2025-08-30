@@ -28,6 +28,12 @@ proc setSources {} {
   lappend Sources {"../hdl/evr/gty_evr_example_gtwiz_userclk_tx.v" "Verilog"}  
   lappend Sources {"../hdl/evr/gty_evr_example_gtwiz_userclk_rx.v" "Verilog"}  
   
+  lappend Sources {"../hdl/clk_meas_freq.vhd" "VHDL 2008"}
+  lappend Sources {"../hdl/clk_freq_counter.vhd" "VHDL 2008"}  
+  lappend Sources {"../hdl/counter_prescale.vhd" "VHDL 2008"}
+  lappend Sources {"../hdl/sync/sync_single_bit_cc.vhd" "VHDL 2008"} 
+  lappend Sources {"../hdl/sync/sync_pulse_ack_cc.vhd" "VHDL 2008"}  
+  
 
   lappend Sources {"../cstr/pins.xdc"  "XDC"}
   lappend Sources {"../cstr/gth.xdc" "XDC"}
@@ -60,8 +66,10 @@ proc doOnCreate {} {
    
   source ${TclPath}/system.tcl
   source ${TclPath}/rfadc_clk_pll.tcl 
+  source ${TclPath}/lmk_clk_pll.tcl 
   source ${TclPath}/adc_fifo.tcl 
   source ${TclPath}/gty_evr.tcl 
+  
   
   addSources "Sources" 
 
