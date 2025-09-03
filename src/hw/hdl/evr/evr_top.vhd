@@ -213,29 +213,29 @@ end component;
 
 
    --debug signals (connect to ila)
-   attribute mark_debug     : string;
-   attribute mark_debug of eventstream: signal is "true";
-   attribute mark_debug of datastream: signal is "true";
-   attribute mark_debug of timestamp: signal is "true";
-   attribute mark_debug of eventclock: signal is "true";
-   attribute mark_debug of prev_datastream: signal is "true";
-   attribute mark_debug of tbt_trig: signal is "true";
-   attribute mark_debug of tbt_trig_i: signal is "true";
+--   attribute mark_debug     : string;
+--   attribute mark_debug of eventstream: signal is "true";
+--   attribute mark_debug of datastream: signal is "true";
+--   attribute mark_debug of timestamp: signal is "true";
+--   attribute mark_debug of eventclock: signal is "true";
+--   attribute mark_debug of prev_datastream: signal is "true";
+--   attribute mark_debug of tbt_trig: signal is "true";
+--   attribute mark_debug of tbt_trig_i: signal is "true";
 
-   attribute mark_debug of gty_txdata_in: signal is "true";  
-   attribute mark_debug of gty_txcharisk_in: signal is "true";
-   attribute mark_debug of gty_rx_userdata: signal is "true";
-   attribute mark_debug of gty_rxctrl0: signal is "true";
-   attribute mark_debug of gty_powergood: signal is "true";
-   attribute mark_debug of gty_reset_rx_done: signal is "true";
+--   attribute mark_debug of gty_txdata_in: signal is "true";  
+--   attribute mark_debug of gty_txcharisk_in: signal is "true";
+--   attribute mark_debug of gty_rx_userdata: signal is "true";
+--   attribute mark_debug of gty_rxctrl0: signal is "true";
+--   attribute mark_debug of gty_powergood: signal is "true";
+--   attribute mark_debug of gty_reset_rx_done: signal is "true";
 
-   attribute mark_debug of gty_reset_tx_done: signal is "true";
-   attribute mark_debug of gty_userclk_tx_active: signal is "true";
-   attribute mark_debug of gty_txpmaresetdone: signal is "true";
+--   attribute mark_debug of gty_reset_tx_done: signal is "true";
+--   attribute mark_debug of gty_userclk_tx_active: signal is "true";
+--   attribute mark_debug of gty_txpmaresetdone: signal is "true";
   
-   attribute mark_debug of gty_cpllfbclklost: signal is "true";
-   attribute mark_debug of gty_cplllock: signal is "true";
-   attribute mark_debug of gty_cpllrefclklost: signal is "true"; 
+--   attribute mark_debug of gty_cpllfbclklost: signal is "true";
+--   attribute mark_debug of gty_cplllock: signal is "true";
+--   attribute mark_debug of gty_cpllrefclklost: signal is "true"; 
 
 
 

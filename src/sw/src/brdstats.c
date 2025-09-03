@@ -48,8 +48,8 @@ float sysmon_read_stats() {
 static void brdstats_push(void *unused)
 {
     (void)unused;
-    u32 i;
-    float sfpregs[5];
+
+    //float sfpregs[5];
 
     static struct {
         uint32_t githash;  // 0

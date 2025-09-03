@@ -39,28 +39,13 @@ u32 InitRFdc(void);
 void GetRFdc_Status(void);
 void WriteLMK04828(void);
 
-void setup_thermistors(u8);
-void trig_thermistors(u8);
-void read_thermistors(u8, float *, float *);
-
-void  ina226_init(void);
-float ina226_read_bus_voltage(void);
-float ina226_read_current(void);
-float ina226_read_power(void);
-
 void i2c_get_mac_address();
 void i2c_eeprom_readBytes(u8, u8 *, u8);
 void i2c_eeprom_writeBytes(u8, u8 *, u8);
 void eeprom_dump();
 void menu_get_ipaddr();
 
-void prog_ad9510();
-void ltc2195_init();
 
-void dma_arm();
-
-
-void read_thermistor_thread();
 
 void init_i2c();
 s32 i2c_read(u8 *, u8, u8);

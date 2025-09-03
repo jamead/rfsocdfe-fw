@@ -138,8 +138,15 @@ architecture behv of top is
   attribute mark_debug     : string;
   attribute mark_debug of adc0_axis_tdata: signal is "true"; 
   attribute mark_debug of adc0_axis_tvalid: signal is "true"; 
-  attribute mark_debug of pl_reset: signal is "true";
-  attribute mark_debug of fp_led: signal is "true";
+  attribute mark_debug of adc1_axis_tdata: signal is "true"; 
+  attribute mark_debug of adc1_axis_tvalid: signal is "true";   
+  attribute mark_debug of adc2_axis_tdata: signal is "true"; 
+  attribute mark_debug of adc2_axis_tvalid: signal is "true";   
+  attribute mark_debug of adc3_axis_tdata: signal is "true"; 
+  attribute mark_debug of adc3_axis_tvalid: signal is "true";   
+  
+  --attribute mark_debug of pl_reset: signal is "true";
+  --attribute mark_debug of fp_led: signal is "true";
 
   --attribute mark_debug of reg_o: signal is "true";
   --attribute mark_debug of reg_i: signal is "true";

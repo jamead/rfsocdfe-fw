@@ -150,6 +150,7 @@ static void on_startup(void *pvt, psc_key *key)
     lstats_setup();
     brdstats_setup();
     rfstats_setup();
+    adcdata_setup();
     console_setup();
 }
 
@@ -192,7 +193,7 @@ static void realmain(void *arg)
 int main()
 {
 
-    u32 i, j, ts_s, ts_ns;
+    u32 ts_s, ts_ns;
 
 	xil_printf("rfSOC DFE ...\r\n");
     print_firmware_version();
@@ -219,48 +220,6 @@ int main()
     InitRFdc();
     sleep(2);
 
-    //Reset & Trigger the ADC0 FIFO
-      u32 wdcnt;
-
-      while (1) {
-          Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RST_REG, 1);
-          usleep(10);
-          Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RST_REG, 0);
-          sleep(1);
-
-          wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_WDCNT_REG);
-          xil_printf("FIFO Wdcnt = %d\r\n",wdcnt);
-          //Trigger
-          xil_printf("Triggering...\r\n");
-          Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIG_REG, 1);
-          sleep(1);
-          Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIG_REG, 0);
-          wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_WDCNT_REG);
-          xil_printf("FIFO Wdcnt = %d\r\n",wdcnt);
-
-      u32 data;
-      s16 adcval;
-      //read out the fifo
-      for (i=0;i<10;i++) {
-      	for (j=0;j<8;j++) {
-      	    if (j<6) {
-      	        data = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_DOUT_REG);
-     	            adcval = (s16) ((data & 0xFFFF0000) >> 16);
-     	            xil_printf("%d\r\n",adcval>>2);
-     	            adcval = (s16) (data & 0xFFFF);
-                  xil_printf("%d\r\n",adcval>>2);
-      	    }
-              else
-         	        data = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_DOUT_REG);
-          }
-      }
-
-      wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_WDCNT_REG);
-       xil_printf("FIFO Wdcnt = %d\r\n",wdcnt);
-      }
-
-
-
 
 	//EVR reset
 	Xil_Out32(XPAR_M_AXI_BASEADDR + EVR_RST_REG, 1);
@@ -271,9 +230,6 @@ int main()
     ts_s = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_S_REG);
     ts_ns = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_NS_REG);
     xil_printf("ts= %d    %d\r\n",ts_s,ts_ns);
-
-
-
 
 
     sys_thread_new("main", realmain, NULL, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);

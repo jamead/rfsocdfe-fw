@@ -60,7 +60,7 @@ component adc_fifo IS
     dout : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
     full : OUT STD_LOGIC;
     empty : OUT STD_LOGIC;
-    rd_data_count : OUT STD_LOGIC_VECTOR(17 DOWNTO 0)
+    rd_data_count : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
   );
 END component;
 
@@ -77,14 +77,18 @@ END component;
   signal adc_enb_sr       : std_logic_vector(2 downto 0);  
   signal adc_enb_s        : std_logic;
   signal sample_num       : std_logic_vector(15 downto 0);
-  signal fifo_rd_data_cnt : std_logic_vector(17 downto 0);
+  signal fifo_rd_data_cnt : std_logic_vector(15 downto 0);
   
 
   attribute mark_debug                 : string;
 
-  attribute mark_debug of sys_rst: signal is "true";
+  attribute mark_debug of fifo_dout: signal is "true";
+  attribute mark_debug of fifo_rdstr: signal is "true";  
+  attribute mark_debug of fifo_rdstr_prev: signal is "true";   
+  attribute mark_debug of fifo_rdstr_fe: signal is "true";   
   attribute mark_debug of adc_data: signal is "true";
   attribute mark_debug of fifo_din: signal is "true";
+  
   attribute mark_debug of fifo_trig: signal is "true";
   attribute mark_debug of state: signal is "true";
   attribute mark_debug of sample_num: signal is "true";
@@ -94,12 +98,13 @@ END component;
   attribute mark_debug of adc_enb_sr: signal is "true";
   attribute mark_debug of adc_enb_s: signal is "true";
   attribute mark_debug of fifo_rst: signal is "true";
+  
 
 begin
 
 
 
-fifo_rdcnt <= 14d"0" & fifo_rd_data_cnt;
+fifo_rdcnt <= 16d"0" & fifo_rd_data_cnt;
 
 --since fifo is fall-through mode, want the rdstr
 --to happen after the current word is read.
@@ -166,13 +171,17 @@ process(adc_clk)
              
            when WR_FIFO =>
               fifo_wren <= '1';
+              --fifo_din <= x"0000" & x"1111" & x"2222" & x"3333" & 
+              --            x"4444" & x"5555" & x"6666" & x"7777" & 
+              --            x"8888" & x"9999" & x"AAAA" & x"BBBB" & 
+              --            x"CCCC" & x"DDDD" & x"EEEE" & x"FFFF";
+
               fifo_din <= adc_data(15 downto 0) & adc_data(31 downto 16) & adc_data(47 downto 32) & adc_data(63 downto 48) &
                           adc_data(79 downto 64) & adc_data(95 downto 80) & adc_data(111 downto 96) & adc_data(127 downto 112) & 
                           adc_data(143 downto 128) & adc_data(159 downto 144) & adc_data(175 downto 160) & adc_data(191 downto 176) &
-                          64d"0";
-                          
+                          64d"0";               
               sample_num <= sample_num + 1;
-              if (sample_num = 32d"16000") then
+              if (sample_num = 32d"8100") then
                 state <= idle;
               else
                 sample_num <= sample_num + 1;
@@ -198,7 +207,7 @@ fifo_inst : adc_fifo
     rd_clk => sys_clk,
     din => fifo_din,
     wr_en => fifo_wren,
-    rd_en => fifo_rdstr_fe,
+    rd_en => fifo_rdstr, --fifo_rdstr_fe,
     dout => fifo_dout,
     full => open,
     empty => open,

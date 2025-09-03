@@ -56,8 +56,8 @@ architecture behv of ps_io is
   signal reg_i        : t_addrmap_pl_regs_in;
   signal reg_o        : t_addrmap_pl_regs_out;
 
-  attribute mark_debug     : string;
-  attribute mark_debug of reg_o: signal is "true";
+  --attribute mark_debug     : string;
+  --attribute mark_debug of reg_o: signal is "true";
 
 
 
@@ -85,11 +85,11 @@ reg_o_rfadcfifo.adc1_rdstr <= reg_o.rfadc1fifo_dout.data.swacc;
 reg_i.rfadc1fifo_dout.data.data <= reg_i_rfadcfifo.adc1_dout;  
 reg_i.rfadc1fifo_wdcnt.data.data <= reg_i_rfadcfifo.adc1_rdcnt; 
 
-reg_o_rfadcfifo.adc2_rdstr <= reg_o.rfadc0fifo_dout.data.swacc;
+reg_o_rfadcfifo.adc2_rdstr <= reg_o.rfadc2fifo_dout.data.swacc;
 reg_i.rfadc2fifo_dout.data.data <= reg_i_rfadcfifo.adc2_dout;  
 reg_i.rfadc2fifo_wdcnt.data.data <= reg_i_rfadcfifo.adc2_rdcnt; 
 
-reg_o_rfadcfifo.adc3_rdstr <= reg_o.rfadc1fifo_dout.data.swacc;
+reg_o_rfadcfifo.adc3_rdstr <= reg_o.rfadc3fifo_dout.data.swacc;
 reg_i.rfadc3fifo_dout.data.data <= reg_i_rfadcfifo.adc3_dout;  
 reg_i.rfadc3fifo_wdcnt.data.data <= reg_i_rfadcfifo.adc3_rdcnt; 
 

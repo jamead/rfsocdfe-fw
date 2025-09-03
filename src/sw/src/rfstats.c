@@ -40,12 +40,12 @@ static void rfstats_push(void *unused)
     	//xil_printf("RF stats Push...\r\n");
         vTaskDelay(pdMS_TO_TICKS(1000));
 
-        printf("Clk0: %f\r\n",Xil_In32(XPAR_M_AXI_BASEADDR + CLK0_FREQ_REG)/1e6);
-        printf("Clk1: %f\r\n",Xil_In32(XPAR_M_AXI_BASEADDR + CLK1_FREQ_REG)/1e6);
-        printf("Clk2: %f\r\n",Xil_In32(XPAR_M_AXI_BASEADDR + CLK2_FREQ_REG)/1e6);
-        printf("Clk3: %f\r\n",Xil_In32(XPAR_M_AXI_BASEADDR + CLK3_FREQ_REG)/1e6);
-        printf("Clk4: %f\r\n",Xil_In32(XPAR_M_AXI_BASEADDR + CLK4_FREQ_REG)/1e6);
-        xil_printf("\r\n");
+        //printf("Clk0: %f\r\n",Xil_In32(XPAR_M_AXI_BASEADDR + CLK0_FREQ_REG)/1e6);
+        //printf("Clk1: %f\r\n",Xil_In32(XPAR_M_AXI_BASEADDR + CLK1_FREQ_REG)/1e6);
+        //printf("Clk2: %f\r\n",Xil_In32(XPAR_M_AXI_BASEADDR + CLK2_FREQ_REG)/1e6);
+        //printf("Clk3: %f\r\n",Xil_In32(XPAR_M_AXI_BASEADDR + CLK3_FREQ_REG)/1e6);
+        //printf("Clk4: %f\r\n",Xil_In32(XPAR_M_AXI_BASEADDR + CLK4_FREQ_REG)/1e6);
+        //xil_printf("\r\n");
 
         msg.clk0_freq = htonl(Xil_In32(XPAR_M_AXI_BASEADDR + CLK0_FREQ_REG));
         msg.clk1_freq = htonl(Xil_In32(XPAR_M_AXI_BASEADDR + CLK1_FREQ_REG));

@@ -29,10 +29,27 @@ void set_fpleds(u32 msgVal)  {
 
 
 void soft_trig(u32 msgVal) {
-	if (msgVal == 1) {
+
+	u32 wdcnt, active_trig;
+
+    //Triggered from PV write to this register which sets it high
+    active_trig = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIG_REG);
+	if (msgVal == 1 && active_trig == 0) {
       xil_printf("Soft Trigger...\r\n");
-	  Xil_Out32(XPAR_M_AXI_BASEADDR + DMA_SOFTTRIG_REG, 1);
-	  Xil_Out32(XPAR_M_AXI_BASEADDR + DMA_SOFTTRIG_REG, 0);
+      // clear the FIFO
+      Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RST_REG, 1);
+      vTaskDelay(pdMS_TO_TICKS(10));
+      Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RST_REG, 0);
+      wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_WDCNT_REG);
+      xil_printf("FIFO Wdcnt after reset = %d\r\n",wdcnt);
+      //Trigger
+      Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIG_REG, 1);
+      vTaskDelay(pdMS_TO_TICKS(10));
+      wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_WDCNT_REG);
+      xil_printf("FIFO Wdcnt after trigger = %d\r\n",wdcnt);
+      //Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIG_REG, 0);
+      wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_WDCNT_REG);
+      xil_printf("FIFO Wdcnt = %d\r\n",wdcnt);
 	}
 }
 
