@@ -36,6 +36,7 @@ proc setSources {} {
   
 
   lappend Sources {"../cstr/pins.xdc"  "XDC"}
+  lappend Sources {"../cstr/ddr4.xdc" "XDC"}
   lappend Sources {"../cstr/gth.xdc" "XDC"}
   lappend Sources {"../cstr/timing.xdc" "XDC"}
   
