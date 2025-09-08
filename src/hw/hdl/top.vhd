@@ -20,6 +20,7 @@ generic(
     );
   port (  
    
+    --rfsoc
     clk104_lmkin0_clk_p     : out std_logic; -- clk104 lmk04828 clkin0
     clk104_lmkin0_clk_n     : out std_logic;
     clk104_adc_refclk_p     : in std_logic;  -- clk104 lmk04828 Dout12
@@ -39,6 +40,24 @@ generic(
     adc2_in_n               : in std_logic;  
     adc3_in_p               : in std_logic; 
     adc3_in_n               : in std_logic;  
+
+    --ddr
+    ddr4_sys_clk_p : in STD_LOGIC;
+    ddr4_sys_clk_n : in STD_LOGIC;
+    ddr4_act_n : out STD_LOGIC;
+    ddr4_adr : out STD_LOGIC_VECTOR ( 16 downto 0 );
+    ddr4_ba : out STD_LOGIC_VECTOR ( 1 downto 0 );
+    ddr4_bg : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ddr4_ck_c : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ddr4_ck_t : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ddr4_cke : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ddr4_cs_n : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ddr4_dm_n : inout STD_LOGIC_VECTOR ( 7 downto 0 );
+    ddr4_dq : inout STD_LOGIC_VECTOR ( 63 downto 0 );
+    ddr4_dqs_c : inout STD_LOGIC_VECTOR ( 7 downto 0 );
+    ddr4_dqs_t : inout STD_LOGIC_VECTOR ( 7 downto 0 );
+    ddr4_odt : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ddr4_reset_n : out STD_LOGIC;    
     
     -- evr
     gty_evr_refclk_p        : in std_logic; 
@@ -64,6 +83,7 @@ architecture behv of top is
 
   
   signal pl_clk0      : std_logic;
+  signal ddr4_sys_clk : std_logic;
   signal pl_resetn    : std_logic;
   signal pl_reset     : std_logic;
   signal ps_leds      : std_logic_vector(7 downto 0);
@@ -191,6 +211,11 @@ lmk_pl_clkin  : IBUFDS port map (O => clk104_pl_clkin, I => clk104_pl_clk_p, IB 
 pl_clkin_bufg : BUFG   port map (O => clk104_pl_clk, I => clk104_pl_clkin);
 
 rfadc_bufg    : BUFG   port map (O => rfadc_axis_clk, I => rfadc_axis_mmcm_clk);
+
+--ddr4_bufg    : BUFG   port map (O => ddr4_sys_clk, I => pl_clk0);
+
+ddr4_bufg  : IBUFDS port map (O => ddr4_sys_clk, I => ddr4_sys_clk_p, IB => ddr4_sys_clk_n);
+
 
 
 
@@ -352,7 +377,24 @@ system_i: component system
     m30_axis_0_tvalid => adc2_axis_tvalid,    
     m32_axis_0_tready => '1',    
     m32_axis_0_tdata => adc3_axis_tdata, 
-    m32_axis_0_tvalid => adc3_axis_tvalid       
+    m32_axis_0_tvalid => adc3_axis_tvalid,       
+
+    ddr4_sys_clk => ddr4_sys_clk,
+    ddr4_act_n => ddr4_act_n, 
+    ddr4_adr => ddr4_adr, 
+    ddr4_ba => ddr4_ba,
+    ddr4_bg => ddr4_bg,
+    ddr4_ck_c => ddr4_ck_c, 
+    ddr4_ck_t => ddr4_ck_t, 
+    ddr4_cke => ddr4_cke, 
+    ddr4_cs_n => ddr4_cs_n, 
+    ddr4_dm_n => ddr4_dm_n, 
+    ddr4_dq => ddr4_dq,
+    ddr4_dqs_c => ddr4_dqs_c, 
+    ddr4_dqs_t => ddr4_dqs_t, 
+    ddr4_odt => ddr4_odt, 
+    ddr4_reset_n => ddr4_reset_n
+
     );
 
 
@@ -360,7 +402,7 @@ clk_meas: entity work.clk_meas_freq
   port map (
     pl_clk0 => pl_clk0,
     reset => pl_reset,
-    clk0 => pl_clk0,           --100MHz
+    clk0 => ddr4_sys_clk, --pl_clk0,           --100MHz
     clk1 => clk104_lmkin0_clk, --124.92MHz 
     clk2 => clk104_pl_clk,     --426.724MHz
     clk3 => rfadc_out_clk,     --146.686MHz

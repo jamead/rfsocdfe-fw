@@ -234,7 +234,6 @@ int main()
 
     sys_thread_new("main", realmain, NULL, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 
-
 	vTaskStartScheduler();
 
     //never reached

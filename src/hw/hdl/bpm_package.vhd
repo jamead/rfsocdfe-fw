@@ -261,8 +261,23 @@ component system is
     pl_clk0 : out STD_LOGIC;
     pl_resetn : out STD_LOGIC;
     sysref_in_diff_n : in STD_LOGIC;
-    sysref_in_diff_p : in STD_LOGIC
+    sysref_in_diff_p : in STD_LOGIC;
 
+    ddr4_sys_clk : in STD_LOGIC;
+    ddr4_act_n : out STD_LOGIC;
+    ddr4_adr : out STD_LOGIC_VECTOR ( 16 downto 0 );
+    ddr4_ba : out STD_LOGIC_VECTOR ( 1 downto 0 );
+    ddr4_bg : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ddr4_ck_c : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ddr4_ck_t : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ddr4_cke : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ddr4_cs_n : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ddr4_dm_n : inout STD_LOGIC_VECTOR ( 7 downto 0 );
+    ddr4_dq : inout STD_LOGIC_VECTOR ( 63 downto 0 );
+    ddr4_dqs_c : inout STD_LOGIC_VECTOR ( 7 downto 0 );
+    ddr4_dqs_t : inout STD_LOGIC_VECTOR ( 7 downto 0 );
+    ddr4_odt : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ddr4_reset_n : out STD_LOGIC   
   );
 end component system;
 
