@@ -10,6 +10,7 @@
 #include "xparameters.h"
 #include "xsysmonpsu.h"
 #include "xiicps.h"
+#include "xil_cache.h"
 
 #include "xstatus.h"       // For XStatus
 #include "pm_defs.h"
@@ -20,6 +21,8 @@
 #include "pl_regs.h"
 #include "xrfdc.h"
 #include "rfdfe.h"
+
+
 
 
 
@@ -194,6 +197,8 @@ int main()
 {
 
     u32 ts_s, ts_ns;
+    u32 i;
+    s32 rdbk;
 
 	xil_printf("rfSOC DFE ...\r\n");
     print_firmware_version();
@@ -233,6 +238,31 @@ int main()
 
 
     sys_thread_new("main", realmain, NULL, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+
+
+
+     for (i=0;i<100;i++) {
+        Xil_Out32(0xA2000000, i);
+     }
+
+
+     for (i=0;i<10;i++) {
+        rdbk = Xil_In32(0xA2000000);
+        xil_printf("i: %d\r\n",rdbk);
+     }
+
+
+    /*
+    for (i=0;i<100;i++) {
+       Xil_Out32(XPAR_DDR4_0_C0_DDR4_MEMORY_MAP_BASEADDR, i);
+    }
+    Xil_DCacheInvalidateRange(XPAR_DDR4_0_C0_DDR4_MEMORY_MAP_BASEADDR, 10000);
+
+    for (i=0;i<10;i++) {
+       rdbk = Xil_In32(XPAR_DDR4_0_C0_DDR4_MEMORY_MAP_BASEADDR);
+       xil_printf("i: %d\r\n",rdbk);
+    }
+    */
 
 	vTaskStartScheduler();
 
