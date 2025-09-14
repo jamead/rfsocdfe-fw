@@ -576,6 +576,72 @@ reg {
 
 
 
+reg {
+    desc="ADC4 FIFO Data";
+    default sw = r;
+    default hw = w;
+    default swacc=true;
+    default swmod=true;
+    field {} data[32];
+  } rfadc4fifo_dout @0x490;
+
+reg {
+    desc="ADC4 FIFO Word Count";
+    default sw = r;
+    default hw = w;
+    field {} data[32];
+} rfadc4fifo_wdcnt @0x494;
+
+
+ reg {
+    desc="ADC5 FIFO Data";
+    default sw = r;
+    default hw = w;
+    default swacc=true;
+    default swmod=true;
+    field {} data[32];
+  } rfadc5fifo_dout @0x4A0;
+
+reg {
+    desc="ADC5 FIFO Word Count";
+    default sw = r;
+    default hw = w;
+    field {} data[32];
+  } rfadc5fifo_wdcnt @0x4A4;
+  
+ reg {
+    desc="ADC6 FIFO Data";
+    default sw = r;
+    default hw = w;
+    default swacc=true;
+    default swmod=true;
+    field {} data[32];
+  } rfadc6fifo_dout @0x4B0;
+
+   reg {
+    desc="ADC6 FIFO Word Count";
+    default sw = r;
+    default hw = w;
+    field {} data[32];
+  } rfadc6fifo_wdcnt @0x4B4;
+
+ reg {
+    desc="ADC7 FIFO Data";
+    default sw = r;
+    default hw = w;
+    default swacc=true;
+    default swmod=true;
+    field {} data[32];
+  } rfadc7fifo_dout @0x4C0;
+
+reg {
+    desc="ADC7 FIFO Word Count";
+    default sw = r;
+    default hw = w;
+    field {} data[32];
+  } rfadc7fifo_wdcnt @0x4C4;
+
+
 
 
 

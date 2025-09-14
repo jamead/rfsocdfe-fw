@@ -133,6 +133,16 @@ static void adcdata_push(void *unused)
             xil_printf("Received ADC Trigger...\r\n");
 
             // Process DMA data into adcmsg array
+            processADC(adc, ADC_MAX_LEN, RFADC0_FIFO_DOUT_REG);
+            // Send buffer (size = nsamples * sizeof(adcmsg_t))
+            psc_send(the_server, 60, sizeof(adc), adc);
+
+            // Process DMA data into adcmsg array
+            processADC(adc, ADC_MAX_LEN, RFADC1_FIFO_DOUT_REG);
+            // Send buffer (size = nsamples * sizeof(adcmsg_t))
+            psc_send(the_server, 61, sizeof(adc), adc);
+
+            // Process DMA data into adcmsg array
             processADC(adc, ADC_MAX_LEN, RFADC2_FIFO_DOUT_REG);
             // Send buffer (size = nsamples * sizeof(adcmsg_t))
             psc_send(the_server, 62, sizeof(adc), adc);
@@ -142,16 +152,25 @@ static void adcdata_push(void *unused)
             // Send buffer (size = nsamples * sizeof(adcmsg_t))
             psc_send(the_server, 63, sizeof(adc), adc);
 
+            // Process DMA data into adcmsg array
+            processADC(adc, ADC_MAX_LEN, RFADC4_FIFO_DOUT_REG);
+            // Send buffer (size = nsamples * sizeof(adcmsg_t))
+            psc_send(the_server, 64, sizeof(adc), adc);
 
             // Process DMA data into adcmsg array
-            processADC(adc, ADC_MAX_LEN, RFADC0_FIFO_DOUT_REG);
+            processADC(adc, ADC_MAX_LEN, RFADC5_FIFO_DOUT_REG);
             // Send buffer (size = nsamples * sizeof(adcmsg_t))
-            psc_send(the_server, 60, sizeof(adc), adc);
+            psc_send(the_server, 65, sizeof(adc), adc);
 
             // Process DMA data into adcmsg array
-            processADC(adc, ADC_MAX_LEN, RFADC1_FIFO_DOUT_REG);
+            processADC(adc, ADC_MAX_LEN, RFADC6_FIFO_DOUT_REG);
             // Send buffer (size = nsamples * sizeof(adcmsg_t))
-            psc_send(the_server, 61, sizeof(adc), adc);
+            psc_send(the_server, 66, sizeof(adc), adc);
+
+            // Process DMA data into adcmsg array
+            processADC(adc, ADC_MAX_LEN, RFADC7_FIFO_DOUT_REG);
+            // Send buffer (size = nsamples * sizeof(adcmsg_t))
+            psc_send(the_server, 67, sizeof(adc), adc);
 
 
 

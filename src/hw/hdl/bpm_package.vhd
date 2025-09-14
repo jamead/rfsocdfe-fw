@@ -23,6 +23,15 @@ type t_reg_i_rfadc_fifo_rdout is record
    adc2_rdcnt   : std_logic_vector(31 downto 0); 
    adc3_dout    : std_logic_vector(31 downto 0);     
    adc3_rdcnt   : std_logic_vector(31 downto 0);  
+   adc4_dout    : std_logic_vector(31 downto 0);
+   adc4_rdcnt   : std_logic_vector(31 downto 0);    
+   adc5_dout    : std_logic_vector(31 downto 0); 
+   adc5_rdcnt   : std_logic_vector(31 downto 0);      
+   adc6_dout    : std_logic_vector(31 downto 0);
+   adc6_rdcnt   : std_logic_vector(31 downto 0); 
+   adc7_dout    : std_logic_vector(31 downto 0);     
+   adc7_rdcnt   : std_logic_vector(31 downto 0); 
+   
 end record t_reg_i_rfadc_fifo_rdout;
 
 
@@ -32,7 +41,11 @@ type t_reg_o_rfadc_fifo_rdout is record
    adc0_rdstr   : std_logic;
    adc1_rdstr   : std_logic;
    adc2_rdstr   : std_logic;
-   adc3_rdstr   : std_logic;         
+   adc3_rdstr   : std_logic;  
+   adc4_rdstr   : std_logic;
+   adc5_rdstr   : std_logic;
+   adc6_rdstr   : std_logic;
+   adc7_rdstr   : std_logic;          
 end record t_reg_o_rfadc_fifo_rdout;
 
 
@@ -208,7 +221,16 @@ component system is
   port (
     adc2_clk_clk_n : in STD_LOGIC;
     adc2_clk_clk_p : in STD_LOGIC;
-    
+ 
+ 
+    vin0_01_v_n : in STD_LOGIC;
+    vin0_01_v_p : in STD_LOGIC;
+    vin0_23_v_n : in STD_LOGIC;
+    vin0_23_v_p : in STD_LOGIC;  
+    vin1_01_v_n : in STD_LOGIC;
+    vin1_01_v_p : in STD_LOGIC;
+    vin1_23_v_n : in STD_LOGIC;
+    vin1_23_v_p : in STD_LOGIC;     
     vin2_01_v_n : in STD_LOGIC;
     vin2_01_v_p : in STD_LOGIC;
     vin2_23_v_n : in STD_LOGIC;
@@ -218,26 +240,46 @@ component system is
     vin3_23_v_n : in STD_LOGIC;
     vin3_23_v_p : in STD_LOGIC;    
     
-    clk_adc2_0 : out STD_LOGIC;
-    clk_adc3_0 : out STD_LOGIC;
-    
-    m20_axis_0_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
-    m20_axis_0_tready : in STD_LOGIC;
-    m20_axis_0_tvalid : out STD_LOGIC;
-    m22_axis_0_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
-    m22_axis_0_tready : in STD_LOGIC;
-    m22_axis_0_tvalid : out STD_LOGIC;    
-    m30_axis_0_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
-    m30_axis_0_tready : in STD_LOGIC;
-    m30_axis_0_tvalid : out STD_LOGIC;
-    m32_axis_0_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
-    m32_axis_0_tready : in STD_LOGIC;
-    m32_axis_0_tvalid : out STD_LOGIC;    
+    clk_adc0 : out STD_LOGIC;
+    clk_adc1 : out STD_LOGIC;
+    clk_adc2 : out STD_LOGIC;
+    clk_adc3 : out STD_LOGIC;
+
+
+    m00_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
+    m00_axis_tready : in STD_LOGIC;
+    m00_axis_tvalid : out STD_LOGIC;
+    m02_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
+    m02_axis_tready : in STD_LOGIC;
+    m02_axis_tvalid : out STD_LOGIC;    
+    m10_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
+    m10_axis_tready : in STD_LOGIC;
+    m10_axis_tvalid : out STD_LOGIC;
+    m12_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
+    m12_axis_tready : in STD_LOGIC;
+    m12_axis_tvalid : out STD_LOGIC;      
+    m20_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
+    m20_axis_tready : in STD_LOGIC;
+    m20_axis_tvalid : out STD_LOGIC;
+    m22_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
+    m22_axis_tready : in STD_LOGIC;
+    m22_axis_tvalid : out STD_LOGIC;    
+    m30_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
+    m30_axis_tready : in STD_LOGIC;
+    m30_axis_tvalid : out STD_LOGIC;
+    m32_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
+    m32_axis_tready : in STD_LOGIC;
+    m32_axis_tvalid : out STD_LOGIC;    
  
-    m2_axis_aclk_0 : in STD_LOGIC;
-    m3_axis_aclk_0 : in STD_LOGIC;
-    m2_axis_aresetn_0 : in STD_LOGIC;
-    m3_axis_aresetn_0 : in STD_LOGIC;
+    m0_axis_aclk : in STD_LOGIC;
+    m1_axis_aclk : in STD_LOGIC;
+    m2_axis_aclk : in STD_LOGIC;
+    m3_axis_aclk : in STD_LOGIC;
+
+    m0_axis_aresetn : in STD_LOGIC;
+    m1_axis_aresetn : in STD_LOGIC;
+    m2_axis_aresetn : in STD_LOGIC;
+    m3_axis_aresetn : in STD_LOGIC;
     
     m_axi_araddr : out STD_LOGIC_VECTOR ( 31 downto 0 );
     m_axi_arprot : out STD_LOGIC_VECTOR ( 2 downto 0 );

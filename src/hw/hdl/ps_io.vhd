@@ -93,7 +93,21 @@ reg_o_rfadcfifo.adc3_rdstr <= reg_o.rfadc3fifo_dout.data.swacc;
 reg_i.rfadc3fifo_dout.data.data <= reg_i_rfadcfifo.adc3_dout;  
 reg_i.rfadc3fifo_wdcnt.data.data <= reg_i_rfadcfifo.adc3_rdcnt; 
 
+reg_o_rfadcfifo.adc4_rdstr <= reg_o.rfadc4fifo_dout.data.swacc;
+reg_i.rfadc4fifo_dout.data.data <= reg_i_rfadcfifo.adc4_dout;  
+reg_i.rfadc4fifo_wdcnt.data.data <= reg_i_rfadcfifo.adc4_rdcnt; 
 
+reg_o_rfadcfifo.adc5_rdstr <= reg_o.rfadc5fifo_dout.data.swacc;
+reg_i.rfadc5fifo_dout.data.data <= reg_i_rfadcfifo.adc5_dout;  
+reg_i.rfadc5fifo_wdcnt.data.data <= reg_i_rfadcfifo.adc5_rdcnt; 
+
+reg_o_rfadcfifo.adc6_rdstr <= reg_o.rfadc6fifo_dout.data.swacc;
+reg_i.rfadc6fifo_dout.data.data <= reg_i_rfadcfifo.adc6_dout;  
+reg_i.rfadc6fifo_wdcnt.data.data <= reg_i_rfadcfifo.adc6_rdcnt; 
+
+reg_o_rfadcfifo.adc7_rdstr <= reg_o.rfadc7fifo_dout.data.swacc;
+reg_i.rfadc7fifo_dout.data.data <= reg_i_rfadcfifo.adc7_dout;  
+reg_i.rfadc7fifo_wdcnt.data.data <= reg_i_rfadcfifo.adc7_rdcnt; 
 
 
 --reg_o_dsa.str <= reg_o.dsa_spi.data.swmod;

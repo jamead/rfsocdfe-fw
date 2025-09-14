@@ -39,6 +39,14 @@ generic(
     adc2_in_n               : in std_logic;  
     adc3_in_p               : in std_logic; 
     adc3_in_n               : in std_logic;  
+    adc4_in_p               : in std_logic; 
+    adc4_in_n               : in std_logic;  
+    adc5_in_p               : in std_logic; 
+    adc5_in_n               : in std_logic;      
+    adc6_in_p               : in std_logic; 
+    adc6_in_n               : in std_logic;  
+    adc7_in_p               : in std_logic; 
+    adc7_in_n               : in std_logic;    
     
     -- evr
     gty_evr_refclk_p        : in std_logic; 
@@ -92,6 +100,19 @@ architecture behv of top is
   signal adc3_axis_tdata        : std_logic_vector(191 downto 0); 
   signal adc3_axis_tready       : std_logic;
   signal adc3_axis_tvalid       : std_logic;     
+  signal adc4_axis_tdata        : std_logic_vector(191 downto 0); 
+  signal adc4_axis_tready       : std_logic;
+  signal adc4_axis_tvalid       : std_logic; 
+  signal adc5_axis_tdata        : std_logic_vector(191 downto 0); 
+  signal adc5_axis_tready       : std_logic;
+  signal adc5_axis_tvalid       : std_logic; 
+  signal adc6_axis_tdata        : std_logic_vector(191 downto 0); 
+  signal adc6_axis_tready       : std_logic;
+  signal adc6_axis_tvalid       : std_logic;   
+  signal adc7_axis_tdata        : std_logic_vector(191 downto 0); 
+  signal adc7_axis_tready       : std_logic;
+  signal adc7_axis_tvalid       : std_logic;     
+  
   
   signal rfadc_out_clk          : std_logic;
   signal rfadc_axis_mmcm_clk    : std_logic;
@@ -144,6 +165,14 @@ architecture behv of top is
   attribute mark_debug of adc2_axis_tvalid: signal is "true";   
   attribute mark_debug of adc3_axis_tdata: signal is "true"; 
   attribute mark_debug of adc3_axis_tvalid: signal is "true";   
+  attribute mark_debug of adc4_axis_tdata: signal is "true"; 
+  attribute mark_debug of adc4_axis_tvalid: signal is "true"; 
+  attribute mark_debug of adc5_axis_tdata: signal is "true"; 
+  attribute mark_debug of adc5_axis_tvalid: signal is "true";   
+  attribute mark_debug of adc6_axis_tdata: signal is "true"; 
+  attribute mark_debug of adc6_axis_tvalid: signal is "true";   
+  attribute mark_debug of adc7_axis_tdata: signal is "true"; 
+  attribute mark_debug of adc7_axis_tvalid: signal is "true";    
   
   --attribute mark_debug of pl_reset: signal is "true";
   --attribute mark_debug of fp_led: signal is "true";
@@ -197,8 +226,8 @@ rfadc_bufg    : BUFG   port map (O => rfadc_axis_clk, I => rfadc_axis_mmcm_clk);
 axisclk_adc: entity work.rfadc_clk_pll  
   port map (
     reset => pl_reset, 
-    clk_in1 => rfadc_out_clk,   --146.686MHz
-    clk_out1 => rfadc_axis_mmcm_clk,  --391.164MHz
+    clk_in1 => rfadc_out_clk,   --156.15MHz
+    clk_out1 => rfadc_axis_mmcm_clk,  --416.4MHz
     locked => open  
 );
 
@@ -256,7 +285,11 @@ rfadc_fifos:  entity work.rf_adc_fifos
     adc0_data => adc0_axis_tdata, 
     adc1_data => adc1_axis_tdata,   
     adc2_data => adc2_axis_tdata, 
-    adc3_data => adc3_axis_tdata    
+    adc3_data => adc3_axis_tdata,
+    adc4_data => adc4_axis_tdata, 
+    adc5_data => adc5_axis_tdata,   
+    adc6_data => adc6_axis_tdata, 
+    adc7_data => adc7_axis_tdata     
  );  
   
   
@@ -318,14 +351,24 @@ system_i: component system
     m_axi_wstrb => m_axi4_m2s.wstrb,
     m_axi_wvalid => m_axi4_m2s.wvalid,
     --adc resets
-    m2_axis_aresetn_0 => pl_resetn,  
-    m3_axis_aresetn_0 => pl_resetn,
+    m0_axis_aresetn => pl_resetn,  
+    m1_axis_aresetn => pl_resetn,    
+    m2_axis_aresetn => pl_resetn,  
+    m3_axis_aresetn => pl_resetn,
     --adc clock input
     adc2_clk_clk_p => clk104_adc_refclk_p,
     adc2_clk_clk_n => clk104_adc_refclk_n,
     sysref_in_diff_p => clk104_pl_sysref_p,
     sysref_in_diff_n => clk104_pl_sysref_n,
     --adc inputs
+    vin0_01_v_p => adc4_in_p,
+    vin0_01_v_n => adc4_in_n, 
+    vin0_23_v_p => adc5_in_p,
+    vin0_23_v_n => adc5_in_n, 
+    vin1_01_v_p => adc6_in_p,
+    vin1_01_v_n => adc6_in_n,         
+    vin1_23_v_p => adc7_in_p,
+    vin1_23_v_n => adc7_in_n, 
     vin2_01_v_p => adc0_in_p,
     vin2_01_v_n => adc0_in_n, 
     vin2_23_v_p => adc1_in_p,
@@ -334,25 +377,41 @@ system_i: component system
     vin3_01_v_n => adc2_in_n,         
     vin3_23_v_p => adc3_in_p,
     vin3_23_v_n => adc3_in_n,       
-    --clock output to drive axis clock via PLL  
-    clk_adc2_0 => rfadc_out_clk, 
-    clk_adc3_0 => open,
+    --clock output to drive axis clock via PLL 
+    clk_adc0 => open,
+    clk_adc1 => open, 
+    clk_adc2 => rfadc_out_clk, 
+    clk_adc3 => open,
     --axis clock    
-    m2_axis_aclk_0 => rfadc_axis_clk,
-    m3_axis_aclk_0 => rfadc_axis_clk,
+    m0_axis_aclk => rfadc_axis_clk,
+    m1_axis_aclk => rfadc_axis_clk,
+    m2_axis_aclk => rfadc_axis_clk,
+    m3_axis_aclk => rfadc_axis_clk,
     --axis data
-    m20_axis_0_tready => '1',    
-    m20_axis_0_tdata => adc0_axis_tdata, 
-    m20_axis_0_tvalid => adc0_axis_tvalid,
-    m22_axis_0_tready => '1',    
-    m22_axis_0_tdata => adc1_axis_tdata, 
-    m22_axis_0_tvalid => adc1_axis_tvalid,
-    m30_axis_0_tready => '1',    
-    m30_axis_0_tdata => adc2_axis_tdata, 
-    m30_axis_0_tvalid => adc2_axis_tvalid,    
-    m32_axis_0_tready => '1',    
-    m32_axis_0_tdata => adc3_axis_tdata, 
-    m32_axis_0_tvalid => adc3_axis_tvalid       
+    m00_axis_tready => '1',    
+    m00_axis_tdata => adc4_axis_tdata, 
+    m00_axis_tvalid => adc4_axis_tvalid,
+    m02_axis_tready => '1',    
+    m02_axis_tdata => adc5_axis_tdata, 
+    m02_axis_tvalid => adc5_axis_tvalid,
+    m10_axis_tready => '1',    
+    m10_axis_tdata => adc6_axis_tdata, 
+    m10_axis_tvalid => adc6_axis_tvalid,    
+    m12_axis_tready => '1',    
+    m12_axis_tdata => adc7_axis_tdata, 
+    m12_axis_tvalid => adc7_axis_tvalid,           
+    m20_axis_tready => '1',    
+    m20_axis_tdata => adc0_axis_tdata, 
+    m20_axis_tvalid => adc0_axis_tvalid,
+    m22_axis_tready => '1',    
+    m22_axis_tdata => adc1_axis_tdata, 
+    m22_axis_tvalid => adc1_axis_tvalid,
+    m30_axis_tready => '1',    
+    m30_axis_tdata => adc2_axis_tdata, 
+    m30_axis_tvalid => adc2_axis_tvalid,    
+    m32_axis_tready => '1',    
+    m32_axis_tdata => adc3_axis_tdata, 
+    m32_axis_tvalid => adc3_axis_tvalid       
     );
 
 

@@ -24,8 +24,12 @@ entity rf_adc_fifos is
     adc0_data       : in std_logic_vector(191 downto 0);
     adc1_data       : in std_logic_vector(191 downto 0);  
     adc2_data       : in std_logic_vector(191 downto 0);
-    adc3_data       : in std_logic_vector(191 downto 0)    
-
+    adc3_data       : in std_logic_vector(191 downto 0);
+    adc4_data       : in std_logic_vector(191 downto 0);
+    adc5_data       : in std_logic_vector(191 downto 0);  
+    adc6_data       : in std_logic_vector(191 downto 0);
+    adc7_data       : in std_logic_vector(191 downto 0)    
+        
  );
 end rf_adc_fifos;
 
@@ -88,6 +92,59 @@ adc3_fifo:  entity work.adc_data_rdout
     fifo_rdstr => reg_o.adc3_rdstr, 
     fifo_dout => reg_i.adc3_dout,  
     fifo_rdcnt => reg_i.adc3_rdcnt, 
+    fifo_rst => reg_o.rst
+ );
+
+
+adc4_fifo:  entity work.adc_data_rdout
+  port map (
+    sys_clk => pl_clk0, 
+    adc_clk => adc_clk,  
+    sys_rst => pl_reset,
+    adc_data => adc4_data,
+    fifo_trig => reg_o.enb,  
+    fifo_rdstr => reg_o.adc4_rdstr, 
+    fifo_dout => reg_i.adc4_dout,  
+    fifo_rdcnt => reg_i.adc4_rdcnt, 
+    fifo_rst => reg_o.rst
+ );
+
+adc5_fifo:  entity work.adc_data_rdout
+  port map (
+    sys_clk => pl_clk0, 
+    adc_clk => adc_clk,  
+    sys_rst => pl_reset,
+    adc_data => adc5_data,
+    fifo_trig => reg_o.enb,  
+    fifo_rdstr => reg_o.adc5_rdstr, 
+    fifo_dout => reg_i.adc5_dout,  
+    fifo_rdcnt => reg_i.adc5_rdcnt, 
+    fifo_rst => reg_o.rst
+ );
+ 
+ adc6_fifo:  entity work.adc_data_rdout
+  port map (
+    sys_clk => pl_clk0, 
+    adc_clk => adc_clk,  
+    sys_rst => pl_reset,
+    adc_data => adc6_data,
+    fifo_trig => reg_o.enb,  
+    fifo_rdstr => reg_o.adc6_rdstr, 
+    fifo_dout => reg_i.adc6_dout,  
+    fifo_rdcnt => reg_i.adc6_rdcnt, 
+    fifo_rst => reg_o.rst
+ );
+ 
+adc7_fifo:  entity work.adc_data_rdout
+  port map (
+    sys_clk => pl_clk0, 
+    adc_clk => adc_clk,  
+    sys_rst => pl_reset,
+    adc_data => adc7_data,
+    fifo_trig => reg_o.enb,  
+    fifo_rdstr => reg_o.adc7_rdstr, 
+    fifo_dout => reg_i.adc7_dout,  
+    fifo_rdcnt => reg_i.adc7_rdcnt, 
     fifo_rst => reg_o.rst
  );
 

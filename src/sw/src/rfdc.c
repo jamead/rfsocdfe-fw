@@ -159,6 +159,7 @@ u32 InitRFdc()
  			if(val & XRFDC_DBG_RST_CAL_MASK) {
  				xil_printf("  ADC Tile%d NOT ready.\r\n", Tile_Id);
  			} else {
+ 				xil_printf("   ADC Tile%d ready.\r\n", Tile_Id);
  				XRFdc_StartUp(&RFdcInst, 0, Tile_Id);
  				usleep(200000);
  			}
