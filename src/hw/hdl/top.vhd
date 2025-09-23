@@ -1,8 +1,12 @@
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 library desyrdl;
 use desyrdl.common.all;
@@ -47,6 +51,25 @@ generic(
     adc6_in_n               : in std_logic;  
     adc7_in_p               : in std_logic; 
     adc7_in_n               : in std_logic;    
+    
+    dac0_out_p               : out std_logic; 
+    dac0_out_n               : out std_logic;  
+    dac1_out_p               : out std_logic; 
+    dac1_out_n               : out std_logic;      
+    dac2_out_p               : out std_logic; 
+    dac2_out_n               : out std_logic;  
+    dac3_out_p               : out std_logic; 
+    dac3_out_n               : out std_logic;  
+    dac4_out_p               : out std_logic; 
+    dac4_out_n               : out std_logic;  
+    dac5_out_p               : out std_logic; 
+    dac5_out_n               : out std_logic;      
+    dac6_out_p               : out std_logic; 
+    dac6_out_n               : out std_logic;  
+    dac7_out_p               : out std_logic; 
+    dac7_out_n               : out std_logic;        
+    
+    
     
     -- evr
     gty_evr_refclk_p        : in std_logic; 
@@ -114,9 +137,41 @@ architecture behv of top is
   signal adc7_axis_tvalid       : std_logic;     
   
   
+  signal dac0_axis_tdata        : std_logic_vector(255 downto 0); 
+  signal dac0_axis_tready       : std_logic;
+  signal dac0_axis_tvalid       : std_logic; 
+  signal dac1_axis_tdata        : std_logic_vector(255 downto 0); 
+  signal dac1_axis_tready       : std_logic;
+  signal dac1_axis_tvalid       : std_logic; 
+  signal dac2_axis_tdata        : std_logic_vector(255 downto 0); 
+  signal dac2_axis_tready       : std_logic;
+  signal dac2_axis_tvalid       : std_logic;   
+  signal dac3_axis_tdata        : std_logic_vector(255 downto 0); 
+  signal dac3_axis_tready       : std_logic;
+  signal dac3_axis_tvalid       : std_logic;     
+  signal dac4_axis_tdata        : std_logic_vector(255 downto 0); 
+  signal dac4_axis_tready       : std_logic;
+  signal dac4_axis_tvalid       : std_logic; 
+  signal dac5_axis_tdata        : std_logic_vector(255 downto 0); 
+  signal dac5_axis_tready       : std_logic;
+  signal dac5_axis_tvalid       : std_logic; 
+  signal dac6_axis_tdata        : std_logic_vector(255 downto 0); 
+  signal dac6_axis_tready       : std_logic;
+  signal dac6_axis_tvalid       : std_logic;   
+  signal dac7_axis_tdata        : std_logic_vector(255 downto 0); 
+  signal dac7_axis_tready       : std_logic;
+  signal dac7_axis_tvalid       : std_logic;       
+  
+  
   signal rfadc_out_clk          : std_logic;
   signal rfadc_axis_mmcm_clk    : std_logic;
   signal rfadc_axis_clk         : std_logic;
+  
+  
+  signal rfdac_out_clk          : std_logic;
+  signal rfdac_axis_mmcm_clk    : std_logic;
+  signal rfdac_axis_clk         : std_logic;  
+  
   
   signal reg_o_adcfifo   : t_reg_o_adc_fifo_rdout;
   signal reg_i_adcfifo   : t_reg_i_adc_fifo_rdout;
@@ -155,24 +210,28 @@ architecture behv of top is
   signal evr_dma_trignum     : std_logic_vector(7 downto 0);
   signal evr_ts              : std_logic_vector(63 downto 0); 
   
+  signal cnt                 : std_logic_vector(15 downto 0);
+  
   
   attribute mark_debug     : string;
-  attribute mark_debug of adc0_axis_tdata: signal is "true"; 
-  attribute mark_debug of adc0_axis_tvalid: signal is "true"; 
-  attribute mark_debug of adc1_axis_tdata: signal is "true"; 
-  attribute mark_debug of adc1_axis_tvalid: signal is "true";   
-  attribute mark_debug of adc2_axis_tdata: signal is "true"; 
-  attribute mark_debug of adc2_axis_tvalid: signal is "true";   
-  attribute mark_debug of adc3_axis_tdata: signal is "true"; 
-  attribute mark_debug of adc3_axis_tvalid: signal is "true";   
-  attribute mark_debug of adc4_axis_tdata: signal is "true"; 
-  attribute mark_debug of adc4_axis_tvalid: signal is "true"; 
-  attribute mark_debug of adc5_axis_tdata: signal is "true"; 
-  attribute mark_debug of adc5_axis_tvalid: signal is "true";   
-  attribute mark_debug of adc6_axis_tdata: signal is "true"; 
-  attribute mark_debug of adc6_axis_tvalid: signal is "true";   
-  attribute mark_debug of adc7_axis_tdata: signal is "true"; 
-  attribute mark_debug of adc7_axis_tvalid: signal is "true";    
+  attribute mark_debug of dac0_axis_tdata: signal is "true"; 
+  attribute mark_debug of dac0_axis_tvalid: signal is "true"; 
+  attribute mark_debug of dac0_axis_tready: signal is "true"; 
+  attribute mark_debug of cnt: signal is "true";
+  
+--  attribute mark_debug of adc1_axis_tvalid: signal is "true";   
+--  attribute mark_debug of adc2_axis_tdata: signal is "true"; 
+--  attribute mark_debug of adc2_axis_tvalid: signal is "true";   
+--  attribute mark_debug of adc3_axis_tdata: signal is "true"; 
+--  attribute mark_debug of adc3_axis_tvalid: signal is "true";   
+--  attribute mark_debug of adc4_axis_tdata: signal is "true"; 
+--  attribute mark_debug of adc4_axis_tvalid: signal is "true"; 
+--  attribute mark_debug of adc5_axis_tdata: signal is "true"; 
+--  attribute mark_debug of adc5_axis_tvalid: signal is "true";   
+--  attribute mark_debug of adc6_axis_tdata: signal is "true"; 
+--  attribute mark_debug of adc6_axis_tvalid: signal is "true";   
+--  attribute mark_debug of adc7_axis_tdata: signal is "true"; 
+--  attribute mark_debug of adc7_axis_tvalid: signal is "true";    
   
   --attribute mark_debug of pl_reset: signal is "true";
   --attribute mark_debug of fp_led: signal is "true";
@@ -220,7 +279,7 @@ lmk_pl_clkin  : IBUFDS port map (O => clk104_pl_clkin, I => clk104_pl_clk_p, IB 
 pl_clkin_bufg : BUFG   port map (O => clk104_pl_clk, I => clk104_pl_clkin);
 
 rfadc_bufg    : BUFG   port map (O => rfadc_axis_clk, I => rfadc_axis_mmcm_clk);
-
+rfdac_bufg    : BUFG   port map (O => rfdac_axis_clk, I => rfdac_out_clk);
 
 
 axisclk_adc: entity work.rfadc_clk_pll  
@@ -230,6 +289,8 @@ axisclk_adc: entity work.rfadc_clk_pll
     clk_out1 => rfadc_axis_mmcm_clk,  --416.4MHz
     locked => open  
 );
+
+
 
 
 lmkclk_pll: entity work.lmk_clk_pll
@@ -324,6 +385,23 @@ evr: entity work.evr_top
 );	
 
 
+--temp drive dac data with counter
+process(rfdac_axis_clk)
+  begin
+    if (rising_edge(rfdac_axis_clk)) then
+      if (pl_reset = '1') then
+        cnt <= 16d"0";
+        dac0_axis_tdata <= 256d"0";
+        dac0_axis_tvalid <= '0';
+      else
+        cnt <= std_logic_vector(unsigned(cnt) + 1);
+        dac0_axis_tdata <= cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt;
+        dac0_axis_tvalid <= '1';
+      end if;
+    end if;
+end process;  
+        
+
 
 
 system_i: component system
@@ -411,7 +489,72 @@ system_i: component system
     m30_axis_tvalid => adc2_axis_tvalid,    
     m32_axis_tready => '1',    
     m32_axis_tdata => adc3_axis_tdata, 
-    m32_axis_tvalid => adc3_axis_tvalid       
+    m32_axis_tvalid => adc3_axis_tvalid,       
+
+    --dac resets
+    s0_axis_aresetn => pl_resetn,  
+    s1_axis_aresetn => pl_resetn,    
+    s2_axis_aresetn => pl_resetn,  
+    s3_axis_aresetn => pl_resetn,
+    --adc clock input
+    dac0_clk_clk_p => clk104_dac_refclk_p,
+    dac0_clk_clk_n => clk104_dac_refclk_n,
+    --sysref_in_diff_p => clk104_pl_sysref_p,
+    --sysref_in_diff_n => clk104_pl_sysref_n,
+    --dac outputs
+    vout00_v_p => dac0_out_p,
+    vout00_v_n => dac0_out_n, 
+    vout02_v_p => dac1_out_p,
+    vout02_v_n => dac1_out_n, 
+    vout10_v_p => dac2_out_p,
+    vout10_v_n => dac2_out_n, 
+    vout12_v_p => dac3_out_p,
+    vout12_v_n => dac3_out_n, 
+    vout20_v_p => dac4_out_p,
+    vout20_v_n => dac4_out_n, 
+    vout22_v_p => dac5_out_p,
+    vout22_v_n => dac5_out_n, 
+    vout30_v_p => dac6_out_p,
+    vout30_v_n => dac6_out_n, 
+    vout32_v_p => dac7_out_p,
+    vout32_v_n => dac7_out_n, 
+       
+    --clock output to drive axis clock via PLL 
+    clk_dac0 => rfdac_out_clk, 
+    clk_dac1 => open, 
+    clk_dac2 => open,
+    clk_dac3 => open,
+    --axis clock    
+    s0_axis_aclk => rfdac_axis_clk,
+    s1_axis_aclk => rfdac_axis_clk,
+    s2_axis_aclk => rfdac_axis_clk,
+    s3_axis_aclk => rfdac_axis_clk,
+    --axis data
+    s00_axis_tready => open,    
+    s00_axis_tdata => dac0_axis_tdata, 
+    s00_axis_tvalid => dac0_axis_tvalid,
+    s02_axis_tready => dac0_axis_tready, --open,    
+    s02_axis_tdata => dac1_axis_tdata, 
+    s02_axis_tvalid => dac1_axis_tvalid,
+    s10_axis_tready => open,    
+    s10_axis_tdata => dac2_axis_tdata, 
+    s10_axis_tvalid => dac2_axis_tvalid,    
+    s12_axis_tready => open,    
+    s12_axis_tdata => dac3_axis_tdata, 
+    s12_axis_tvalid => dac3_axis_tvalid,           
+    s20_axis_tready => open,    
+    s20_axis_tdata => dac4_axis_tdata, 
+    s20_axis_tvalid => dac4_axis_tvalid,
+    s22_axis_tready => open,    
+    s22_axis_tdata => dac5_axis_tdata, 
+    s22_axis_tvalid => dac5_axis_tvalid,
+    s30_axis_tready => open,    
+    s30_axis_tdata => dac6_axis_tdata, 
+    s30_axis_tvalid => dac6_axis_tvalid,    
+    s32_axis_tready => open,    
+    s32_axis_tdata => dac7_axis_tdata, 
+    s32_axis_tvalid => dac7_axis_tvalid    
+
     );
 
 
@@ -419,7 +562,7 @@ clk_meas: entity work.clk_meas_freq
   port map (
     pl_clk0 => pl_clk0,
     reset => pl_reset,
-    clk0 => pl_clk0,           --100MHz
+    clk0 => rfdac_out_clk,  --pl_clk0,           --100MHz
     clk1 => clk104_lmkin0_clk, --124.92MHz 
     clk2 => clk104_pl_clk,     --426.724MHz
     clk3 => rfadc_out_clk,     --146.686MHz

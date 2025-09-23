@@ -37,7 +37,7 @@ typedef struct {
 
 u32 InitRFdc(void);
 void GetRFdc_Status(void);
-void WriteLMK04828(void);
+void WriteLMK04828(int);
 
 void i2c_get_mac_address();
 void i2c_eeprom_readBytes(u8, u8 *, u8);

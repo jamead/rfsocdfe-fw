@@ -212,9 +212,12 @@ int main()
     write_lmk61e2();
 
     // Program the CLK104 PLL
+    //while (1) {
     xil_printf("Init LMK04828 PLL for ADC's...\r\n");
-    WriteLMK04828();
+    WriteLMK04828(1);  //0=bnl104, 1=clk104
     sleep(1);
+    i2c_set_port_expander(I2C_PORTEXP2_ADDR,0x0);
+    //}
 
     // Initialize the RFdc subsystem
     InitRFdc();

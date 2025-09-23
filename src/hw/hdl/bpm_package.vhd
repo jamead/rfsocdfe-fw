@@ -219,10 +219,9 @@ end record t_reg_i_dma;
 
 component system is
   port (
+    --8 ADC's
     adc2_clk_clk_n : in STD_LOGIC;
     adc2_clk_clk_p : in STD_LOGIC;
- 
- 
     vin0_01_v_n : in STD_LOGIC;
     vin0_01_v_p : in STD_LOGIC;
     vin0_23_v_n : in STD_LOGIC;
@@ -238,49 +237,103 @@ component system is
     vin3_01_v_n : in STD_LOGIC;
     vin3_01_v_p : in STD_LOGIC;
     vin3_23_v_n : in STD_LOGIC;
-    vin3_23_v_p : in STD_LOGIC;    
-    
+    vin3_23_v_p : in STD_LOGIC;       
     clk_adc0 : out STD_LOGIC;
     clk_adc1 : out STD_LOGIC;
     clk_adc2 : out STD_LOGIC;
     clk_adc3 : out STD_LOGIC;
-
-
+    m0_axis_aclk : in STD_LOGIC;
+    m0_axis_aresetn : in STD_LOGIC;    
     m00_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
     m00_axis_tready : in STD_LOGIC;
     m00_axis_tvalid : out STD_LOGIC;
     m02_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
     m02_axis_tready : in STD_LOGIC;
-    m02_axis_tvalid : out STD_LOGIC;    
+    m02_axis_tvalid : out STD_LOGIC; 
+    m1_axis_aclk : in STD_LOGIC; 
+    m1_axis_aresetn : in STD_LOGIC;   
     m10_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
     m10_axis_tready : in STD_LOGIC;
     m10_axis_tvalid : out STD_LOGIC;
     m12_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
     m12_axis_tready : in STD_LOGIC;
     m12_axis_tvalid : out STD_LOGIC;      
+    m2_axis_aclk : in STD_LOGIC;
+    m2_axis_aresetn : in STD_LOGIC;    
     m20_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
     m20_axis_tready : in STD_LOGIC;
     m20_axis_tvalid : out STD_LOGIC;
     m22_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
     m22_axis_tready : in STD_LOGIC;
     m22_axis_tvalid : out STD_LOGIC;    
+    m3_axis_aclk : in STD_LOGIC;
+    m3_axis_aresetn : in STD_LOGIC;
     m30_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
     m30_axis_tready : in STD_LOGIC;
     m30_axis_tvalid : out STD_LOGIC;
     m32_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
     m32_axis_tready : in STD_LOGIC;
     m32_axis_tvalid : out STD_LOGIC;    
- 
-    m0_axis_aclk : in STD_LOGIC;
-    m1_axis_aclk : in STD_LOGIC;
-    m2_axis_aclk : in STD_LOGIC;
-    m3_axis_aclk : in STD_LOGIC;
 
-    m0_axis_aresetn : in STD_LOGIC;
-    m1_axis_aresetn : in STD_LOGIC;
-    m2_axis_aresetn : in STD_LOGIC;
-    m3_axis_aresetn : in STD_LOGIC;
-    
+
+    --DAC
+    dac0_clk_clk_n : in STD_LOGIC;
+    dac0_clk_clk_p : in STD_LOGIC;
+ 
+ 
+    vout00_v_p : out STD_LOGIC;
+    vout00_v_n : out STD_LOGIC;
+    vout02_v_p : out STD_LOGIC;
+    vout02_v_n : out STD_LOGIC; 
+    vout10_v_p : out STD_LOGIC;
+    vout10_v_n : out STD_LOGIC;
+    vout12_v_p : out STD_LOGIC;
+    vout12_v_n : out STD_LOGIC;     
+    vout20_v_p : out STD_LOGIC;
+    vout20_v_n : out STD_LOGIC;
+    vout22_v_p : out STD_LOGIC;
+    vout22_v_n : out STD_LOGIC; 
+    vout30_v_p : out STD_LOGIC;
+    vout30_v_n : out STD_LOGIC;
+    vout32_v_p : out STD_LOGIC;
+    vout32_v_n : out STD_LOGIC;   
+    clk_dac0 : out STD_LOGIC;
+    clk_dac1 : out STD_LOGIC;
+    clk_dac2 : out STD_LOGIC;
+    clk_dac3 : out STD_LOGIC;
+    s0_axis_aclk : in STD_LOGIC;
+    s0_axis_aresetn : in STD_LOGIC; 
+    s00_axis_tdata : in STD_LOGIC_VECTOR (255 downto 0);
+    s00_axis_tready : out STD_LOGIC;
+    s00_axis_tvalid : in STD_LOGIC;
+    s02_axis_tdata : in STD_LOGIC_VECTOR (255 downto 0);
+    s02_axis_tready : out STD_LOGIC;
+    s02_axis_tvalid : in STD_LOGIC;    
+    s1_axis_aclk : in STD_LOGIC;
+    s1_axis_aresetn : in STD_LOGIC; 
+    s10_axis_tdata : in STD_LOGIC_VECTOR (255 downto 0);
+    s10_axis_tready : out STD_LOGIC;
+    s10_axis_tvalid : in STD_LOGIC;
+    s12_axis_tdata : in STD_LOGIC_VECTOR (255 downto 0);
+    s12_axis_tready : out STD_LOGIC;
+    s12_axis_tvalid : in STD_LOGIC;      
+    s2_axis_aclk : in STD_LOGIC;
+    s2_axis_aresetn : in STD_LOGIC; 
+    s20_axis_tdata : in STD_LOGIC_VECTOR (255 downto 0);
+    s20_axis_tready : out STD_LOGIC;
+    s20_axis_tvalid : in STD_LOGIC;
+    s22_axis_tdata : in STD_LOGIC_VECTOR (255 downto 0);
+    s22_axis_tready : out STD_LOGIC;
+    s22_axis_tvalid : in STD_LOGIC;    
+    s3_axis_aclk : in STD_LOGIC;
+    s3_axis_aresetn : in STD_LOGIC;
+    s30_axis_tdata : in STD_LOGIC_VECTOR (255 downto 0);
+    s30_axis_tready : out STD_LOGIC;
+    s30_axis_tvalid : in STD_LOGIC;
+    s32_axis_tdata : in STD_LOGIC_VECTOR (255 downto 0);
+    s32_axis_tready : out STD_LOGIC;
+    s32_axis_tvalid : in STD_LOGIC;    
+    --ps io AXI bus
     m_axi_araddr : out STD_LOGIC_VECTOR ( 31 downto 0 );
     m_axi_arprot : out STD_LOGIC_VECTOR ( 2 downto 0 );
     m_axi_arready : in STD_LOGIC;

@@ -195,6 +195,11 @@ proc create_root_design { parentCell } {
    CONFIG.FREQ_HZ {250000000.0} \
    ] $adc2_clk
 
+  set dac0_clk [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 dac0_clk ]
+  set_property -dict [ list \
+   CONFIG.FREQ_HZ {416400000.0} \
+   ] $dac0_clk
+
   set m00_axis [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 m00_axis ]
 
   set m02_axis [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:axis_rtl:1.0 m02_axis ]
@@ -225,6 +230,110 @@ proc create_root_design { parentCell } {
    CONFIG.PROTOCOL {AXI4LITE} \
    ] $m_axi
 
+  set s00_axis [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s00_axis ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {0} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {32} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $s00_axis
+
+  set s02_axis [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s02_axis ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {0} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {32} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $s02_axis
+
+  set s10_axis [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s10_axis ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {0} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {32} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $s10_axis
+
+  set s12_axis [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s12_axis ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {0} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {32} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $s12_axis
+
+  set s20_axis [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s20_axis ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {0} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {32} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $s20_axis
+
+  set s22_axis [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s22_axis ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {0} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {32} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $s22_axis
+
+  set s30_axis [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s30_axis ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {0} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {32} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $s30_axis
+
+  set s32_axis [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s32_axis ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {0} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {32} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $s32_axis
+
   set sysref_in [ create_bd_intf_port -mode Slave -vlnv xilinx.com:display_usp_rf_data_converter:diff_pins_rtl:1.0 sysref_in ]
 
   set vin0_01 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vin0_01 ]
@@ -243,15 +352,35 @@ proc create_root_design { parentCell } {
 
   set vin3_23 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vin3_23 ]
 
+  set vout00 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vout00 ]
+
+  set vout02 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vout02 ]
+
+  set vout10 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vout10 ]
+
+  set vout12 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vout12 ]
+
+  set vout20 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vout20 ]
+
+  set vout22 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vout22 ]
+
+  set vout30 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vout30 ]
+
+  set vout32 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vout32 ]
+
 
   # Create ports
   set clk_adc0 [ create_bd_port -dir O -type clk clk_adc0 ]
   set clk_adc1 [ create_bd_port -dir O -type clk clk_adc1 ]
   set clk_adc2 [ create_bd_port -dir O -type clk clk_adc2 ]
   set clk_adc3 [ create_bd_port -dir O -type clk clk_adc3 ]
+  set clk_dac0 [ create_bd_port -dir O -type clk clk_dac0 ]
+  set clk_dac1 [ create_bd_port -dir O -type clk clk_dac1 ]
+  set clk_dac2 [ create_bd_port -dir O -type clk clk_dac2 ]
+  set clk_dac3 [ create_bd_port -dir O -type clk clk_dac3 ]
   set m0_axis_aclk [ create_bd_port -dir I -type clk m0_axis_aclk ]
   set_property -dict [ list \
-   CONFIG.ASSOCIATED_RESET {m2_axis_aresetn:m0_axis_aresetn:m0_axis_aresetn} \
+   CONFIG.ASSOCIATED_RESET {m0_axis_aresetn} \
  ] $m0_axis_aclk
   set m0_axis_aresetn [ create_bd_port -dir I -type rst m0_axis_aresetn ]
   set_property -dict [ list \
@@ -259,7 +388,7 @@ proc create_root_design { parentCell } {
  ] $m0_axis_aresetn
   set m1_axis_aclk [ create_bd_port -dir I -type clk m1_axis_aclk ]
   set_property -dict [ list \
-   CONFIG.ASSOCIATED_RESET {m2_axis_aresetn:m1_axis_aresetn} \
+   CONFIG.ASSOCIATED_RESET {m1_axis_aresetn} \
  ] $m1_axis_aclk
   set m1_axis_aresetn [ create_bd_port -dir I -type rst m1_axis_aresetn ]
   set m2_axis_aclk [ create_bd_port -dir I -type clk m2_axis_aclk ]
@@ -280,6 +409,14 @@ proc create_root_design { parentCell } {
    CONFIG.ASSOCIATED_RESET {pl_resetn} \
  ] $pl_clk0
   set pl_resetn [ create_bd_port -dir O -type rst pl_resetn ]
+  set s0_axis_aclk [ create_bd_port -dir I -type clk s0_axis_aclk ]
+  set s0_axis_aresetn [ create_bd_port -dir I -type rst s0_axis_aresetn ]
+  set s1_axis_aclk [ create_bd_port -dir I -type clk s1_axis_aclk ]
+  set s1_axis_aresetn [ create_bd_port -dir I -type rst s1_axis_aresetn ]
+  set s2_axis_aclk [ create_bd_port -dir I -type clk s2_axis_aclk ]
+  set s2_axis_aresetn [ create_bd_port -dir I -type rst s2_axis_aresetn ]
+  set s3_axis_aclk [ create_bd_port -dir I -type clk s3_axis_aclk ]
+  set s3_axis_aresetn [ create_bd_port -dir I -type rst s3_axis_aresetn ]
 
   # Create instance: rst_ps8_0_100M, and set properties
   set rst_ps8_0_100M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_ps8_0_100M ]
@@ -332,6 +469,30 @@ proc create_root_design { parentCell } {
     CONFIG.ADC_Slice22_Enable {true} \
     CONFIG.ADC_Slice30_Enable {true} \
     CONFIG.ADC_Slice32_Enable {true} \
+    CONFIG.DAC0_Clock_Dist {1} \
+    CONFIG.DAC0_Clock_Source {4} \
+    CONFIG.DAC0_PLL_Enable {true} \
+    CONFIG.DAC0_Refclk_Freq {416.400} \
+    CONFIG.DAC0_Sampling_Rate {4.9968} \
+    CONFIG.DAC1_PLL_Enable {true} \
+    CONFIG.DAC1_Refclk_Freq {416.400} \
+    CONFIG.DAC1_Sampling_Rate {4.9968} \
+    CONFIG.DAC2_Clock_Dist {0} \
+    CONFIG.DAC2_Clock_Source {4} \
+    CONFIG.DAC2_PLL_Enable {true} \
+    CONFIG.DAC2_Refclk_Freq {416.400} \
+    CONFIG.DAC2_Sampling_Rate {4.9968} \
+    CONFIG.DAC3_PLL_Enable {true} \
+    CONFIG.DAC3_Refclk_Freq {416.400} \
+    CONFIG.DAC3_Sampling_Rate {4.9968} \
+    CONFIG.DAC_Slice00_Enable {true} \
+    CONFIG.DAC_Slice02_Enable {true} \
+    CONFIG.DAC_Slice10_Enable {true} \
+    CONFIG.DAC_Slice12_Enable {true} \
+    CONFIG.DAC_Slice20_Enable {true} \
+    CONFIG.DAC_Slice22_Enable {true} \
+    CONFIG.DAC_Slice30_Enable {true} \
+    CONFIG.DAC_Slice32_Enable {true} \
   ] $usp_rf_data_converter_0
 
 
@@ -1336,6 +1497,15 @@ Port;FD4A0000;FD4AFFFF;0|FPD;DPDMA;FD4C0000;FD4CFFFF;0|FPD;DDR_XMPU5_CFG;FD05000
 
   # Create interface connections
   connect_bd_intf_net -intf_net adc2_clk_1 [get_bd_intf_ports adc2_clk] [get_bd_intf_pins usp_rf_data_converter_0/adc2_clk]
+  connect_bd_intf_net -intf_net dac0_clk_1 [get_bd_intf_ports dac0_clk] [get_bd_intf_pins usp_rf_data_converter_0/dac0_clk]
+  connect_bd_intf_net -intf_net s00_axis_0_1 [get_bd_intf_ports s00_axis] [get_bd_intf_pins usp_rf_data_converter_0/s00_axis]
+  connect_bd_intf_net -intf_net s02_axis_0_1 [get_bd_intf_ports s02_axis] [get_bd_intf_pins usp_rf_data_converter_0/s02_axis]
+  connect_bd_intf_net -intf_net s10_axis_0_1 [get_bd_intf_ports s10_axis] [get_bd_intf_pins usp_rf_data_converter_0/s10_axis]
+  connect_bd_intf_net -intf_net s12_axis_0_1 [get_bd_intf_ports s12_axis] [get_bd_intf_pins usp_rf_data_converter_0/s12_axis]
+  connect_bd_intf_net -intf_net s20_axis_0_1 [get_bd_intf_ports s20_axis] [get_bd_intf_pins usp_rf_data_converter_0/s20_axis]
+  connect_bd_intf_net -intf_net s22_axis_0_1 [get_bd_intf_ports s22_axis] [get_bd_intf_pins usp_rf_data_converter_0/s22_axis]
+  connect_bd_intf_net -intf_net s30_axis_0_1 [get_bd_intf_ports s30_axis] [get_bd_intf_pins usp_rf_data_converter_0/s30_axis]
+  connect_bd_intf_net -intf_net s32_axis_0_1 [get_bd_intf_ports s32_axis] [get_bd_intf_pins usp_rf_data_converter_0/s32_axis]
   connect_bd_intf_net -intf_net smartconnect_0_M00_AXI [get_bd_intf_ports m_axi] [get_bd_intf_pins smartconnect_0/M00_AXI]
   connect_bd_intf_net -intf_net smartconnect_0_M01_AXI [get_bd_intf_pins smartconnect_0/M01_AXI] [get_bd_intf_pins usp_rf_data_converter_0/s_axi]
   connect_bd_intf_net -intf_net sysref_in_1 [get_bd_intf_ports sysref_in] [get_bd_intf_pins usp_rf_data_converter_0/sysref_in]
@@ -1347,6 +1517,14 @@ Port;FD4A0000;FD4AFFFF;0|FPD;DPDMA;FD4C0000;FD4CFFFF;0|FPD;DDR_XMPU5_CFG;FD05000
   connect_bd_intf_net -intf_net usp_rf_data_converter_0_m22_axis [get_bd_intf_ports m22_axis] [get_bd_intf_pins usp_rf_data_converter_0/m22_axis]
   connect_bd_intf_net -intf_net usp_rf_data_converter_0_m30_axis [get_bd_intf_ports m30_axis] [get_bd_intf_pins usp_rf_data_converter_0/m30_axis]
   connect_bd_intf_net -intf_net usp_rf_data_converter_0_m32_axis [get_bd_intf_ports m32_axis] [get_bd_intf_pins usp_rf_data_converter_0/m32_axis]
+  connect_bd_intf_net -intf_net usp_rf_data_converter_0_vout00 [get_bd_intf_ports vout00] [get_bd_intf_pins usp_rf_data_converter_0/vout00]
+  connect_bd_intf_net -intf_net usp_rf_data_converter_0_vout02 [get_bd_intf_ports vout02] [get_bd_intf_pins usp_rf_data_converter_0/vout02]
+  connect_bd_intf_net -intf_net usp_rf_data_converter_0_vout10 [get_bd_intf_ports vout10] [get_bd_intf_pins usp_rf_data_converter_0/vout10]
+  connect_bd_intf_net -intf_net usp_rf_data_converter_0_vout12 [get_bd_intf_ports vout12] [get_bd_intf_pins usp_rf_data_converter_0/vout12]
+  connect_bd_intf_net -intf_net usp_rf_data_converter_0_vout20 [get_bd_intf_ports vout20] [get_bd_intf_pins usp_rf_data_converter_0/vout20]
+  connect_bd_intf_net -intf_net usp_rf_data_converter_0_vout22 [get_bd_intf_ports vout22] [get_bd_intf_pins usp_rf_data_converter_0/vout22]
+  connect_bd_intf_net -intf_net usp_rf_data_converter_0_vout30 [get_bd_intf_ports vout30] [get_bd_intf_pins usp_rf_data_converter_0/vout30]
+  connect_bd_intf_net -intf_net usp_rf_data_converter_0_vout32 [get_bd_intf_ports vout32] [get_bd_intf_pins usp_rf_data_converter_0/vout32]
   connect_bd_intf_net -intf_net vin0_01_0_1 [get_bd_intf_ports vin0_01] [get_bd_intf_pins usp_rf_data_converter_0/vin0_01]
   connect_bd_intf_net -intf_net vin0_23_0_1 [get_bd_intf_ports vin0_23] [get_bd_intf_pins usp_rf_data_converter_0/vin0_23]
   connect_bd_intf_net -intf_net vin1_01_0_1 [get_bd_intf_ports vin1_01] [get_bd_intf_pins usp_rf_data_converter_0/vin1_01]
@@ -1367,10 +1545,22 @@ Port;FD4A0000;FD4AFFFF;0|FPD;DPDMA;FD4C0000;FD4CFFFF;0|FPD;DDR_XMPU5_CFG;FD05000
   connect_bd_net -net m3_axis_aclk_0_1 [get_bd_ports m3_axis_aclk] [get_bd_pins usp_rf_data_converter_0/m3_axis_aclk]
   connect_bd_net -net m3_axis_aresetn_0_1 [get_bd_ports m3_axis_aresetn] [get_bd_pins usp_rf_data_converter_0/m3_axis_aresetn]
   connect_bd_net -net rst_ps8_0_100M_peripheral_aresetn [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins usp_rf_data_converter_0/s_axi_aresetn]
+  connect_bd_net -net s0_axis_aclk_0_1 [get_bd_ports s0_axis_aclk] [get_bd_pins usp_rf_data_converter_0/s0_axis_aclk]
+  connect_bd_net -net s0_axis_aresetn_0_1 [get_bd_ports s0_axis_aresetn] [get_bd_pins usp_rf_data_converter_0/s0_axis_aresetn]
+  connect_bd_net -net s1_axis_aclk_0_1 [get_bd_ports s1_axis_aclk] [get_bd_pins usp_rf_data_converter_0/s1_axis_aclk]
+  connect_bd_net -net s1_axis_aresetn_0_1 [get_bd_ports s1_axis_aresetn] [get_bd_pins usp_rf_data_converter_0/s1_axis_aresetn]
+  connect_bd_net -net s2_axis_aclk_0_1 [get_bd_ports s2_axis_aclk] [get_bd_pins usp_rf_data_converter_0/s2_axis_aclk]
+  connect_bd_net -net s2_axis_aresetn_0_1 [get_bd_ports s2_axis_aresetn] [get_bd_pins usp_rf_data_converter_0/s2_axis_aresetn]
+  connect_bd_net -net s3_axis_aclk_0_1 [get_bd_ports s3_axis_aclk] [get_bd_pins usp_rf_data_converter_0/s3_axis_aclk]
+  connect_bd_net -net s3_axis_aresetn_0_1 [get_bd_ports s3_axis_aresetn] [get_bd_pins usp_rf_data_converter_0/s3_axis_aresetn]
   connect_bd_net -net usp_rf_data_converter_0_clk_adc0 [get_bd_ports clk_adc0] [get_bd_pins usp_rf_data_converter_0/clk_adc0]
   connect_bd_net -net usp_rf_data_converter_0_clk_adc1 [get_bd_ports clk_adc1] [get_bd_pins usp_rf_data_converter_0/clk_adc1]
   connect_bd_net -net usp_rf_data_converter_0_clk_adc2 [get_bd_ports clk_adc2] [get_bd_pins usp_rf_data_converter_0/clk_adc2]
   connect_bd_net -net usp_rf_data_converter_0_clk_adc3 [get_bd_ports clk_adc3] [get_bd_pins usp_rf_data_converter_0/clk_adc3]
+  connect_bd_net -net usp_rf_data_converter_0_clk_dac0 [get_bd_ports clk_dac0] [get_bd_pins usp_rf_data_converter_0/clk_dac0]
+  connect_bd_net -net usp_rf_data_converter_0_clk_dac1 [get_bd_ports clk_dac1] [get_bd_pins usp_rf_data_converter_0/clk_dac1]
+  connect_bd_net -net usp_rf_data_converter_0_clk_dac2 [get_bd_ports clk_dac2] [get_bd_pins usp_rf_data_converter_0/clk_dac2]
+  connect_bd_net -net usp_rf_data_converter_0_clk_dac3 [get_bd_ports clk_dac3] [get_bd_pins usp_rf_data_converter_0/clk_dac3]
   connect_bd_net -net usp_rf_data_converter_0_irq [get_bd_pins usp_rf_data_converter_0/irq] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
   connect_bd_net -net zynq_ultra_ps_e_0_pl_clk0 [get_bd_ports pl_clk0] [get_bd_pins rst_ps8_0_100M/slowest_sync_clk] [get_bd_pins smartconnect_0/aclk] [get_bd_pins usp_rf_data_converter_0/s_axi_aclk] [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
   connect_bd_net -net zynq_ultra_ps_e_0_pl_resetn0 [get_bd_ports pl_resetn] [get_bd_pins rst_ps8_0_100M/ext_reset_in] [get_bd_pins smartconnect_0/aresetn] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
