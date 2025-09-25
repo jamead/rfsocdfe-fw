@@ -95,6 +95,12 @@ float i2c_ltc2991_vdac_avcc_aux_current();
 float i2c_ltc2991_vdac_avtt();
 float i2c_ltc2991_vdac_avtt_current();
 
+void  ina226_init(void);
+float ina226_read_bus_voltage(void);
+float ina226_read_current(void);
+float ina226_read_power(void);
+
+
 void i2c_sfp_get_stats(float *, u8);
 
 

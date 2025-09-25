@@ -37,6 +37,7 @@ void discover_setup(void);
 void tftp_setup(void);
 void lstats_setup(void);
 void brdstats_setup(void);
+void sadata_setup(void);
 void rfstats_setup(void);
 void adcdata_setup(void);
 void console_setup(void);

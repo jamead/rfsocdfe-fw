@@ -44,6 +44,7 @@ entity evr_top is
     sys_clk        : in std_logic;
     sys_rst        : in std_logic;
     reg_o          : in t_reg_o_evr;
+    reg_i          : out t_reg_i_evr;
     --evr_gty_reset  : in std_logic_vector(7 downto 0);
     
     refclk_p       : in std_logic;	 -- 312.5 MHz reference clock
@@ -213,35 +214,38 @@ end component;
 
 
    --debug signals (connect to ila)
---   attribute mark_debug     : string;
---   attribute mark_debug of eventstream: signal is "true";
---   attribute mark_debug of datastream: signal is "true";
---   attribute mark_debug of timestamp: signal is "true";
---   attribute mark_debug of eventclock: signal is "true";
---   attribute mark_debug of prev_datastream: signal is "true";
---   attribute mark_debug of tbt_trig: signal is "true";
---   attribute mark_debug of tbt_trig_i: signal is "true";
+   attribute mark_debug     : string;
+   attribute mark_debug of eventstream: signal is "true";
+   attribute mark_debug of datastream: signal is "true";
+   attribute mark_debug of timestamp: signal is "true";
+   attribute mark_debug of eventclock: signal is "true";
+   attribute mark_debug of prev_datastream: signal is "true";
+   attribute mark_debug of tbt_trig: signal is "true";
+   attribute mark_debug of tbt_trig_i: signal is "true";
 
---   attribute mark_debug of gty_txdata_in: signal is "true";  
---   attribute mark_debug of gty_txcharisk_in: signal is "true";
---   attribute mark_debug of gty_rx_userdata: signal is "true";
---   attribute mark_debug of gty_rxctrl0: signal is "true";
---   attribute mark_debug of gty_powergood: signal is "true";
---   attribute mark_debug of gty_reset_rx_done: signal is "true";
+   attribute mark_debug of gty_txdata_in: signal is "true";  
+   attribute mark_debug of gty_txcharisk_in: signal is "true";
+   attribute mark_debug of gty_rx_userdata: signal is "true";
+   attribute mark_debug of gty_rxctrl0: signal is "true";
+   attribute mark_debug of gty_powergood: signal is "true";
+   attribute mark_debug of gty_reset_rx_done: signal is "true";
 
---   attribute mark_debug of gty_reset_tx_done: signal is "true";
---   attribute mark_debug of gty_userclk_tx_active: signal is "true";
---   attribute mark_debug of gty_txpmaresetdone: signal is "true";
+   attribute mark_debug of gty_reset_tx_done: signal is "true";
+   attribute mark_debug of gty_userclk_tx_active: signal is "true";
+   attribute mark_debug of gty_txpmaresetdone: signal is "true";
   
---   attribute mark_debug of gty_cpllfbclklost: signal is "true";
---   attribute mark_debug of gty_cplllock: signal is "true";
---   attribute mark_debug of gty_cpllrefclklost: signal is "true"; 
+   attribute mark_debug of gty_cpllfbclklost: signal is "true";
+   attribute mark_debug of gty_cplllock: signal is "true";
+   attribute mark_debug of gty_cpllrefclklost: signal is "true"; 
 
 
 
 begin
 
 evr_rcvd_clk <= gty_userclk_rx_usrclk2;
+
+reg_i.ts_s <= timestamp(63 downto 32);
+reg_i.ts_ns <= timestamp(31 downto 0);
 
 
 

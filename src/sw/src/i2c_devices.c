@@ -25,7 +25,7 @@ static const u32 lmk61e2_values [] = {
 
 
 //clkin2 124.92MHz dualloop clkout=416.4MHz
-static const u32 lmk_values_bnl104[] = {
+static const u32 lmk_values_clk104[] = {
 		0x000090,0x000000,0x000200,0x000306,0x0004D0,0x00055B,0x000600,0x000C51,
 		0x000D04,0x01000B,0x010155,0x010255,0x010300,0x010402,0x010500,0x0106F8,
 		0x010755,0x010805,0x010955,0x010A55,0x010B00,0x010C02,0x010D00,0x010EF8,
@@ -48,7 +48,7 @@ static const u32 lmk_values_bnl104[] = {
 
 
 //clkin0 124.92MHz dualloop clkout=416.4MHz
-static const u32 lmk_values_clk104[] = {
+static const u32 lmk_values_bnl104[] = {
 		0x000090, 0x000000, 0x000200, 0x000306, 0x0004D0, 0x00055B, 0x000600, 0x000C51,
 		0x000D04, 0x01000B, 0x010155, 0x010255, 0x010300, 0x010402, 0x010500, 0x0106F8,
 		0x010755, 0x010805, 0x010955, 0x010A55, 0x010B00, 0x010C02, 0x010D00, 0x010EF8,
@@ -165,7 +165,7 @@ void WriteLMK04828(int lmk_sel)
         i2c_write(buf, 4, 0x28);  // bnl clk104 I2C address A2=A1=A0=0
     }
 
-    i2c_set_port_expander(I2C_PORTEXP2_ADDR, 0);
+    //i2c_set_port_expander(I2C_PORTEXP2_ADDR, 0);
 }
 
 

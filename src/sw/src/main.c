@@ -151,6 +151,7 @@ static void on_startup(void *pvt, psc_key *key)
     brdstats_setup();
     rfstats_setup();
     adcdata_setup();
+    sadata_setup();
     console_setup();
 }
 
@@ -193,7 +194,7 @@ static void realmain(void *arg)
 int main()
 {
 
-    u32 ts_s, ts_ns;
+    u32 ts_s, ts_ns, i;
 
 	xil_printf("rfSOC DFE ...\r\n");
     print_firmware_version();
@@ -214,8 +215,17 @@ int main()
     // Program the CLK104 PLL
     //while (1) {
     xil_printf("Init LMK04828 PLL for ADC's...\r\n");
-    WriteLMK04828(1);  //0=bnl104, 1=clk104
+    WriteLMK04828(0);  //0=bnl104, 1=clk104
     sleep(1);
+    //voltage and current readback device on AFE
+    ina226_init();
+    usleep(10000);
+    printf("BNL104 Voltage: %f\n",ina226_read_bus_voltage());
+    printf("BNL104 Current: %f\n",ina226_read_current());
+    sleep(1);
+
+
+
     i2c_set_port_expander(I2C_PORTEXP2_ADDR,0x0);
     //}
 
@@ -230,10 +240,12 @@ int main()
     usleep(1000);
 
     //read Timestamp
-    ts_s = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_S_REG);
-    ts_ns = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_NS_REG);
-    xil_printf("ts= %d    %d\r\n",ts_s,ts_ns);
-
+    for (i=0;i<5;i++) {
+      ts_s = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_S_REG);
+      ts_ns = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_NS_REG);
+      xil_printf("ts= %d    %d\r\n",ts_s,ts_ns);
+      sleep(1);
+    }
 
     sys_thread_new("main", realmain, NULL, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 
