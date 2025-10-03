@@ -171,32 +171,16 @@ architecture behv of top is
   signal rfdac_out_clk          : std_logic;
   signal rfdac_axis_mmcm_clk    : std_logic;
   signal rfdac_axis_clk         : std_logic;  
-  
-  
-  signal reg_o_adcfifo   : t_reg_o_adc_fifo_rdout;
-  signal reg_i_adcfifo   : t_reg_i_adc_fifo_rdout;
-  signal reg_o_tbtfifo   : t_reg_o_tbt_fifo_rdout;
-  signal reg_i_tbtfifo   : t_reg_i_tbt_fifo_rdout;
 
-  
-  signal reg_o_dsa       : t_reg_o_dsa;  
-  signal reg_o_pll       : t_reg_o_pll;
-  signal reg_i_pll       : t_reg_i_pll;
+  signal reg_o_rfdac     : t_reg_o_rfdac;
+
   signal reg_i_rfadcfifo : t_reg_i_rfadc_fifo_rdout;
   signal reg_o_rfadcfifo : t_reg_o_rfadc_fifo_rdout;	 
-  
-  signal reg_o_tbt       : t_reg_o_tbt;
-  signal reg_o_dma       : t_reg_o_dma;
-  signal reg_i_dma       : t_reg_i_dma;
+
   signal reg_o_evr       : t_reg_o_evr;
   signal reg_i_evr       : t_reg_i_evr;
-  signal reg_o_therm     : t_reg_o_therm;
-  signal reg_i_therm     : t_reg_i_therm;
+
   signal reg_i_freq      : t_reg_i_freq;
-  
-  signal tbt_data        : t_tbt_data;    
-  signal sa_data         : t_sa_data;
-  signal fa_data         : t_fa_data;
   
   signal evr_gty_reset       : std_logic_vector(7 downto 0);
   signal evr_ref_clk         : std_logic;
@@ -210,14 +194,13 @@ architecture behv of top is
   signal evr_dma_trignum     : std_logic_vector(7 downto 0);
   signal evr_ts              : std_logic_vector(63 downto 0); 
   
-  signal cnt                 : std_logic_vector(15 downto 0);
-  
+
   
   attribute mark_debug     : string;
   attribute mark_debug of dac0_axis_tdata: signal is "true"; 
   attribute mark_debug of dac0_axis_tvalid: signal is "true"; 
   attribute mark_debug of dac0_axis_tready: signal is "true"; 
-  attribute mark_debug of cnt: signal is "true";
+
   
 --  attribute mark_debug of adc1_axis_tvalid: signal is "true";   
 --  attribute mark_debug of adc2_axis_tdata: signal is "true"; 
@@ -272,7 +255,7 @@ fp_led  <= ps_leds;
 pl_reset <= not pl_resetn;
 
 --drive the CLK104 PLL with 100MHz for now
-lmk_clkout : OBUFDS port map (O => clk104_lmkin0_clk_p, OB => clk104_lmkin0_clk_n, I => evr_rcvd_clk); --clk104_lmkin0_clk);   
+lmk_clkout : OBUFDS port map (O => clk104_lmkin0_clk_p, OB => clk104_lmkin0_clk_n, I => clk104_lmkin0_clk);   
 
 
 lmk_pl_clkin  : IBUFDS port map (O => clk104_pl_clkin, I => clk104_pl_clk_p, IB => clk104_pl_clk_n);
@@ -311,21 +294,10 @@ ps_pl: entity work.ps_io
     pl_reset => not pl_resetn, 
     m_axi4_m2s => m_axi4_m2s, 
     m_axi4_s2m => m_axi4_s2m, 
-    fp_leds => ps_leds,
-    adc_data => adc_data,
-    sa_data => sa_data,
-    reg_o_tbt => reg_o_tbt,  
+    fp_leds => ps_leds, 
+    reg_o_rfdac => reg_o_rfdac,
     reg_i_rfadcfifo => reg_i_rfadcfifo, 
     reg_o_rfadcfifo => reg_o_rfadcfifo, 	 
-    reg_o_adcfifo => reg_o_adcfifo, 
-	reg_i_adcfifo => reg_i_adcfifo,
-	reg_o_tbtfifo => reg_o_tbtfifo, 
-	reg_i_tbtfifo => reg_i_tbtfifo,
-	reg_o_dma => reg_o_dma,
-	reg_i_dma => reg_i_dma,
-	reg_o_dsa => reg_o_dsa,
-	reg_o_pll => reg_o_pll,
-	reg_i_pll => reg_i_pll,
 	reg_o_evr => reg_o_evr, 
 	reg_i_evr => reg_i_evr,
 	reg_i_freq => reg_i_freq
@@ -354,6 +326,34 @@ rfadc_fifos:  entity work.rf_adc_fifos
  );  
   
   
+dac0_axis_tvalid <= '1';
+dac1_axis_tvalid <= '1';
+dac2_axis_tvalid <= '1';
+dac3_axis_tvalid <= '1';
+dac4_axis_tvalid <= '1';
+dac5_axis_tvalid <= '1';
+dac6_axis_tvalid <= '1';
+dac7_axis_tvalid <= '1';
+
+
+
+  
+dac_awg: entity work.rf_dac_awg
+  port map(
+    pl_clk0 => pl_clk0,
+    dac_clk => rfdac_axis_clk,     
+    reset => pl_reset, 
+    reg_o => reg_o_rfdac,
+    dac0_data => dac0_axis_tdata, 
+    dac1_data => dac1_axis_tdata,  
+    dac2_data => dac2_axis_tdata, 
+    dac3_data => dac3_axis_tdata,
+    dac4_data => dac4_axis_tdata, 
+    dac5_data => dac5_axis_tdata,   
+    dac6_data => dac6_axis_tdata, 
+    dac7_data => dac7_axis_tdata           
+ );
+ 
 
 --embedded event receiver
 evr: entity work.evr_top 
@@ -384,24 +384,6 @@ evr: entity work.evr_top
     evr_ref_clk => evr_ref_clk,
     dbg => evr_dbg
 );	
-
-
---temp drive dac data with counter
-process(rfdac_axis_clk)
-  begin
-    if (rising_edge(rfdac_axis_clk)) then
-      if (pl_reset = '1') then
-        cnt <= 16d"0";
-        dac0_axis_tdata <= 256d"0";
-        dac0_axis_tvalid <= '0';
-      else
-        cnt <= std_logic_vector(unsigned(cnt) + 1);
-        dac0_axis_tdata <= cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt & cnt;
-        dac0_axis_tvalid <= '1';
-      end if;
-    end if;
-end process;  
-        
 
 
 

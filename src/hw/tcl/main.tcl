@@ -21,6 +21,8 @@ proc setSources {} {
   lappend Sources {"../hdl/ps_io.vhd" "VHDL 2008"} 
   lappend Sources {"../hdl/rf_adc_fifos.vhd" "VHDL 2008"}
   
+  lappend Sources {"../hdl/rf_dac_awg.vhd" "VHDL 2008"}
+  
   lappend Sources {"../hdl/evr/evr_top.vhd" "VHDL 2008"}
   lappend Sources {"../hdl/evr/EventReceiverChannel.v" "Verilog"}
   lappend Sources {"../hdl/evr/timeofDayReceiver.v" "Verilog"}
@@ -68,6 +70,7 @@ proc doOnCreate {} {
   source ${TclPath}/rfadc_clk_pll.tcl 
   source ${TclPath}/lmk_clk_pll.tcl 
   source ${TclPath}/adc_fifo.tcl 
+  source ${TclPath}/dac_dpram.tcl 
   source ${TclPath}/gty_evr.tcl 
   
   

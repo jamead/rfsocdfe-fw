@@ -114,76 +114,6 @@ reg {
   
   
 
-reg {
-    desc="Kx";
-    default sw = rw;
-    default hw = r;
-    field {} data[32] = 10000000;  /* 1e6 nm */
-  } kx @0x90;
- 
-reg {
-    desc="Ky";
-    default sw = rw;
-    default hw = r;
-    field {} data[32] = 10000000; /* 10e6 nm */
-  } ky @0x94;
- 
- reg {
-    desc="ChA Gain";
-    default sw = rw;
-    default hw = r;
-    field {} data[16] = 32762;
-  } cha_gain @0x98;
- 
-reg {
-    desc="ChB Gain";
-    default sw = rw;
-    default hw = r;
-    field {} data[16] = 32763;
-  } chb_gain @0x9C;
- 
- reg {
-    desc="ChC Gain";
-    default sw = rw;
-    default hw = r;
-    field {} data[16] = 32764;
-  } chc_gain @0xA0;
- 
- reg {
-    desc="ChD Gain";
-    default sw = rw;
-    default hw = r;
-    field {} data[16] = 32765;
-  } chd_gain @0xA4;
- 
-reg {
-    desc="X position offset";
-    default sw = rw;
-    default hw = r;
-    field {} data[32];
-  } xpos_offset @0xA8;
- 
- reg {
-    desc="Y position offset";
-    default sw = rw;
-    default hw = r;
-    field {} data[32];
-  } ypos_offset @0xAC;
-  
-reg {
-    desc="TbT Gate Delay";
-    default sw = rw;
-    default hw = r;
-    field {} data[9];
-  } gate_delay @0xB0;
- 
- 
- reg {
-    desc="TbT Gate Width";
-    default sw = rw;
-    default hw = r;
-    field {} data[9];
-  } gate_width @0xB4;
    
  
  reg {
@@ -205,68 +135,6 @@ reg {
 
   
 
-/* 10Hz Position Registers */
- 
- reg {
-    desc="SA Counter";
-    default sw = r;
-    default hw = w;
-    field {} data[32];
-  } sa_cnt @0xC0;
-
-reg {
-    desc="SA ChA magnitude";
-    default sw = r;
-    default hw = w;
-    field {} data[32];
-  } sa_cha @0xC4;
-  
-reg {
-    desc="SA ChB magnitude";
-    default sw = r;
-    default hw = w;
-    field {} data[32];
-  } sa_chb @0xC8;
-  
-reg {
-    desc="SA ChC magnitude";
-    default sw = r;
-    default hw = w;
-    field {} data[32];
-  } sa_chc @0xCC;    
-
-reg {
-    desc="SA ChD magnitude";
-    default sw = r;
-    default hw = w;
-    field {} data[32];
-  } sa_chd @0xD0;
-
-reg {
-    desc="SA X position";
-    default sw = r;
-    default hw = w;
-    field {} data[32];
-  } sa_xpos @0xD4;
-
-reg {
-    desc="SA Y position";
-    default sw = r;
-    default hw = w;
-    field {} data[32];
-  } sa_ypos @0xD8;
-
-reg {
-    desc="SA Sum";
-    default sw = r;
-    default hw = w;
-    field {} data[32];
-  } sa_sum @0xDC;
-
-
-
-
-
 /*  DMA Registers */
 reg {
     desc="DMA Soft Trigger";
@@ -274,15 +142,6 @@ reg {
     default hw = r;
     field {} data[1];
   } dma_soft_trig @0x100;
-
-
-reg {
-    desc="DMA FIFO reset";
-    default sw = rw;
-    default hw = r;
-    field {} data[1];
-  } dma_fifo_rst @0x104;
-
 
 reg {
     desc="DMA ADC Enable";
@@ -297,35 +156,6 @@ reg {
     default hw = r;
     field {} data[32] = 100000;
   } dma_adc_len @0x10C;
-
-reg {
-    desc="DMA TBT Enable";
-    default sw = rw;
-    default hw = r;
-    field {} data[1];
-  } dma_tbt_enb @0x110;
-
-reg {
-    desc="DMA TBT Length";
-    default sw = rw;
-    default hw = r;
-    field {} data[32] = 100000;
-  } dma_tbt_len @0x114;
-
-
-reg {
-    desc="DMA FA Enable";
-    default sw = rw;
-    default hw = r;
-    field {} data[1];
-  } dma_fa_enb @0x118;
-
-reg {
-    desc="DMA FA Length";
-    default sw = rw;
-    default hw = r;
-    field {} data[32] = 5000;
-  } dma_fa_len @0x11C;
 
 
 reg {
@@ -349,12 +179,6 @@ reg {
     field {} data[32];
   } dma_trigcnt @0x128;
    
-reg {
-    desc="DMA Status: bit4=adc_active, bit3=tbt_active, bit2=fa_active, bit1=dma_done, bit0=dma_running";
-    default sw = r;
-    default hw = w;
-    field {} data[5];
-  } dma_status @0x12C;
 
 
  reg {
@@ -413,81 +237,81 @@ reg {
     field {} val[32];
   } dma_trig_delay @0x164;  
 
+
+ 
+/* rfSOC DAC Dual Port Memory write registers */
+
+
  reg {
-    desc="Internal clock mode (tbt,fa,sa trig source) (0=int counters, 1=evr)";
+    desc="DAC DPRAM Select";
     default sw = rw;
+    default hw = r;
+    field {} val[8];
+  } rfdac_dpram_sel @0x200;
+
+reg {
+    desc="DAC DPRAM Number of Samples";
+    default sw = rw;
+    default hw = r;
+    default swacc=true;
+    default swmod=true;   
+    field {} val[16];
+  } rfdac_dpram_numpts @0x204;
+
+ reg {
+    desc="DAC DPRAM Sync to TBT";
+    default sw = rw;
+    default swacc=true;
+    default swmod=true;   
     default hw = r;
     field {} val[1];
-  } event_src_sel @0x168;  
- 
- 
- 
- 
- 
-/* ADC FIFO Readout Registers */
-reg {
-    desc="ADC FIFO Readout Enable";
-    default sw = rw;
-    default hw = r;
-    default swmod=true; 
-    field {} data[1];
-  } adcfifo_streamenb @0x200;
-     
-reg {
-    desc="ADC FIFO Reset";
-    default sw = rw;
-    default hw = r;
-    field {} data[1];
-  } adcfifo_reset @0x204;
-   
-reg {
-    desc="ADC FIFO Data Out";
-    default sw = r;
-    default hw = w;
-    default swacc=true;   
-    field {} data[32];
-  } adcfifo_data @0x208;
-   
-reg {
-    desc="ADC FIFO Word Count";
-    default sw = r;
-    default hw = w;
-    field {} data[32];
-  } adcfifo_rdcnt @0x20C;
-   
+  } rfdac_dpram_sync2tbt @0x208;
 
-/* TBT FIFO Readout Registers */
 reg {
-    desc="TBT FIFO Readout Enable";
+    desc="DAC DPRAM Loop Enable";
     default sw = rw;
+    default swacc=true;
+    default swmod=true;   
     default hw = r;
-    default swmod=true; 
-    field {} data[1];
-  } tbtfifo_streamenb @0x210;
-     
-reg {
-    desc="TBT FIFO Reset";
-    default sw = rw;
-    default hw = r;
-    field {} data[1];
-  } tbtfifo_reset @0x214;
-   
-reg {
-    desc="TBT FIFO Data Out";
-    default sw = r;
-    default hw = w;
-    default swacc=true;   
-    field {} data[32];
-  } tbtfifo_data @0x218;
-   
-reg {
-    desc="TBT FIFO Word Count";
-    default sw = r;
-    default hw = w;
-    field {} data[32];
-  } tbtfifo_rdcnt @0x21C;
-   
+    field {} val[1];
+  } rfdac_dpram_loopenb @0x20C;
 
+reg {
+    desc="DAC DPRAM Trigger";
+    default sw = rw;
+    default swacc=true;
+    default swmod=true;   
+    default hw = r;
+    field {} val[1];
+  } rfdac_dpram_trig @0x210;
+
+
+ reg {
+    desc="DAC DPRAM Address";
+    default sw = rw;
+    default hw = r;
+    field {} val[16];
+  } rfdac_dpram_addr @0x220;
+
+ reg {
+    desc="DAC DPRAM Data";
+    default sw = rw;
+    default hw = r;
+    field {} val[16];
+  } rfdac_dpram_data @0x224;
+
+ reg {
+    desc="DAC DPRAM we";
+    default sw = rw;
+    default hw = r;
+    default swacc=true;
+    default swmod=true;
+    field {} val[1];
+  } rfdac_dpram_we @0x228;
+ 
+ 
+ 
+ 
 
 /* RfSOC raw ADC FIFO registers */
 

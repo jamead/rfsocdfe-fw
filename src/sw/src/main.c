@@ -20,6 +20,7 @@
 #include "pl_regs.h"
 #include "xrfdc.h"
 #include "rfdfe.h"
+#include "math.h"
 
 
 
@@ -124,8 +125,8 @@ static void client_msg(void *pvt, psc_client *ckey, uint16_t msgid, uint32_t msg
 
 
     //blink front panel LED
-    Xil_Out32(XPAR_M_AXI_BASEADDR + IOC_ACCESS_REG, 1);
-    Xil_Out32(XPAR_M_AXI_BASEADDR + IOC_ACCESS_REG, 0);
+    //Xil_Out32(XPAR_M_AXI_BASEADDR + IOC_ACCESS_REG, 1);
+    //Xil_Out32(XPAR_M_AXI_BASEADDR + IOC_ACCESS_REG, 0);
 
     switch(msgid) {
         case 1: //register settings
@@ -189,6 +190,24 @@ static void realmain(void *arg)
 }
 
 
+void generate_sine_wave(int16_t *buffer, int num_points, double freq, double sample_rate) {
+
+	const double AMPLITUDE = 32767.0;   // full-scale for int16_t
+	double phase_inc = 2.0 * M_PI * freq / sample_rate;
+    double phase = 0.0;
+
+    for (int i = 0; i < num_points; i++) {
+        double val = sin(phase);
+        buffer[i] = (int16_t)(AMPLITUDE * val);
+        phase += phase_inc;
+
+        if (phase >= 2.0 * M_PI) {
+            phase -= 2.0 * M_PI;
+        }
+    }
+}
+
+
 
 
 int main()
@@ -240,12 +259,40 @@ int main()
     usleep(1000);
 
     //read Timestamp
-    for (i=0;i<5;i++) {
+    for (i=0;i<3;i++) {
       ts_s = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_S_REG);
       ts_ns = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_NS_REG);
       xil_printf("ts= %d    %d\r\n",ts_s,ts_ns);
       sleep(1);
     }
+
+
+    int loopcnt = 0;
+    while (1) {
+      loopcnt = loopcnt + 1;
+      xil_printf("Writing DAC:  %d\r\n",loopcnt);
+      for (i=0;i<1000;i++) {
+
+    	Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_ADDR_REG, i);
+    	if ((i > 100) && (i < 120)) {
+    	   Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_DATA_REG, 20000);
+    	   xil_printf("Data: %d\r\n", Xil_In32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_DATA_REG));
+       }
+       else
+    	   Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_DATA_REG, 0);
+    	//xil_printf("Data: %d\r\n", Xil_In32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_DATA_REG));
+    	Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_WE_REG, 1);
+    	Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_WE_REG, 0);
+      }
+
+      Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_NUMSAMP_REG, 1000);
+      Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_TRIG_REG, 1);
+      usleep(1);
+      Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_TRIG_REG, 0);
+      sleep(1);
+    }
+
+
 
     sys_thread_new("main", realmain, NULL, THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 

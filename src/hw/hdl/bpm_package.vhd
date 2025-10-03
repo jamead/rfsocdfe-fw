@@ -35,6 +35,20 @@ type t_reg_i_rfadc_fifo_rdout is record
 end record t_reg_i_rfadc_fifo_rdout;
 
 
+
+type t_reg_o_rfdac is record
+   chsel        : std_logic_vector(7 downto 0);
+   numpts       : std_logic_vector(15 downto 0);
+   sync2tbt     : std_logic;
+   loopenb      : std_logic;
+   trig         : std_logic;
+   we           : std_logic;
+   addr         : std_logic_vector(13 downto 0);
+   data         : std_logic_vector(15 downto 0);
+end record t_reg_o_rfdac;
+
+
+
 type t_reg_o_rfadc_fifo_rdout is record
    enb          : std_logic;
    rst          : std_logic;
@@ -61,23 +75,6 @@ type t_reg_o_adc_fifo_rdout is record
 end record t_reg_o_adc_fifo_rdout;
 
 
-type t_reg_i_tbt_fifo_rdout is record
-   dout     : std_logic_vector(31 downto 0);
-   rdcnt    : std_logic_vector(31 downto 0); 
-end record t_reg_i_tbt_fifo_rdout;
-
-type t_reg_o_tbt_fifo_rdout is record
-   enb      : std_logic;
-   rst      : std_logic;
-   rdstr    : std_logic;
-end record t_reg_o_tbt_fifo_rdout;
-
-
-type t_reg_o_dsa is record
-   str      : std_logic;
-   data     : std_logic_vector(7 downto 0);
-end record t_reg_o_dsa;
-
 type t_reg_o_evr is record
    reset         : std_logic;
    dma_trigno    : std_logic_vector(7 downto 0);
@@ -97,98 +94,6 @@ type t_reg_i_freq is record
    clk3_freq  : std_logic_vector(31 downto 0);   
    clk4_freq  : std_logic_vector(31 downto 0);            
 end record t_reg_i_freq;
-
-
-type t_reg_o_pll is record
-   str      : std_logic;
-   data     : std_logic_vector(31 downto 0);
-end record t_reg_o_pll;
-
-type t_reg_i_pll is record
-   locked      : std_logic;
-end record t_reg_i_pll;
-
-
-type t_reg_o_therm is record
-   spi_we     : std_logic;
-   spi_wdata  : std_logic_vector(31 downto 0);
-   sel        : std_logic_vector(1 downto 0);
-end record t_reg_o_therm;
-
-type t_reg_i_therm is record
-   spi_rdata    : std_logic_vector(7 downto 0);
-end record t_reg_i_therm;
-
-
-
-type t_tbt_data is record
-    cha_mag    : signed(31 downto 0);
-    cha_phs    : signed(31 downto 0);
-    cha_i      : signed(31 downto 0);
-    cha_q      : signed(31 downto 0);
-    chb_mag    : signed(31 downto 0);
-    chb_phs    : signed(31 downto 0); 
-    chb_i      : signed(31 downto 0);
-    chb_q      : signed(31 downto 0);
-    chc_mag    : signed(31 downto 0);
-    chc_phs    : signed(31 downto 0); 
-    chc_i      : signed(31 downto 0);
-    chc_q      : signed(31 downto 0);
-    chd_mag    : signed(31 downto 0);
-    chd_phs    : signed(31 downto 0);     
-    chd_i      : signed(31 downto 0);
-    chd_q      : signed(31 downto 0);
-    xpos       : signed(31 downto 0);
-    ypos       : signed(31 downto 0);
-    xpos_nm    : signed(31 downto 0);
-    ypos_nm    : signed(31 downto 0);
-    sum        : signed(31 downto 0);
-end record t_tbt_data;
-
-
-type t_sa_data is record
-    cnt        : std_logic_vector(31 downto 0);
-    cha_mag    : signed(31 downto 0);
-    chb_mag    : signed(31 downto 0);
-    chc_mag    : signed(31 downto 0);
-    chd_mag    : signed(31 downto 0);     
-    xpos       : signed(31 downto 0);
-    ypos       : signed(31 downto 0);
-    sum        : signed(31 downto 0);
-end record t_sa_data;
-
-
-type t_fa_data is record
-    cha_mag    : signed(31 downto 0);
-    chb_mag    : signed(31 downto 0);
-    chc_mag    : signed(31 downto 0); 
-    chd_mag    : signed(31 downto 0);     
-    xpos       : signed(31 downto 0);
-    ypos       : signed(31 downto 0);
-    sum        : signed(31 downto 0);
-end record t_fa_data;
-
-
-type rffe_sw_params_type is record
-    adcdma_sel   : std_logic;
-    enb          : std_logic_vector(1 downto 0);
-    demuxdly     : std_logic_vector(8 downto 0);
-    trigdly      : std_logic_vector(15 downto 0);
-end record rffe_sw_params_type;
-
-
-type t_reg_o_tbt is record
-    kx          : std_logic_vector(31 downto 0);
-    ky          : std_logic_vector(31 downto 0);
-    cha_gain    : std_logic_vector(15 downto 0);
-    chb_gain    : std_logic_vector(15 downto 0);
-    chc_gain    : std_logic_vector(15 downto 0);
-    chd_gain    : std_logic_vector(15 downto 0);      
-    xpos_offset : std_logic_vector(31 downto 0);
-    ypos_offset : std_logic_vector(31 downto 0); 
-    gate_delay  : std_logic_vector(8 downto 0); 
-    gate_width  : std_logic_vector(8 downto 0);
-end record t_reg_o_tbt;
 
 
 type t_reg_o_dma is record
