@@ -194,6 +194,8 @@ architecture behv of top is
   signal evr_dma_trignum     : std_logic_vector(7 downto 0);
   signal evr_ts              : std_logic_vector(63 downto 0); 
   
+  signal tbt_trig            : std_logic;
+  
 
   
   attribute mark_debug     : string;
@@ -201,7 +203,6 @@ architecture behv of top is
   attribute mark_debug of dac0_axis_tvalid: signal is "true"; 
   attribute mark_debug of dac0_axis_tready: signal is "true"; 
 
-  
 --  attribute mark_debug of adc1_axis_tvalid: signal is "true";   
 --  attribute mark_debug of adc2_axis_tdata: signal is "true"; 
 --  attribute mark_debug of adc2_axis_tvalid: signal is "true";   
@@ -242,10 +243,10 @@ sfp_led(7 downto 6) <= sfp_rxlos(3) & ps_leds(3);
 sfp_led(9 downto 8) <= sfp_rxlos(4) & ps_leds(4);
 sfp_led(11 downto 10) <= sfp_rxlos(5) & ps_leds(5);
 
-fp_out(0) <= evr_tbt_trig; --fp_led(0); --clk104_pl_clk;
-fp_out(1) <= evr_rcvd_clk;
-fp_out(2) <= rfadc_out_clk; --fp_led(2); --rfadc_axis_clk;  --125 MHz
-fp_out(3) <= fp_led(3); --rfadc_axis_mmcm_clk; -- 166MHz
+fp_out(0) <= evr_rcvd_clk; 
+fp_out(1) <= rfdac_out_clk;   --124.92MHz
+fp_out(2) <= rfadc_out_clk;   --416.4MHz
+fp_out(3) <= evr_tbt_trig; 
 
 
 fp_led  <= ps_leds;
@@ -254,8 +255,8 @@ fp_led  <= ps_leds;
 
 pl_reset <= not pl_resetn;
 
---drive the CLK104 PLL with 100MHz for now
-lmk_clkout : OBUFDS port map (O => clk104_lmkin0_clk_p, OB => clk104_lmkin0_clk_n, I => clk104_lmkin0_clk);   
+--drive the CLK104 PLL with the 124.92 EVR recovered clock
+lmk_clkout : OBUFDS port map (O => clk104_lmkin0_clk_p, OB => clk104_lmkin0_clk_n, I => evr_rcvd_clk);   
 
 
 lmk_pl_clkin  : IBUFDS port map (O => clk104_pl_clkin, I => clk104_pl_clk_p, IB => clk104_pl_clk_n);
@@ -265,6 +266,7 @@ rfadc_bufg    : BUFG   port map (O => rfadc_axis_clk, I => rfadc_axis_mmcm_clk);
 rfdac_bufg    : BUFG   port map (O => rfdac_axis_clk, I => rfdac_out_clk);
 
 
+
 axisclk_adc: entity work.rfadc_clk_pll  
   port map (
     reset => pl_reset, 
@@ -272,8 +274,6 @@ axisclk_adc: entity work.rfadc_clk_pll
     clk_out1 => rfadc_axis_mmcm_clk,  --416.4MHz
     locked => open  
 );
-
-
 
 
 lmkclk_pll: entity work.lmk_clk_pll
@@ -313,8 +313,8 @@ rfadc_fifos:  entity work.rf_adc_fifos
     pl_reset => pl_reset, 
     adc_clk => rfadc_axis_clk,  
     reg_i => reg_i_rfadcfifo, 
-    reg_o => reg_o_rfadcfifo,  
-    
+    reg_o => reg_o_rfadcfifo,
+    dac_trig => reg_o_rfdac.trig,  
     adc0_data => adc0_axis_tdata, 
     adc1_data => adc1_axis_tdata,   
     adc2_data => adc2_axis_tdata, 
@@ -384,6 +384,17 @@ evr: entity work.evr_top
     evr_ref_clk => evr_ref_clk,
     dbg => evr_dbg
 );	
+
+
+tbt_gen: entity work.pt_cntrl
+  port map (
+    evr_clk => evr_rcvd_clk, 
+    reset => pl_reset,                
+    evr_tbt_trig => evr_tbt_trig,  
+    inttrig_enb => '0', 
+    tbt_trig => tbt_trig
+  );    
+
 
 
 

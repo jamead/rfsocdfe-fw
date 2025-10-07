@@ -472,19 +472,19 @@ proc create_root_design { parentCell } {
     CONFIG.DAC0_Clock_Dist {1} \
     CONFIG.DAC0_Clock_Source {4} \
     CONFIG.DAC0_PLL_Enable {true} \
-    CONFIG.DAC0_Refclk_Freq {416.400} \
-    CONFIG.DAC0_Sampling_Rate {4.9968} \
+    CONFIG.DAC0_Refclk_Freq {124.920} \
+    CONFIG.DAC0_Sampling_Rate {1.99872} \
     CONFIG.DAC1_PLL_Enable {true} \
-    CONFIG.DAC1_Refclk_Freq {416.400} \
-    CONFIG.DAC1_Sampling_Rate {4.9968} \
+    CONFIG.DAC1_Refclk_Freq {124.920} \
+    CONFIG.DAC1_Sampling_Rate {1.99872} \
     CONFIG.DAC2_Clock_Dist {0} \
     CONFIG.DAC2_Clock_Source {4} \
     CONFIG.DAC2_PLL_Enable {true} \
-    CONFIG.DAC2_Refclk_Freq {416.400} \
-    CONFIG.DAC2_Sampling_Rate {4.9968} \
+    CONFIG.DAC2_Refclk_Freq {124.920} \
+    CONFIG.DAC2_Sampling_Rate {1.99872} \
     CONFIG.DAC3_PLL_Enable {true} \
-    CONFIG.DAC3_Refclk_Freq {416.400} \
-    CONFIG.DAC3_Sampling_Rate {4.9968} \
+    CONFIG.DAC3_Refclk_Freq {124.920} \
+    CONFIG.DAC3_Sampling_Rate {1.99872} \
     CONFIG.DAC_Slice00_Enable {true} \
     CONFIG.DAC_Slice02_Enable {true} \
     CONFIG.DAC_Slice10_Enable {true} \

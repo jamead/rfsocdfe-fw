@@ -189,8 +189,8 @@ static void realmain(void *arg)
     }
 }
 
-
-void generate_sine_wave(int16_t *buffer, int num_points, double freq, double sample_rate) {
+/*
+void gen_sine_wave(int16_t *buffer, int num_points, double freq, double sample_rate) {
 
 	const double AMPLITUDE = 32767.0;   // full-scale for int16_t
 	double phase_inc = 2.0 * M_PI * freq / sample_rate;
@@ -206,7 +206,7 @@ void generate_sine_wave(int16_t *buffer, int num_points, double freq, double sam
         }
     }
 }
-
+*/
 
 
 
@@ -214,6 +214,7 @@ int main()
 {
 
     u32 ts_s, ts_ns, i;
+    int16_t dac_buf[16000];
 
 	xil_printf("rfSOC DFE ...\r\n");
     print_firmware_version();
@@ -259,7 +260,7 @@ int main()
     usleep(1000);
 
     //read Timestamp
-    for (i=0;i<3;i++) {
+    for (i=0;i<2;i++) {
       ts_s = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_S_REG);
       ts_ns = Xil_In32(XPAR_M_AXI_BASEADDR + EVR_TS_NS_REG);
       xil_printf("ts= %d    %d\r\n",ts_s,ts_ns);
@@ -267,30 +268,40 @@ int main()
     }
 
 
+    /*
+    int num_pts = 2000;  //max is 16k
+    double freq = 19.987200e6;
+    double sample_rate = 1.99872e9;
+    gen_sine_wave(dac_buf,num_pts, freq, sample_rate);
+
+
     int loopcnt = 0;
     while (1) {
       loopcnt = loopcnt + 1;
       xil_printf("Writing DAC:  %d\r\n",loopcnt);
-      for (i=0;i<1000;i++) {
-
+      for (i=0;i<1600;i++) {
+        // write the waveform
     	Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_ADDR_REG, i);
-    	if ((i > 100) && (i < 120)) {
-    	   Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_DATA_REG, 20000);
-    	   xil_printf("Data: %d\r\n", Xil_In32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_DATA_REG));
-       }
-       else
-    	   Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_DATA_REG, 0);
-    	//xil_printf("Data: %d\r\n", Xil_In32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_DATA_REG));
+    	if (i < 1500)
+      	  Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_DATA_REG, dac_buf[i]);
+    	else
+    	  Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_DATA_REG, 0);
+    	if (i > 1400)
+    		xil_printf("Address: %d  Data: %d\r\n", i, (int16_t)Xil_In32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_DATA_REG));
     	Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_WE_REG, 1);
     	Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_WE_REG, 0);
       }
 
-      Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_NUMSAMP_REG, 1000);
+      //write the number of samples to play back (each is 16 samples)
+      Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_NUMSAMP_REG, 80);
+
+      //play it out the dac
       Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_TRIG_REG, 1);
       usleep(1);
       Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_TRIG_REG, 0);
       sleep(1);
     }
+    */
 
 
 
