@@ -36,6 +36,7 @@ proc setSources {} {
   lappend Sources {"../hdl/sync/sync_single_bit_cc.vhd" "VHDL 2008"} 
   lappend Sources {"../hdl/sync/sync_pulse_ack_cc.vhd" "VHDL 2008"}  
   
+  lappend Sources {"../hdl/pt_cntrl.vhd" "VHDL 2008"}  
 
   lappend Sources {"../cstr/pins.xdc"  "XDC"}
   lappend Sources {"../cstr/gth.xdc" "XDC"}
