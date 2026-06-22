@@ -55,8 +55,8 @@ entity evr_top is
     rx_p           : in std_logic;
     rx_n           : in std_logic;
 
-    trignum        : in std_logic_vector(7 downto 0);
-    trigdly        : in std_logic_vector(31 downto 0);
+    --trignum        : in std_logic_vector(7 downto 0);
+    --trigdly        : in std_logic_vector(31 downto 0);
     
     tbt_trig       : out std_logic;
     fa_trig        : out std_logic;
@@ -416,7 +416,7 @@ event_gps : EventReceiverChannel
        eventstream => eventstream,
        myevent => (x"7D"),     -- 125d
        mydelay => (x"00000001"),
-       mywidth => (x"00000175"),   -- //creates a pulse about 3us long
+       mywidth => 32d"3125000",   -- //creates a pulse about 25ms long for LED
        mypolarity => ('0'),
        trigger => gps_trig
 );
@@ -456,8 +456,8 @@ event_usr : EventReceiverChannel
        clock => evr_rcvd_clk,
        reset => sys_rst,
        eventstream => eventstream,
-       myevent => trignum,
-       mydelay => trigdly, 
+       myevent => reg_o.dma_trigno, --trignum,
+       mydelay => 32d"1",  
        mywidth => (x"00000175"),   -- //creates a pulse about 3us long
        mypolarity => ('0'),
        trigger => usr_trig

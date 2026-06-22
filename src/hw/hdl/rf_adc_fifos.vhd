@@ -16,7 +16,9 @@ entity rf_adc_fifos is
     adc_clk         : in std_logic; 
     reg_i           : out t_reg_i_rfadc_fifo_rdout;
     reg_o           : in  t_reg_o_rfadc_fifo_rdout;
-    dac_trig        : in std_logic; 
+    soft_trig       : in std_logic;
+    dac_trig        : in std_logic;
+    evr_trig        : in std_logic; 
     
     adc0_data       : in std_logic_vector(191 downto 0);
     adc1_data       : in std_logic_vector(191 downto 0);  
@@ -35,6 +37,9 @@ architecture behv of rf_adc_fifos is
   attribute mark_debug     : string;
   attribute mark_debug of reg_i: signal is "true"; 
   attribute mark_debug of reg_o: signal is "true"; 
+  attribute mark_debug of soft_trig: signal is "true";
+  attribute mark_debug of dac_trig: signal is "true";
+  attribute mark_debug of evr_trig: signal is "true";
 
 begin
 
@@ -46,7 +51,7 @@ adc0_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc0_data,
-    fifo_trig => reg_o.enb or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig,  
     fifo_rdstr => reg_o.adc0_rdstr, 
     fifo_dout => reg_i.adc0_dout,  
     fifo_rdcnt => reg_i.adc0_rdcnt, 
@@ -59,7 +64,7 @@ adc1_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc1_data,
-    fifo_trig => reg_o.enb or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig,  
     fifo_rdstr => reg_o.adc1_rdstr, 
     fifo_dout => reg_i.adc1_dout,  
     fifo_rdcnt => reg_i.adc1_rdcnt, 
@@ -72,7 +77,7 @@ adc1_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc2_data,
-    fifo_trig => reg_o.enb or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig,  
     fifo_rdstr => reg_o.adc2_rdstr, 
     fifo_dout => reg_i.adc2_dout,  
     fifo_rdcnt => reg_i.adc2_rdcnt, 
@@ -85,7 +90,7 @@ adc3_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc3_data,
-    fifo_trig => reg_o.enb or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig,  
     fifo_rdstr => reg_o.adc3_rdstr, 
     fifo_dout => reg_i.adc3_dout,  
     fifo_rdcnt => reg_i.adc3_rdcnt, 
@@ -99,7 +104,7 @@ adc4_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc4_data,
-    fifo_trig => reg_o.enb or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig,  
     fifo_rdstr => reg_o.adc4_rdstr, 
     fifo_dout => reg_i.adc4_dout,  
     fifo_rdcnt => reg_i.adc4_rdcnt, 
@@ -112,7 +117,7 @@ adc5_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc5_data,
-    fifo_trig => reg_o.enb or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig, 
     fifo_rdstr => reg_o.adc5_rdstr, 
     fifo_dout => reg_i.adc5_dout,  
     fifo_rdcnt => reg_i.adc5_rdcnt, 
@@ -125,7 +130,7 @@ adc5_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc6_data,
-    fifo_trig => reg_o.enb or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig,  
     fifo_rdstr => reg_o.adc6_rdstr, 
     fifo_dout => reg_i.adc6_dout,  
     fifo_rdcnt => reg_i.adc6_rdcnt, 
@@ -138,7 +143,7 @@ adc7_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc7_data,
-    fifo_trig => reg_o.enb or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig,  
     fifo_rdstr => reg_o.adc7_rdstr, 
     fifo_dout => reg_i.adc7_dout,  
     fifo_rdcnt => reg_i.adc7_rdcnt, 

@@ -80,10 +80,13 @@ void write_dacawg() {
    //write the number of samples to play back (each is 16 samples)
    Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_NUMSAMP_REG, 80);
 
+
    //trigger the ADC
    Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIG_REG, 1);
+   for(i=0;i<100;i++);
    //play it out the dac
    Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_TRIG_REG, 1);
+
    usleep(1);
    Xil_Out32(XPAR_M_AXI_BASEADDR + RFDAC_DPRAM_TRIG_REG, 0);
    sleep(1);
@@ -113,11 +116,11 @@ void soft_trig(u32 msgVal) {
       xil_printf("FIFO Wdcnt after reset = %d\r\n",wdcnt);
 
       //Trigger
-      Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIG_REG, 1);
-      vTaskDelay(pdMS_TO_TICKS(10));
+      //Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIG_REG, 1);
+      //vTaskDelay(pdMS_TO_TICKS(10));
 
       //Trigger by writing to the DAC AWG, which will trigger the ADC
-      //write_dacawg();
+      write_dacawg();
 
 
 
@@ -184,15 +187,15 @@ void reg_settings(void *msg) {
             soft_trig(data.u);
             break;
 
+        case EVENT_SRC_SEL_MSG:
+          	xil_printf("Setting Event Source:   Value=%d\r\n",data.u);
+          	set_trigsrc(data.u);
+          	break;
+
         case EVENT_NO_MSG:
            	xil_printf("DMA Event Number Message:   Value=%d\r\n",data.u);
             set_eventno(data.u);
             break;
-
-        case FP_LED_MSG:
-          	xil_printf("Setting FP LED:   Value=%d\r\n",data.u);
-          	//set_fpleds(data.u);
-          	break;
 
 
 

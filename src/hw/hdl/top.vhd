@@ -236,7 +236,7 @@ dbg(6) <= rfadc_axis_clk;
 dbg(19 downto 7) <= (others => '0'); 
 
 
-sfp_led(1 downto 0) <= sfp_rxlos(0) & ps_leds(0);
+sfp_led(1 downto 0) <= sfp_rxlos(0) & evr_gps_trig; --ps_leds(0);
 sfp_led(3 downto 2) <= sfp_rxlos(1) & ps_leds(1);
 sfp_led(5 downto 4) <= sfp_rxlos(2) & ps_leds(2);
 sfp_led(7 downto 6) <= sfp_rxlos(3) & ps_leds(3);
@@ -314,7 +314,9 @@ rfadc_fifos:  entity work.rf_adc_fifos
     adc_clk => rfadc_axis_clk,  
     reg_i => reg_i_rfadcfifo, 
     reg_o => reg_o_rfadcfifo,
-    dac_trig => reg_o_rfdac.trig,  
+    soft_trig => reg_o_rfadcfifo.enb,
+    dac_trig => reg_o_rfdac.trig,
+    evr_trig => evr_dma_trig,  
     adc0_data => adc0_axis_tdata, 
     adc1_data => adc1_axis_tdata,   
     adc2_data => adc2_axis_tdata, 
@@ -372,8 +374,8 @@ evr: entity work.evr_top
     rx_p => gty_evr_rx_p,
     rx_n => gty_evr_rx_n,
       
-    trignum => evr_dma_trignum, 
-    trigdly => (x"00000001"), 
+    --trignum => evr_dma_trignum, 
+    --trigdly => (x"00000001"), 
     tbt_trig => evr_tbt_trig, 
     fa_trig => evr_fa_trig, 
     sa_trig => evr_sa_trig, 

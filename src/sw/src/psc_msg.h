@@ -47,6 +47,10 @@
 
 // Control Message Offsets
 #define SOFT_TRIG_MSG 0
+#define EVENT_SRC_SEL_MSG 4
+#define EVENT_NO_MSG 8
+
+/*
 #define FP_LED_MSG 4
 #define PILOT_TONE_ENB_MSG 8
 #define ADC_IDLY_MSG 12
@@ -79,7 +83,7 @@
 #define RFFESW_ENB_MSG 400
 #define RFFESW_TRIGDLY_MSG 404
 #define RFFESW_DEMUXDLY_MSG 408
-
+*/
 
 
 
