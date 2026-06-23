@@ -21,7 +21,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
+--use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 
 
@@ -37,10 +37,12 @@ entity adc_data_rdout is
     adc_clk         : in std_logic; 
     adc_data        : in std_logic_vector(191 downto 0);
     fifo_trig       : in std_logic;
-    fifo_rst        : in std_logic; 
+    fifo_rdoutdone  : in std_logic;
+    --fifo_rst        : in std_logic; 
     fifo_rdstr      : in std_logic; 
     fifo_dout       : out std_logic_vector(31 downto 0); 
-    fifo_rdcnt      : out std_logic_vector(31 downto 0)
+    fifo_rdcnt      : out std_logic_vector(31 downto 0);
+    fifo_wrdone     : out std_logic
  );
 end adc_data_rdout;
 
@@ -65,7 +67,7 @@ component adc_fifo IS
 END component;
 
 
-  type     state_type is (IDLE, ARM, WR_FIFO);                   
+  type     state_type is (IDLE, ARM, WR_FIFO, RDOUT_WAIT, FIFO_RESET);                   
   signal   state   : state_type;  
 
 
@@ -74,10 +76,16 @@ END component;
   signal fifo_din         : std_logic_vector(255 downto 0);
   signal fifo_wren        : std_logic := '0';  
 
-  signal adc_enb_sr       : std_logic_vector(2 downto 0);  
-  signal adc_enb_s        : std_logic;
-  signal sample_num       : std_logic_vector(15 downto 0);
+  signal adc_trig_sr      : std_logic_vector(2 downto 0);  
+  signal adc_trig_s       : std_logic;
+  signal sample_num       : unsigned(15 downto 0);
   signal fifo_rd_data_cnt : std_logic_vector(15 downto 0);
+  
+  signal fifo_rst         : std_logic := '0';
+  signal fifo_rst_cnt     : unsigned(4 downto 0) := (others => '0');  -- 0..31
+  
+  signal fifo_rdoutdone_sr : std_logic_vector(2 downto 0) := (others => '0');
+  signal fifo_rdoutdone_s  : std_logic := '0';
   
 
   attribute mark_debug                 : string;
@@ -95,8 +103,8 @@ END component;
   attribute mark_debug of fifo_wren: signal is "true";
   attribute mark_debug of fifo_rdstr: signal is "true";
   attribute mark_debug of fifo_rd_data_cnt: signal is "true";
-  attribute mark_debug of adc_enb_sr: signal is "true";
-  attribute mark_debug of adc_enb_s: signal is "true";
+  attribute mark_debug of adc_trig_sr: signal is "true";
+  attribute mark_debug of adc_trig_s: signal is "true";
   attribute mark_debug of fifo_rst: signal is "true";
   
 
@@ -127,21 +135,35 @@ process (adc_clk)
 begin
   if (rising_edge(adc_clk)) then
 	if (sys_rst = '1') then
-	  adc_enb_sr <= "000";
+	  adc_trig_sr <= "000";
     else
-      adc_enb_sr(0) <= fifo_trig;
-      adc_enb_sr(1) <= adc_enb_sr(0);
-      adc_enb_sr(2) <= adc_enb_sr(1);
+      adc_trig_sr(0) <= fifo_trig;
+      adc_trig_sr(1) <= adc_trig_sr(0);
+      adc_trig_sr(2) <= adc_trig_sr(1);
     end if;
-    if (adc_enb_sr(2) = '0' and adc_enb_sr(1) = '1') then
-      adc_enb_s <= '1';
+    if (adc_trig_sr(2) = '0' and adc_trig_sr(1) = '1') then
+      adc_trig_s <= '1';
     else
-      adc_enb_s <= '0';
+      adc_trig_s <= '0';
     end if;
   end if;
 end process;
 
+process(adc_clk)
+begin
+  if rising_edge(adc_clk) then
+    if sys_rst = '1' then
+      fifo_rdoutdone_sr <= (others => '0');
+      fifo_rdoutdone_s  <= '0';
+    else
+      fifo_rdoutdone_sr(0) <= fifo_rdoutdone;
+      fifo_rdoutdone_sr(1) <= fifo_rdoutdone_sr(0);
+      fifo_rdoutdone_sr(2) <= fifo_rdoutdone_sr(1);
 
+      fifo_rdoutdone_s <= fifo_rdoutdone_sr(2);
+    end if;
+  end if;
+end process;
 
 
 
@@ -154,13 +176,17 @@ process(adc_clk)
           sample_num <= (others => '0');
           state <= idle;
           fifo_din <= (others => '0');
+          fifo_wrdone <= '0';
+          fifo_rst <= '1';
+          fifo_rst_cnt <= (others => '0');
        else
          case state is
            when IDLE =>  
+             fifo_rst <= '0';
              fifo_wren <= '0'; 
              fifo_din <= (others => '0');
              sample_num <= (others => '0');    
-             if (adc_enb_s = '1') then
+             if (adc_trig_s = '1') then
                 state <= arm;
              end if;
              
@@ -180,12 +206,32 @@ process(adc_clk)
                           adc_data(79 downto 64) & adc_data(95 downto 80) & adc_data(111 downto 96) & adc_data(127 downto 112) & 
                           adc_data(143 downto 128) & adc_data(159 downto 144) & adc_data(175 downto 160) & adc_data(191 downto 176) &
                           64d"0";               
-              sample_num <= sample_num + 1;
-              if (sample_num = 32d"8100") then
-                state <= idle;
+                          
+              if (sample_num = to_unsigned(8100, sample_num'length)) then
+                fifo_wren <= '0'; 
+                state <= rdout_wait;
               else
                 sample_num <= sample_num + 1;
               end if;
+              
+           when RDOUT_WAIT =>
+              -- wait here until fifo readout is complete
+              fifo_wrdone <= '1';
+              if (fifo_rdoutdone_s = '1') then
+                 fifo_wrdone <= '0';
+                 fifo_rst_cnt <= (others => '0');
+                 state <= fifo_reset;
+              end if;              
+              
+              
+           when FIFO_RESET =>
+             fifo_rst <= '1';
+             if (fifo_rst_cnt = 19) then      -- 20 adc_clk cycles
+               fifo_rst <= '0';
+               state <= IDLE;
+             else
+               fifo_rst_cnt <= fifo_rst_cnt + 1;
+             end if;                         
               
           when OTHERS => 
               state <= idle;    

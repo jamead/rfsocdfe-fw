@@ -14,7 +14,25 @@ type sfp_i2c_data_type is array(0 to 5) of std_logic_vector(15 downto 0);
 
 
 
+type t_reg_o_rfadc_fifo_rdout is record
+   enb          : std_logic;
+   rst          : std_logic;
+   softtrig     : std_logic;
+   rdoutdone    : std_logic;
+   adc0_rdstr   : std_logic;
+   adc1_rdstr   : std_logic;
+   adc2_rdstr   : std_logic;
+   adc3_rdstr   : std_logic;  
+   adc4_rdstr   : std_logic;
+   adc5_rdstr   : std_logic;
+   adc6_rdstr   : std_logic;
+   adc7_rdstr   : std_logic;          
+end record t_reg_o_rfadc_fifo_rdout;
+
+
+
 type t_reg_i_rfadc_fifo_rdout is record
+   wrdone       : std_logic;
    adc0_dout    : std_logic_vector(31 downto 0);
    adc0_rdcnt   : std_logic_vector(31 downto 0);    
    adc1_dout    : std_logic_vector(31 downto 0); 
@@ -31,7 +49,6 @@ type t_reg_i_rfadc_fifo_rdout is record
    adc6_rdcnt   : std_logic_vector(31 downto 0); 
    adc7_dout    : std_logic_vector(31 downto 0);     
    adc7_rdcnt   : std_logic_vector(31 downto 0); 
-   
 end record t_reg_i_rfadc_fifo_rdout;
 
 
@@ -49,18 +66,7 @@ end record t_reg_o_rfdac;
 
 
 
-type t_reg_o_rfadc_fifo_rdout is record
-   enb          : std_logic;
-   rst          : std_logic;
-   adc0_rdstr   : std_logic;
-   adc1_rdstr   : std_logic;
-   adc2_rdstr   : std_logic;
-   adc3_rdstr   : std_logic;  
-   adc4_rdstr   : std_logic;
-   adc5_rdstr   : std_logic;
-   adc6_rdstr   : std_logic;
-   adc7_rdstr   : std_logic;          
-end record t_reg_o_rfadc_fifo_rdout;
+
 
 
 type t_reg_i_adc_fifo_rdout is record
@@ -69,9 +75,9 @@ type t_reg_i_adc_fifo_rdout is record
 end record t_reg_i_adc_fifo_rdout;
 
 type t_reg_o_adc_fifo_rdout is record
-   enb      : std_logic;
-   rst      : std_logic;
-   rdstr    : std_logic;
+   rst        : std_logic;
+   rdstr      : std_logic;
+   
 end record t_reg_o_adc_fifo_rdout;
 
 

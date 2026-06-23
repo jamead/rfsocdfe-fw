@@ -76,8 +76,11 @@ reg_o_rfdac.data <= reg_o.rfdac_dpram_data.val.data;
 
 
 -- adc FIFO's
-reg_o_rfadcfifo.enb <= reg_o.rfadcfifo_trig.data.data(0); 
+--reg_o_rfadcfifo.enb <= reg_o.rfadcfifo_softtrig.data.data(0); 
 reg_o_rfadcfifo.rst <= reg_o.rfadcfifo_reset.data.data(0);
+reg_o_rfadcfifo.softtrig <= reg_o.rfadcfifo_softtrig.data.data(0);
+reg_o_rfadcfifo.rdoutdone <= reg_o.rfadcfifo_rdoutdone.data.data(0);
+reg_i.rfadcfifo_writedone.data.data(0) <= reg_i_rfadcfifo.wrdone;
 
 reg_o_rfadcfifo.adc0_rdstr <= reg_o.rfadc0fifo_dout.data.swacc;
 reg_i.rfadc0fifo_dout.data.data <= reg_i_rfadcfifo.adc0_dout;  

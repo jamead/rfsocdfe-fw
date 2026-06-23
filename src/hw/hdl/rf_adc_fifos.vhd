@@ -52,10 +52,12 @@ adc0_fifo:  entity work.adc_data_rdout
     sys_rst => pl_reset,
     adc_data => adc0_data,
     fifo_trig => soft_trig or evr_trig or dac_trig,  
+    fifo_wrdone => reg_i.wrdone,
+    fifo_rdoutdone => reg_o.rdoutdone,
     fifo_rdstr => reg_o.adc0_rdstr, 
     fifo_dout => reg_i.adc0_dout,  
-    fifo_rdcnt => reg_i.adc0_rdcnt, 
-    fifo_rst => reg_o.rst
+    fifo_rdcnt => reg_i.adc0_rdcnt 
+    --fifo_rst => reg_o.rst
  );
 
 adc1_fifo:  entity work.adc_data_rdout
@@ -64,11 +66,13 @@ adc1_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc1_data,
-    fifo_trig => soft_trig or evr_trig or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig, 
+    fifo_wrdone => open, 
+    fifo_rdoutdone => reg_o.rdoutdone,
     fifo_rdstr => reg_o.adc1_rdstr, 
     fifo_dout => reg_i.adc1_dout,  
-    fifo_rdcnt => reg_i.adc1_rdcnt, 
-    fifo_rst => reg_o.rst
+    fifo_rdcnt => reg_i.adc1_rdcnt 
+    --fifo_rst => reg_o.rst
  );
  
  adc2_fifo:  entity work.adc_data_rdout
@@ -77,11 +81,14 @@ adc1_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc2_data,
-    fifo_trig => soft_trig or evr_trig or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig, 
+    fifo_wrdone => open, 
+    fifo_rdoutdone => reg_o.rdoutdone,    
     fifo_rdstr => reg_o.adc2_rdstr, 
     fifo_dout => reg_i.adc2_dout,  
-    fifo_rdcnt => reg_i.adc2_rdcnt, 
-    fifo_rst => reg_o.rst
+    fifo_rdcnt => reg_i.adc2_rdcnt 
+    --fifo_rst => reg_o.rst
+
  );
  
 adc3_fifo:  entity work.adc_data_rdout
@@ -90,11 +97,13 @@ adc3_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc3_data,
-    fifo_trig => soft_trig or evr_trig or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig, 
+    fifo_wrdone => open, 
+    fifo_rdoutdone => reg_o.rdoutdone,    
     fifo_rdstr => reg_o.adc3_rdstr, 
     fifo_dout => reg_i.adc3_dout,  
-    fifo_rdcnt => reg_i.adc3_rdcnt, 
-    fifo_rst => reg_o.rst
+    fifo_rdcnt => reg_i.adc3_rdcnt 
+    --fifo_rst => reg_o.rst
  );
 
 
@@ -105,10 +114,12 @@ adc4_fifo:  entity work.adc_data_rdout
     sys_rst => pl_reset,
     adc_data => adc4_data,
     fifo_trig => soft_trig or evr_trig or dac_trig,  
+    fifo_wrdone => open, 
+    fifo_rdoutdone => reg_o.rdoutdone,    
     fifo_rdstr => reg_o.adc4_rdstr, 
     fifo_dout => reg_i.adc4_dout,  
-    fifo_rdcnt => reg_i.adc4_rdcnt, 
-    fifo_rst => reg_o.rst
+    fifo_rdcnt => reg_i.adc4_rdcnt 
+    --fifo_rst => reg_o.rst
  );
 
 adc5_fifo:  entity work.adc_data_rdout
@@ -118,10 +129,12 @@ adc5_fifo:  entity work.adc_data_rdout
     sys_rst => pl_reset,
     adc_data => adc5_data,
     fifo_trig => soft_trig or evr_trig or dac_trig, 
+    fifo_wrdone => open, 
+    fifo_rdoutdone => reg_o.rdoutdone,    
     fifo_rdstr => reg_o.adc5_rdstr, 
     fifo_dout => reg_i.adc5_dout,  
-    fifo_rdcnt => reg_i.adc5_rdcnt, 
-    fifo_rst => reg_o.rst
+    fifo_rdcnt => reg_i.adc5_rdcnt 
+    --fifo_rst => reg_o.rst
  );
  
  adc6_fifo:  entity work.adc_data_rdout
@@ -130,11 +143,13 @@ adc5_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc6_data,
-    fifo_trig => soft_trig or evr_trig or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig, 
+    fifo_wrdone => open, 
+    fifo_rdoutdone => reg_o.rdoutdone,     
     fifo_rdstr => reg_o.adc6_rdstr, 
     fifo_dout => reg_i.adc6_dout,  
-    fifo_rdcnt => reg_i.adc6_rdcnt, 
-    fifo_rst => reg_o.rst
+    fifo_rdcnt => reg_i.adc6_rdcnt 
+    --fifo_rst => reg_o.rst
  );
  
 adc7_fifo:  entity work.adc_data_rdout
@@ -143,11 +158,13 @@ adc7_fifo:  entity work.adc_data_rdout
     adc_clk => adc_clk,  
     sys_rst => pl_reset,
     adc_data => adc7_data,
-    fifo_trig => soft_trig or evr_trig or dac_trig,  
+    fifo_trig => soft_trig or evr_trig or dac_trig, 
+    fifo_wrdone => open, 
+    fifo_rdoutdone => reg_o.rdoutdone,     
     fifo_rdstr => reg_o.adc7_rdstr, 
     fifo_dout => reg_i.adc7_dout,  
-    fifo_rdcnt => reg_i.adc7_rdcnt, 
-    fifo_rst => reg_o.rst
+    fifo_rdcnt => reg_i.adc7_rdcnt 
+    --fifo_rst => reg_o.rst
  );
 
 

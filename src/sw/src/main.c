@@ -267,6 +267,11 @@ int main()
       sleep(1);
     }
 
+    //while (1) {
+    //    Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RDOUTDONE_REG, 1);
+    //    Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RDOUTDONE_REG, 0);
+    //}
+
 
     /*
     int num_pts = 2000;  //max is 16k

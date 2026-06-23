@@ -125,8 +125,9 @@ static void adcdata_push(void *unused)
     while (1) {
         vTaskDelay(pdMS_TO_TICKS(10));
 
-        //Triggered from PV write to this register which sets it high
-        triggered = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIG_REG);
+        //This gets set when the ADC data has triggered and FIFO write is done
+        // ADC data can get triggered from either EVR, Soft Trig or DAC
+        triggered = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_WRDONE_REG);
 
         if (triggered == 1) {
             vTaskDelay(pdMS_TO_TICKS(100));
@@ -174,8 +175,9 @@ static void adcdata_push(void *unused)
 
 
 
-            //Clear the trigger register, to allow another trigger
-            Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIG_REG, 0);
+            //Tell the Fabric the Readout of the ADC FIFO's is complete, to allow another trigger
+            Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RDOUTDONE_REG, 1);
+            Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RDOUTDONE_REG, 0);
 
             wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_WDCNT_REG);
             xil_printf("FIFO Ch0 Wdcnt after reading FIFO = %d\r\n",wdcnt);

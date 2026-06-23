@@ -314,7 +314,7 @@ rfadc_fifos:  entity work.rf_adc_fifos
     adc_clk => rfadc_axis_clk,  
     reg_i => reg_i_rfadcfifo, 
     reg_o => reg_o_rfadcfifo,
-    soft_trig => reg_o_rfadcfifo.enb,
+    soft_trig => reg_o_rfadcfifo.softtrig,
     dac_trig => reg_o_rfdac.trig,
     evr_trig => evr_dma_trig,  
     adc0_data => adc0_axis_tdata, 

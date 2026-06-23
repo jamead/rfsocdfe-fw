@@ -331,7 +331,26 @@ reg {
     default swacc=true;
     default swmod=true;
     field {} data[1];
-  } rfadcfifo_trig @0x404;
+  } rfadcfifo_softtrig @0x404;
+
+  reg {
+    desc="ADC FIFO Write Done";
+    default sw = rw;
+    default hw = w;
+    default swacc=true;
+    default swmod=true;
+    field {} data[1];
+  } rfadcfifo_writedone @0x408;
+
+  reg {
+    desc="ADC FIFO Rdout Done";
+    default sw = rw;
+    default hw = r;
+    default swacc=true;
+    default swmod=true;
+    field {} data[1];
+  } rfadcfifo_rdoutdone @0x40C;
+
 
 
   reg {
