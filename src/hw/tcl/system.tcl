@@ -435,23 +435,23 @@ proc create_root_design { parentCell } {
     CONFIG.ADC0_Clock_Source {2} \
     CONFIG.ADC0_Outclk_Freq {156.150} \
     CONFIG.ADC0_PLL_Enable {true} \
-    CONFIG.ADC0_Refclk_Freq {416.400} \
+    CONFIG.ADC0_Refclk_Freq {499.680} \
     CONFIG.ADC0_Sampling_Rate {4.9968} \
     CONFIG.ADC1_Clock_Source {2} \
     CONFIG.ADC1_Outclk_Freq {156.150} \
     CONFIG.ADC1_PLL_Enable {true} \
-    CONFIG.ADC1_Refclk_Freq {416.400} \
+    CONFIG.ADC1_Refclk_Freq {499.680} \
     CONFIG.ADC1_Sampling_Rate {4.9968} \
     CONFIG.ADC2_Clock_Dist {1} \
     CONFIG.ADC2_Outclk_Freq {156.150} \
     CONFIG.ADC2_PLL_Enable {true} \
-    CONFIG.ADC2_Refclk_Freq {416.400} \
+    CONFIG.ADC2_Refclk_Freq {499.680} \
     CONFIG.ADC2_Sampling_Rate {4.9968} \
     CONFIG.ADC3_Clock_Dist {0} \
     CONFIG.ADC3_Clock_Source {2} \
     CONFIG.ADC3_Outclk_Freq {156.150} \
     CONFIG.ADC3_PLL_Enable {true} \
-    CONFIG.ADC3_Refclk_Freq {416.400} \
+    CONFIG.ADC3_Refclk_Freq {499.680} \
     CONFIG.ADC3_Sampling_Rate {4.9968} \
     CONFIG.ADC_Data_Width00 {12} \
     CONFIG.ADC_Data_Width02 {12} \

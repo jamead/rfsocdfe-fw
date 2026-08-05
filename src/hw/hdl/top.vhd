@@ -233,7 +233,9 @@ dbg(3) <= '0';
 dbg(4) <= rfadc_out_clk;
 dbg(5) <= '0';
 dbg(6) <= rfadc_axis_clk;
-dbg(19 downto 7) <= (others => '0'); 
+dbg(7) <= '0';
+dbg(8) <= evr_rcvd_clk;
+dbg(19 downto 9) <= (others => '0'); 
 
 
 sfp_led(1 downto 0) <= sfp_rxlos(0) & evr_gps_trig; --ps_leds(0);
@@ -244,8 +246,8 @@ sfp_led(9 downto 8) <= sfp_rxlos(4) & ps_leds(4);
 sfp_led(11 downto 10) <= sfp_rxlos(5) & ps_leds(5);
 
 fp_out(0) <= evr_rcvd_clk; 
-fp_out(1) <= rfdac_out_clk;   --124.92MHz
-fp_out(2) <= rfadc_out_clk;   --416.4MHz
+fp_out(1) <= '0'; --rfdac_out_clk;   --124.92MHz
+fp_out(2) <= evr_dma_trig; -- rfadc_out_clk;   --416.4MHz
 fp_out(3) <= evr_tbt_trig; 
 
 
@@ -256,7 +258,7 @@ fp_led  <= ps_leds;
 pl_reset <= not pl_resetn;
 
 --drive the CLK104 PLL with the 124.92 EVR recovered clock
-lmk_clkout : OBUFDS port map (O => clk104_lmkin0_clk_p, OB => clk104_lmkin0_clk_n, I => evr_rcvd_clk);   
+lmk_clkout : OBUFDS port map (O => clk104_lmkin0_clk_p, OB => clk104_lmkin0_clk_n, I => evr_rcvd_clk);    
 
 
 lmk_pl_clkin  : IBUFDS port map (O => clk104_pl_clkin, I => clk104_pl_clk_p, IB => clk104_pl_clk_n);

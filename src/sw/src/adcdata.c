@@ -51,6 +51,7 @@ void processADC(s16 *adcmsg, u32 nsamples, u32 fifoaddr)
 
 
     // Debug print first 50 samples, 12 per line
+    /*
     for (i = 0; i < 12*4; i++) {
         s16 sample = (s16) ntohs(adcmsgbase[i]);
         // Print sample with a space
@@ -60,49 +61,12 @@ void processADC(s16 *adcmsg, u32 nsamples, u32 fifoaddr)
             printf("\n");
     }
     printf("\n");
-
+    */
 }
 
 
 
-/*
-void processADC(s16 *adcmsg, u32 nsamples, u32 fifoaddr)
-{
 
-	u32 i, j, data, wdcnt;
-    s16 *adcmsgbase = adcmsg;
-
-    //Read out of ADC data is packed in a FIFO which is 256bits.
-    //12-16bit ADC samples, 4-16bit zeros.
-    //FIFO is read out 32 bits at a time.
-    for (i=0;i<nsamples;i=i+12) {
-	    for (j=0;j<8;j++) {
-	        if (j<6) {
-	            data = Xil_In32(XPAR_M_AXI_BASEADDR + fifoaddr);
-	            *adcmsg++ = htons(((s16) ((data & 0xFFFF0000) >> 16)) >> 2);
-	            //xil_printf("%d\r\n",adcval>>2);
-	            *adcmsg++ = htons((s16) ((data & 0xFFFF) >> 2));
-                //xil_printf("%d\r\n",adcval>>2);
-	        }
-            else
-   	            data = Xil_In32(XPAR_M_AXI_BASEADDR + fifoaddr);
-        }
-    }
-
-   wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + fifoaddr+4);
-   xil_printf("FIFO Wdcnt = %d\r\n",wdcnt);
-
-
-
-    // Debug print first 10
-    for (i = 0; i < 100; i++)
-        xil_printf("%d\r\n", ntohs(adcmsgbase[i]));
-
-
-
-}
-
-*/
 
 
 
@@ -112,6 +76,7 @@ static void adcdata_push(void *unused)
     (void)unused;
 
      u32 triggered, wdcnt;
+     u32 trigcnt=0;
 
      #define ADC_MAX_LEN 8000*12
 
@@ -129,9 +94,12 @@ static void adcdata_push(void *unused)
         // ADC data can get triggered from either EVR, Soft Trig or DAC
         triggered = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_WRDONE_REG);
 
+        //triggered is set to 1 by the fabric when all the ADC data is in the
+        //FIFO and ready to read out
         if (triggered == 1) {
-            vTaskDelay(pdMS_TO_TICKS(100));
-            xil_printf("Received ADC Trigger...\r\n");
+        	trigcnt++;
+            //vTaskDelay(pdMS_TO_TICKS(100));
+            xil_printf("ADC Data Ready... Trigger #: %d\r\n", trigcnt);
 
             // Process DMA data into adcmsg array
             processADC(adc, ADC_MAX_LEN, RFADC0_FIFO_DOUT_REG);
@@ -173,12 +141,13 @@ static void adcdata_push(void *unused)
             // Send buffer (size = nsamples * sizeof(adcmsg_t))
             psc_send(the_server, 67, sizeof(adc), adc);
 
-
+            xil_printf("Data Read and Sent to IOC\r\n");
 
             //Tell the Fabric the Readout of the ADC FIFO's is complete, to allow another trigger
             Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RDOUTDONE_REG, 1);
             Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RDOUTDONE_REG, 0);
 
+            /*
             wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC0_FIFO_WDCNT_REG);
             xil_printf("FIFO Ch0 Wdcnt after reading FIFO = %d\r\n",wdcnt);
             wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC1_FIFO_WDCNT_REG);
@@ -187,7 +156,7 @@ static void adcdata_push(void *unused)
             xil_printf("FIFO Ch2 Wdcnt after reading FIFO = %d\r\n",wdcnt);
             wdcnt = Xil_In32(XPAR_M_AXI_BASEADDR + RFADC3_FIFO_WDCNT_REG);
             xil_printf("FIFO Ch3 Wdcnt after reading FIFO = %d\r\n",wdcnt);
-
+            */
 
         }
     }
