@@ -27,6 +27,7 @@ entity ps_io is
      reg_o_rfadcfifo : out t_reg_o_rfadc_fifo_rdout;	
      
      reg_o_rfdac     : out t_reg_o_rfdac; 
+     reg_o_dma       : out t_reg_o_dma;
 	 
 	 reg_o_evr       : out t_reg_o_evr;
 	 reg_i_evr       : in  t_reg_i_evr;
@@ -73,6 +74,22 @@ reg_o_rfdac.trig <= reg_o.rfdac_dpram_trig.val.data(0);
 reg_o_rfdac.we <= reg_o.rfdac_dpram_we.val.data(0);
 reg_o_rfdac.addr <= reg_o.rfdac_dpram_addr.val.data(13 downto 0);
 reg_o_rfdac.data <= reg_o.rfdac_dpram_data.val.data;
+
+
+reg_o_dma.testdata_enb <= reg_o.dma_testdata_enb.data.data(0);
+reg_o_dma.soft_trig <= reg_o.dma_soft_trig.data.data(0);
+reg_o_dma.trigsrc <= reg_o.dma_trigsrc.data.data(0);
+--reg_o_dma.fifo_rst <= reg_o.dma_fifo_rst.data.data(0); 
+reg_o_dma.adc_enb <= reg_o.dma_adc_enb.data.data(0); 
+reg_o_dma.adc_len <= reg_o.dma_adc_len.data.data;
+--reg_o_dma.tbt_enb <= reg_o.dma_tbt_enb.data.data(0); 
+--reg_o_dma.tbt_len <= reg_o.dma_tbt_len.data.data;
+--reg_o_dma.fa_enb <= reg_o.dma_fa_enb.data.data(0); 
+--reg_o_dma.fa_len <= reg_o.dma_fa_len.data.data;
+--reg_o_dma.txtoioc_done <= reg_o.dma_txtoioc_done.data.data(0);
+
+
+
 
 
 -- adc FIFO's

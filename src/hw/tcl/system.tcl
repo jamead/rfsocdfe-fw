@@ -123,6 +123,8 @@ set bCheckIPsPassed 1
 set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
+xilinx.com:ip:axi_dma:7.1\
+xilinx.com:ip:axis_dwidth_converter:1.1\
 xilinx.com:ip:proc_sys_reset:5.0\
 xilinx.com:ip:smartconnect:1.0\
 xilinx.com:ip:usp_rf_data_converter:2.6\
@@ -334,6 +336,19 @@ proc create_root_design { parentCell } {
    CONFIG.TUSER_WIDTH {0} \
    ] $s32_axis
 
+  set s_axis_adc [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:axis_rtl:1.0 s_axis_adc ]
+  set_property -dict [ list \
+   CONFIG.HAS_TKEEP {0} \
+   CONFIG.HAS_TLAST {1} \
+   CONFIG.HAS_TREADY {1} \
+   CONFIG.HAS_TSTRB {0} \
+   CONFIG.LAYERED_METADATA {undef} \
+   CONFIG.TDATA_NUM_BYTES {96} \
+   CONFIG.TDEST_WIDTH {0} \
+   CONFIG.TID_WIDTH {0} \
+   CONFIG.TUSER_WIDTH {0} \
+   ] $s_axis_adc
+
   set sysref_in [ create_bd_intf_port -mode Slave -vlnv xilinx.com:display_usp_rf_data_converter:diff_pins_rtl:1.0 sysref_in ]
 
   set vin0_01 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_analog_io_rtl:1.0 vin0_01 ]
@@ -408,6 +423,10 @@ proc create_root_design { parentCell } {
    CONFIG.ASSOCIATED_BUSIF {m_axi} \
    CONFIG.ASSOCIATED_RESET {pl_resetn} \
  ] $pl_clk0
+  set pl_clk1 [ create_bd_port -dir O -type clk pl_clk1 ]
+  set_property -dict [ list \
+   CONFIG.ASSOCIATED_BUSIF {s_axis_adc} \
+ ] $pl_clk1
   set pl_resetn [ create_bd_port -dir O -type rst pl_resetn ]
   set s0_axis_aclk [ create_bd_port -dir I -type clk s0_axis_aclk ]
   set s0_axis_aresetn [ create_bd_port -dir I -type rst s0_axis_aresetn ]
@@ -418,13 +437,34 @@ proc create_root_design { parentCell } {
   set s3_axis_aclk [ create_bd_port -dir I -type clk s3_axis_aclk ]
   set s3_axis_aresetn [ create_bd_port -dir I -type rst s3_axis_aresetn ]
 
+  # Create instance: axi_dma_0, and set properties
+  set axi_dma_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 axi_dma_0 ]
+  set_property -dict [list \
+    CONFIG.c_include_mm2s {0} \
+    CONFIG.c_include_sg {0} \
+    CONFIG.c_s_axis_s2mm_tdata_width {64} \
+    CONFIG.c_sg_length_width {26} \
+  ] $axi_dma_0
+
+
+  # Create instance: axis_dwidth_converter_0, and set properties
+  set axis_dwidth_converter_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_dwidth_converter:1.1 axis_dwidth_converter_0 ]
+  set_property -dict [list \
+    CONFIG.M_TDATA_NUM_BYTES {8} \
+    CONFIG.S_TDATA_NUM_BYTES {96} \
+  ] $axis_dwidth_converter_0
+
+
   # Create instance: rst_ps8_0_100M, and set properties
   set rst_ps8_0_100M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_ps8_0_100M ]
+
+  # Create instance: rst_ps8_0_200M, and set properties
+  set rst_ps8_0_200M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_ps8_0_200M ]
 
   # Create instance: smartconnect_0, and set properties
   set smartconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect:1.0 smartconnect_0 ]
   set_property -dict [list \
-    CONFIG.NUM_MI {2} \
+    CONFIG.NUM_MI {3} \
     CONFIG.NUM_SI {1} \
   ] $smartconnect_0
 
@@ -435,23 +475,23 @@ proc create_root_design { parentCell } {
     CONFIG.ADC0_Clock_Source {2} \
     CONFIG.ADC0_Outclk_Freq {156.150} \
     CONFIG.ADC0_PLL_Enable {true} \
-    CONFIG.ADC0_Refclk_Freq {499.680} \
+    CONFIG.ADC0_Refclk_Freq {416.400} \
     CONFIG.ADC0_Sampling_Rate {4.9968} \
     CONFIG.ADC1_Clock_Source {2} \
     CONFIG.ADC1_Outclk_Freq {156.150} \
     CONFIG.ADC1_PLL_Enable {true} \
-    CONFIG.ADC1_Refclk_Freq {499.680} \
+    CONFIG.ADC1_Refclk_Freq {416.400} \
     CONFIG.ADC1_Sampling_Rate {4.9968} \
     CONFIG.ADC2_Clock_Dist {1} \
     CONFIG.ADC2_Outclk_Freq {156.150} \
     CONFIG.ADC2_PLL_Enable {true} \
-    CONFIG.ADC2_Refclk_Freq {499.680} \
+    CONFIG.ADC2_Refclk_Freq {416.400} \
     CONFIG.ADC2_Sampling_Rate {4.9968} \
     CONFIG.ADC3_Clock_Dist {0} \
     CONFIG.ADC3_Clock_Source {2} \
     CONFIG.ADC3_Outclk_Freq {156.150} \
     CONFIG.ADC3_PLL_Enable {true} \
-    CONFIG.ADC3_Refclk_Freq {499.680} \
+    CONFIG.ADC3_Refclk_Freq {416.400} \
     CONFIG.ADC3_Sampling_Rate {4.9968} \
     CONFIG.ADC_Data_Width00 {12} \
     CONFIG.ADC_Data_Width02 {12} \
@@ -1013,7 +1053,9 @@ proc create_root_design { parentCell } {
     CONFIG.PSU__CRL_APB__PL0_REF_CTRL__ACT_FREQMHZ {100.000000} \
     CONFIG.PSU__CRL_APB__PL0_REF_CTRL__FREQMHZ {100} \
     CONFIG.PSU__CRL_APB__PL0_REF_CTRL__SRCSEL {IOPLL} \
-    CONFIG.PSU__CRL_APB__PL1_REF_CTRL__ACT_FREQMHZ {100} \
+    CONFIG.PSU__CRL_APB__PL1_REF_CTRL__ACT_FREQMHZ {200.000000} \
+    CONFIG.PSU__CRL_APB__PL1_REF_CTRL__FREQMHZ {200} \
+    CONFIG.PSU__CRL_APB__PL1_REF_CTRL__SRCSEL {RPLL} \
     CONFIG.PSU__CRL_APB__PL2_REF_CTRL__ACT_FREQMHZ {100} \
     CONFIG.PSU__CRL_APB__PL3_REF_CTRL__ACT_FREQMHZ {100} \
     CONFIG.PSU__CRL_APB__QSPI_REF_CTRL__ACT_FREQMHZ {125.000000} \
@@ -1153,7 +1195,7 @@ proc create_root_design { parentCell } {
     CONFIG.PSU__FPDMASTERS_COHERENCY {0} \
     CONFIG.PSU__FPD_SLCR__WDT1__ACT_FREQMHZ {100.000000} \
     CONFIG.PSU__FPGA_PL0_ENABLE {1} \
-    CONFIG.PSU__FPGA_PL1_ENABLE {0} \
+    CONFIG.PSU__FPGA_PL1_ENABLE {1} \
     CONFIG.PSU__FPGA_PL2_ENABLE {0} \
     CONFIG.PSU__FPGA_PL3_ENABLE {0} \
     CONFIG.PSU__FP__POWER__ON {1} \
@@ -1321,6 +1363,7 @@ proc create_root_design { parentCell } {
     CONFIG.PSU__PCIE__VENDOR_ID {} \
     CONFIG.PSU__PJTAG__PERIPHERAL__ENABLE {0} \
     CONFIG.PSU__PL_CLK0_BUF {TRUE} \
+    CONFIG.PSU__PL_CLK1_BUF {TRUE} \
     CONFIG.PSU__PL__POWER__ON {1} \
     CONFIG.PSU__PMU__PERIPHERAL__ENABLE {0} \
     CONFIG.PSU__PRESET_APPLIED {1} \
@@ -1338,7 +1381,7 @@ Firmware| SA:0xFF410000; SIZE:640; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Writ
 SA:0xFF9A0000; SIZE:64; UNIT:KB; RegionTZ:Secure; WrAllowed:Read/Write; subsystemId:PMU Firmware|SA:0xFF5E0000 ; SIZE:2560; UNIT:KB; RegionTZ:Secure ; WrAllowed:Read/Write; subsystemId:Secure Subsystem|SA:0xFFCC0000\
 ; SIZE:64; UNIT:KB; RegionTZ:Secure ; WrAllowed:Read/Write; subsystemId:Secure Subsystem|SA:0xFF180000 ; SIZE:768; UNIT:KB; RegionTZ:Secure ; WrAllowed:Read/Write; subsystemId:Secure Subsystem|SA:0xFF9A0000\
 ; SIZE:64; UNIT:KB; RegionTZ:Secure ; WrAllowed:Read/Write; subsystemId:Secure Subsystem} \
-    CONFIG.PSU__PROTECTION__MASTERS {USB1:NonSecure;0|USB0:NonSecure;1|S_AXI_LPD:NA;0|S_AXI_HPC1_FPD:NA;0|S_AXI_HPC0_FPD:NA;0|S_AXI_HP3_FPD:NA;0|S_AXI_HP2_FPD:NA;0|S_AXI_HP1_FPD:NA;0|S_AXI_HP0_FPD:NA;0|S_AXI_ACP:NA;0|S_AXI_ACE:NA;0|SD1:NonSecure;1|SD0:NonSecure;0|SATA1:NonSecure;1|SATA0:NonSecure;1|RPU1:Secure;1|RPU0:Secure;1|QSPI:NonSecure;0|PMU:NA;1|PCIe:NonSecure;0|NAND:NonSecure;0|LDMA:NonSecure;1|GPU:NonSecure;1|GEM3:NonSecure;1|GEM2:NonSecure;0|GEM1:NonSecure;0|GEM0:NonSecure;0|FDMA:NonSecure;1|DP:NonSecure;0|DAP:NA;1|Coresight:NA;1|CSU:NA;1|APU:NA;1}\
+    CONFIG.PSU__PROTECTION__MASTERS {USB1:NonSecure;0|USB0:NonSecure;1|S_AXI_LPD:NA;0|S_AXI_HPC1_FPD:NA;0|S_AXI_HPC0_FPD:NA;0|S_AXI_HP3_FPD:NA;0|S_AXI_HP2_FPD:NA;0|S_AXI_HP1_FPD:NA;0|S_AXI_HP0_FPD:NA;1|S_AXI_ACP:NA;0|S_AXI_ACE:NA;0|SD1:NonSecure;1|SD0:NonSecure;0|SATA1:NonSecure;1|SATA0:NonSecure;1|RPU1:Secure;1|RPU0:Secure;1|QSPI:NonSecure;0|PMU:NA;1|PCIe:NonSecure;0|NAND:NonSecure;0|LDMA:NonSecure;1|GPU:NonSecure;1|GEM3:NonSecure;1|GEM2:NonSecure;0|GEM1:NonSecure;0|GEM0:NonSecure;0|FDMA:NonSecure;1|DP:NonSecure;0|DAP:NA;1|Coresight:NA;1|CSU:NA;1|APU:NA;1}\
 \
     CONFIG.PSU__PROTECTION__MASTERS_TZ {GEM0:NonSecure|SD1:NonSecure|GEM2:NonSecure|GEM1:NonSecure|GEM3:NonSecure|PCIe:NonSecure|DP:NonSecure|NAND:NonSecure|GPU:NonSecure|USB1:NonSecure|USB0:NonSecure|LDMA:NonSecure|FDMA:NonSecure|QSPI:NonSecure|SD0:NonSecure}\
 \
@@ -1360,6 +1403,7 @@ Port;FD4A0000;FD4AFFFF;0|FPD;DPDMA;FD4C0000;FD4CFFFF;0|FPD;DDR_XMPU5_CFG;FD05000
     CONFIG.PSU__SATA__PERIPHERAL__ENABLE {1} \
     CONFIG.PSU__SATA__REF_CLK_FREQ {125} \
     CONFIG.PSU__SATA__REF_CLK_SEL {Ref Clk1} \
+    CONFIG.PSU__SAXIGP2__DATA_WIDTH {64} \
     CONFIG.PSU__SD0__CLK_100_SDR_OTAP_DLY {0x3} \
     CONFIG.PSU__SD0__CLK_200_SDR_OTAP_DLY {0x3} \
     CONFIG.PSU__SD0__CLK_50_DDR_ITAP_DLY {0x3D} \
@@ -1463,7 +1507,7 @@ Port;FD4A0000;FD4AFFFF;0|FPD;DPDMA;FD4C0000;FD4CFFFF;0|FPD;DDR_XMPU5_CFG;FD05000
     CONFIG.PSU__USE__S_AXI_ACP {0} \
     CONFIG.PSU__USE__S_AXI_GP0 {0} \
     CONFIG.PSU__USE__S_AXI_GP1 {0} \
-    CONFIG.PSU__USE__S_AXI_GP2 {0} \
+    CONFIG.PSU__USE__S_AXI_GP2 {1} \
     CONFIG.PSU__USE__S_AXI_GP3 {0} \
     CONFIG.PSU__USE__S_AXI_GP4 {0} \
     CONFIG.PSU__USE__S_AXI_GP5 {0} \
@@ -1496,7 +1540,10 @@ Port;FD4A0000;FD4AFFFF;0|FPD;DPDMA;FD4C0000;FD4CFFFF;0|FPD;DDR_XMPU5_CFG;FD05000
 
 
   # Create interface connections
+  connect_bd_intf_net -intf_net S_AXIS_0_1 [get_bd_intf_ports s_axis_adc] [get_bd_intf_pins axis_dwidth_converter_0/S_AXIS]
   connect_bd_intf_net -intf_net adc2_clk_1 [get_bd_intf_ports adc2_clk] [get_bd_intf_pins usp_rf_data_converter_0/adc2_clk]
+  connect_bd_intf_net -intf_net axi_dma_0_M_AXI_S2MM [get_bd_intf_pins axi_dma_0/M_AXI_S2MM] [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0_FPD]
+  connect_bd_intf_net -intf_net axis_dwidth_converter_0_M_AXIS [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM] [get_bd_intf_pins axis_dwidth_converter_0/M_AXIS]
   connect_bd_intf_net -intf_net dac0_clk_1 [get_bd_intf_ports dac0_clk] [get_bd_intf_pins usp_rf_data_converter_0/dac0_clk]
   connect_bd_intf_net -intf_net s00_axis_0_1 [get_bd_intf_ports s00_axis] [get_bd_intf_pins usp_rf_data_converter_0/s00_axis]
   connect_bd_intf_net -intf_net s02_axis_0_1 [get_bd_intf_ports s02_axis] [get_bd_intf_pins usp_rf_data_converter_0/s02_axis]
@@ -1508,6 +1555,7 @@ Port;FD4A0000;FD4AFFFF;0|FPD;DPDMA;FD4C0000;FD4CFFFF;0|FPD;DDR_XMPU5_CFG;FD05000
   connect_bd_intf_net -intf_net s32_axis_0_1 [get_bd_intf_ports s32_axis] [get_bd_intf_pins usp_rf_data_converter_0/s32_axis]
   connect_bd_intf_net -intf_net smartconnect_0_M00_AXI [get_bd_intf_ports m_axi] [get_bd_intf_pins smartconnect_0/M00_AXI]
   connect_bd_intf_net -intf_net smartconnect_0_M01_AXI [get_bd_intf_pins smartconnect_0/M01_AXI] [get_bd_intf_pins usp_rf_data_converter_0/s_axi]
+  connect_bd_intf_net -intf_net smartconnect_0_M02_AXI [get_bd_intf_pins axi_dma_0/S_AXI_LITE] [get_bd_intf_pins smartconnect_0/M02_AXI]
   connect_bd_intf_net -intf_net sysref_in_1 [get_bd_intf_ports sysref_in] [get_bd_intf_pins usp_rf_data_converter_0/sysref_in]
   connect_bd_intf_net -intf_net usp_rf_data_converter_0_m00_axis [get_bd_intf_ports m00_axis] [get_bd_intf_pins usp_rf_data_converter_0/m00_axis]
   connect_bd_intf_net -intf_net usp_rf_data_converter_0_m02_axis [get_bd_intf_ports m02_axis] [get_bd_intf_pins usp_rf_data_converter_0/m02_axis]
@@ -1544,7 +1592,8 @@ Port;FD4A0000;FD4AFFFF;0|FPD;DPDMA;FD4C0000;FD4CFFFF;0|FPD;DDR_XMPU5_CFG;FD05000
   connect_bd_net -net m2_axis_aclk_0_1 [get_bd_ports m2_axis_aclk] [get_bd_pins usp_rf_data_converter_0/m2_axis_aclk]
   connect_bd_net -net m3_axis_aclk_0_1 [get_bd_ports m3_axis_aclk] [get_bd_pins usp_rf_data_converter_0/m3_axis_aclk]
   connect_bd_net -net m3_axis_aresetn_0_1 [get_bd_ports m3_axis_aresetn] [get_bd_pins usp_rf_data_converter_0/m3_axis_aresetn]
-  connect_bd_net -net rst_ps8_0_100M_peripheral_aresetn [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins usp_rf_data_converter_0/s_axi_aresetn]
+  connect_bd_net -net rst_ps8_0_100M1_peripheral_aresetn [get_bd_pins axis_dwidth_converter_0/aresetn] [get_bd_pins rst_ps8_0_200M/peripheral_aresetn]
+  connect_bd_net -net rst_ps8_0_100M_peripheral_aresetn [get_bd_pins axi_dma_0/axi_resetn] [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins usp_rf_data_converter_0/s_axi_aresetn]
   connect_bd_net -net s0_axis_aclk_0_1 [get_bd_ports s0_axis_aclk] [get_bd_pins usp_rf_data_converter_0/s0_axis_aclk]
   connect_bd_net -net s0_axis_aresetn_0_1 [get_bd_ports s0_axis_aresetn] [get_bd_pins usp_rf_data_converter_0/s0_axis_aresetn]
   connect_bd_net -net s1_axis_aclk_0_1 [get_bd_ports s1_axis_aclk] [get_bd_pins usp_rf_data_converter_0/s1_axis_aclk]
@@ -1562,12 +1611,19 @@ Port;FD4A0000;FD4AFFFF;0|FPD;DPDMA;FD4C0000;FD4CFFFF;0|FPD;DDR_XMPU5_CFG;FD05000
   connect_bd_net -net usp_rf_data_converter_0_clk_dac2 [get_bd_ports clk_dac2] [get_bd_pins usp_rf_data_converter_0/clk_dac2]
   connect_bd_net -net usp_rf_data_converter_0_clk_dac3 [get_bd_ports clk_dac3] [get_bd_pins usp_rf_data_converter_0/clk_dac3]
   connect_bd_net -net usp_rf_data_converter_0_irq [get_bd_pins usp_rf_data_converter_0/irq] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
-  connect_bd_net -net zynq_ultra_ps_e_0_pl_clk0 [get_bd_ports pl_clk0] [get_bd_pins rst_ps8_0_100M/slowest_sync_clk] [get_bd_pins smartconnect_0/aclk] [get_bd_pins usp_rf_data_converter_0/s_axi_aclk] [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
-  connect_bd_net -net zynq_ultra_ps_e_0_pl_resetn0 [get_bd_ports pl_resetn] [get_bd_pins rst_ps8_0_100M/ext_reset_in] [get_bd_pins smartconnect_0/aresetn] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
+  connect_bd_net -net zynq_ultra_ps_e_0_pl_clk0 [get_bd_ports pl_clk0] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins rst_ps8_0_100M/slowest_sync_clk] [get_bd_pins smartconnect_0/aclk] [get_bd_pins usp_rf_data_converter_0/s_axi_aclk] [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
+  connect_bd_net -net zynq_ultra_ps_e_0_pl_clk1 [get_bd_ports pl_clk1] [get_bd_pins axi_dma_0/m_axi_s2mm_aclk] [get_bd_pins axis_dwidth_converter_0/aclk] [get_bd_pins rst_ps8_0_200M/slowest_sync_clk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk1] [get_bd_pins zynq_ultra_ps_e_0/saxihp0_fpd_aclk]
+  connect_bd_net -net zynq_ultra_ps_e_0_pl_resetn0 [get_bd_ports pl_resetn] [get_bd_pins rst_ps8_0_100M/ext_reset_in] [get_bd_pins rst_ps8_0_200M/ext_reset_in] [get_bd_pins smartconnect_0/aresetn] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
 
   # Create address segments
+  assign_bd_address -offset 0x40000000 -range 0x40000000 -target_address_space [get_bd_addr_spaces axi_dma_0/Data_S2MM] [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP2/HP0_DDR_LOW] -force
+  assign_bd_address -offset 0xA0010000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_dma_0/S_AXI_LITE/Reg] -force
   assign_bd_address -offset 0xA0000000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs m_axi/Reg] -force
   assign_bd_address -offset 0xA0040000 -range 0x00040000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs usp_rf_data_converter_0/s_axi/Reg] -force
+
+  # Exclude Address Segments
+  exclude_bd_addr_seg -target_address_space [get_bd_addr_spaces axi_dma_0/Data_S2MM] [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP2/HP0_DDR_HIGH]
+  exclude_bd_addr_seg -offset 0xFF000000 -range 0x01000000 -target_address_space [get_bd_addr_spaces axi_dma_0/Data_S2MM] [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP2/HP0_LPS_OCM]
 
 
   # Restore current instance

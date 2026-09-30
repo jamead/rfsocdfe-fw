@@ -18,6 +18,7 @@ proc setSources {} {
   lappend Sources {"../hdl/top.vhd" "VHDL 2008"} 
   lappend Sources {"../hdl/bpm_package.vhd" "VHDL 2008"} 
   lappend Sources {"../hdl/adc_data_rdout.vhd" "VHDL 2008"}
+  lappend Sources {"../hdl/adc2dma.vhd" "VHDL 2008"}
   lappend Sources {"../hdl/ps_io.vhd" "VHDL 2008"} 
   lappend Sources {"../hdl/rf_adc_fifos.vhd" "VHDL 2008"}
   
@@ -71,6 +72,7 @@ proc doOnCreate {} {
   source ${TclPath}/rfadc_clk_pll.tcl 
   source ${TclPath}/lmk_clk_pll.tcl 
   source ${TclPath}/adc_fifo.tcl 
+  source ${TclPath}/axis_adc_fifo.tcl 
   source ${TclPath}/dac_dpram.tcl 
   source ${TclPath}/gty_evr.tcl 
   

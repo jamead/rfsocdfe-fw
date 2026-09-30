@@ -95,6 +95,7 @@ architecture behv of top is
 
   
   signal pl_clk0      : std_logic;
+  signal pl_clk1      : std_logic;
   signal pl_resetn    : std_logic;
   signal pl_reset     : std_logic;
   signal ps_leds      : std_logic_vector(7 downto 0);
@@ -104,6 +105,8 @@ architecture behv of top is
   
   signal reg_i      : t_addrmap_pl_regs_in;
   signal reg_o      : t_addrmap_pl_regs_out;
+  
+
   
   signal clk104_lmkin0_clk      : std_logic;
   signal clk104_pl_clkin        : std_logic;
@@ -172,15 +175,17 @@ architecture behv of top is
   signal rfdac_axis_mmcm_clk    : std_logic;
   signal rfdac_axis_clk         : std_logic;  
 
-  signal reg_o_rfdac     : t_reg_o_rfdac;
+  signal reg_o_rfdac            : t_reg_o_rfdac;
 
-  signal reg_i_rfadcfifo : t_reg_i_rfadc_fifo_rdout;
-  signal reg_o_rfadcfifo : t_reg_o_rfadc_fifo_rdout;	 
+  signal reg_i_rfadcfifo        : t_reg_i_rfadc_fifo_rdout;
+  signal reg_o_rfadcfifo        : t_reg_o_rfadc_fifo_rdout;	 
 
-  signal reg_o_evr       : t_reg_o_evr;
-  signal reg_i_evr       : t_reg_i_evr;
+  signal reg_o_evr              : t_reg_o_evr;
+  signal reg_i_evr              : t_reg_i_evr;
 
-  signal reg_i_freq      : t_reg_i_freq;
+  signal reg_i_freq             : t_reg_i_freq;
+  
+  signal reg_o_dma              : t_reg_o_dma;
   
   signal evr_gty_reset       : std_logic_vector(7 downto 0);
   signal evr_ref_clk         : std_logic;
@@ -195,6 +200,13 @@ architecture behv of top is
   signal evr_ts              : std_logic_vector(63 downto 0); 
   
   signal tbt_trig            : std_logic;
+  
+  signal dma_adc_active      : std_logic;
+  signal dma_adc_tdata       : std_logic_vector(767 downto 0);
+
+  signal dma_adc_tlast       : std_logic;
+  signal dma_adc_tready      : std_logic;
+  signal dma_adc_tvalid      : std_logic;
   
 
   
@@ -308,7 +320,7 @@ ps_pl: entity work.ps_io
 
 
   
-  
+-- store entire adc data for about 3 turns to internal FIFO 
 rfadc_fifos:  entity work.rf_adc_fifos
   port map (
     pl_clk0 => pl_clk0,  
@@ -328,6 +340,36 @@ rfadc_fifos:  entity work.rf_adc_fifos
     adc6_data => adc6_axis_tdata, 
     adc7_data => adc7_axis_tdata     
  );  
+  
+  
+-- DMA a window of adc data for 1000 turns.
+adctoddr: entity work.adc2dma
+  port map(
+    sys_clk => pl_clk1, 
+    adc_clk => rfadc_axis_clk,  
+    reset => pl_reset,                        
+    trig => evr_dma_trig, --soft_trig, 
+    reg_o => reg_o_dma, 	 
+    adc0_data => adc0_axis_tdata, 
+    adc1_data => adc1_axis_tdata,   
+    adc2_data => adc2_axis_tdata, 
+    adc3_data => adc3_axis_tdata,
+	dma_active => dma_adc_active,
+    m_axis_tdata => dma_adc_tdata, 
+    m_axis_tlast => dma_adc_tlast, 
+    m_axis_tready => dma_adc_tready, 
+    m_axis_tvalid => dma_adc_tvalid   
+  );      
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
 dac0_axis_tvalid <= '1';
@@ -358,6 +400,7 @@ dac_awg: entity work.rf_dac_awg
     dac7_data => dac7_axis_tdata           
  );
  
+
 
 --embedded event receiver
 evr: entity work.evr_top 
@@ -405,6 +448,7 @@ tbt_gen: entity work.pt_cntrl
 system_i: component system
   port map (
     pl_clk0 => pl_clk0,
+    pl_clk1 => pl_clk1,
     pl_resetn => pl_resetn,
     -- axi-lite interface for register I/O    
     m_axi_araddr => m_axi4_m2s.araddr, 
@@ -426,6 +470,14 @@ system_i: component system
     m_axi_wready => m_axi4_s2m.wready,
     m_axi_wstrb => m_axi4_m2s.wstrb,
     m_axi_wvalid => m_axi4_m2s.wvalid,
+    
+    --axis DMA data
+    s_axis_adc_tdata => dma_adc_tdata,
+    s_axis_adc_tlast => dma_adc_tlast, 
+    s_axis_adc_tready => dma_adc_tready,
+    s_axis_adc_tvalid => dma_adc_tvalid,
+    
+    
     --adc resets
     m0_axis_aresetn => pl_resetn,  
     m1_axis_aresetn => pl_resetn,    

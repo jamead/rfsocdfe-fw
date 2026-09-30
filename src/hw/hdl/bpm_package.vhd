@@ -184,8 +184,12 @@ component system is
     m30_axis_tvalid : out STD_LOGIC;
     m32_axis_tdata : out STD_LOGIC_VECTOR ( 191 downto 0 );
     m32_axis_tready : in STD_LOGIC;
-    m32_axis_tvalid : out STD_LOGIC;    
-
+    m32_axis_tvalid : out STD_LOGIC;   
+     
+    s_axis_adc_tdata : in std_logic_vector(767 downto 0); 
+    s_axis_adc_tlast : in std_logic;  
+    s_axis_adc_tready : out std_logic; 
+    s_axis_adc_tvalid : in std_logic;  
 
     --DAC
     dac0_clk_clk_n : in STD_LOGIC;
@@ -265,6 +269,7 @@ component system is
     m_axi_wstrb : out STD_LOGIC_VECTOR ( 3 downto 0 );
     m_axi_wvalid : out STD_LOGIC;
     pl_clk0 : out STD_LOGIC;
+    pl_clk1 : out std_logic;
     pl_resetn : out STD_LOGIC;
     sysref_in_diff_n : in STD_LOGIC;
     sysref_in_diff_p : in STD_LOGIC
