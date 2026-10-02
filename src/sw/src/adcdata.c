@@ -99,7 +99,7 @@ static void adcdata_push(void *unused)
         if (triggered == 1) {
         	trigcnt++;
             //vTaskDelay(pdMS_TO_TICKS(100));
-            xil_printf("ADC Data Ready... Trigger #: %d\r\n", trigcnt);
+            //xil_printf("ADC Data Ready... Trigger #: %d\r\n", trigcnt);
 
             // Process DMA data into adcmsg array
             processADC(adc, ADC_MAX_LEN, RFADC0_FIFO_DOUT_REG);
@@ -141,7 +141,7 @@ static void adcdata_push(void *unused)
             // Send buffer (size = nsamples * sizeof(adcmsg_t))
             psc_send(the_server, 67, sizeof(adc), adc);
 
-            xil_printf("Data Read and Sent to IOC\r\n");
+            //xil_printf("Data Read and Sent to IOC\r\n");
 
             //Tell the Fabric the Readout of the ADC FIFO's is complete, to allow another trigger
             Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RDOUTDONE_REG, 1);

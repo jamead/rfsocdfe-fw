@@ -152,6 +152,7 @@ static void on_startup(void *pvt, psc_key *key)
     brdstats_setup();
     rfstats_setup();
     adcdata_setup();
+    dmadata_setup();
     sadata_setup();
     console_setup();
 }
@@ -225,7 +226,7 @@ int main()
 	xil_printf("Init Sysmon...\r\n");
 	init_sysmon();
 
-
+    xil_printf("Set port expander...\r\n");
     i2c_set_port_expander(I2C_PORTEXP1_ADDR,0x40);
     //voltage and current readback device on AFE
 

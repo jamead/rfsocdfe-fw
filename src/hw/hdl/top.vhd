@@ -208,12 +208,32 @@ architecture behv of top is
   signal dma_adc_tready      : std_logic;
   signal dma_adc_tvalid      : std_logic;
   
+--  signal adc0_data_reg_fifo : std_logic_vector(191 downto 0);
+--  signal adc0_data_reg_dma  : std_logic_vector(191 downto 0);
+--  signal adc1_data_reg_fifo : std_logic_vector(191 downto 0);
+--  signal adc1_data_reg_dma  : std_logic_vector(191 downto 0);
+--  signal adc2_data_reg_fifo : std_logic_vector(191 downto 0);
+--  signal adc2_data_reg_dma  : std_logic_vector(191 downto 0);
+--  signal adc3_data_reg_fifo : std_logic_vector(191 downto 0);
+--  signal adc3_data_reg_dma  : std_logic_vector(191 downto 0);
+
+
+--  attribute dont_touch : string;
+--  attribute dont_touch of adc0_data_reg_fifo : signal is "true";
+--  attribute dont_touch of adc0_data_reg_dma  : signal is "true";
+--  attribute dont_touch of adc1_data_reg_fifo : signal is "true";
+--  attribute dont_touch of adc1_data_reg_dma  : signal is "true";
+--  attribute dont_touch of adc2_data_reg_fifo : signal is "true";
+--  attribute dont_touch of adc2_data_reg_dma  : signal is "true";
+--  attribute dont_touch of adc3_data_reg_fifo : signal is "true";
+--  attribute dont_touch of adc3_data_reg_dma  : signal is "true";
 
   
   attribute mark_debug     : string;
   attribute mark_debug of dac0_axis_tdata: signal is "true"; 
   attribute mark_debug of dac0_axis_tvalid: signal is "true"; 
   attribute mark_debug of dac0_axis_tready: signal is "true"; 
+  attribute mark_debug of adc0_axis_tdata: signal is "true";
 
 --  attribute mark_debug of adc1_axis_tvalid: signal is "true";   
 --  attribute mark_debug of adc2_axis_tdata: signal is "true"; 
@@ -311,12 +331,31 @@ ps_pl: entity work.ps_io
     fp_leds => ps_leds, 
     reg_o_rfdac => reg_o_rfdac,
     reg_i_rfadcfifo => reg_i_rfadcfifo, 
-    reg_o_rfadcfifo => reg_o_rfadcfifo, 	 
+    reg_o_rfadcfifo => reg_o_rfadcfifo, 	
+    reg_o_dma => reg_o_dma, 
 	reg_o_evr => reg_o_evr, 
 	reg_i_evr => reg_i_evr,
 	reg_i_freq => reg_i_freq
           
   );
+
+
+
+
+--process(rfadc_axis_clk)
+--begin
+--    if rising_edge(rfadc_axis_clk) then
+--        adc0_data_reg_fifo <= adc0_axis_tdata;
+--        adc0_data_reg_dma  <= adc0_axis_tdata;
+--        adc1_data_reg_fifo <= adc1_axis_tdata;
+--        adc1_data_reg_dma  <= adc1_axis_tdata;
+--        adc2_data_reg_fifo <= adc2_axis_tdata;
+--        adc2_data_reg_dma  <= adc2_axis_tdata;
+--        adc3_data_reg_fifo <= adc3_axis_tdata;
+--        adc3_data_reg_dma  <= adc3_axis_tdata;                        
+--    end if;
+--end process;
+
 
 
   
@@ -332,9 +371,9 @@ rfadc_fifos:  entity work.rf_adc_fifos
     dac_trig => reg_o_rfdac.trig,
     evr_trig => evr_dma_trig,  
     adc0_data => adc0_axis_tdata, 
-    adc1_data => adc1_axis_tdata,   
-    adc2_data => adc2_axis_tdata, 
-    adc3_data => adc3_axis_tdata,
+    adc1_data => adc1_axis_tdata,    
+    adc2_data => adc2_axis_tdata,  
+    adc3_data => adc3_axis_tdata, 
     adc4_data => adc4_axis_tdata, 
     adc5_data => adc5_axis_tdata,   
     adc6_data => adc6_axis_tdata, 
@@ -348,7 +387,7 @@ adctoddr: entity work.adc2dma
     sys_clk => pl_clk1, 
     adc_clk => rfadc_axis_clk,  
     reset => pl_reset,                        
-    trig => evr_dma_trig, --soft_trig, 
+    trig => reg_o_dma.soft_trig, 
     reg_o => reg_o_dma, 	 
     adc0_data => adc0_axis_tdata, 
     adc1_data => adc1_axis_tdata,   

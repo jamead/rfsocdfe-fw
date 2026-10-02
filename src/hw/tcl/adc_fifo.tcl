@@ -67,7 +67,7 @@ set_property -dict [list \
   CONFIG.Enable_Reset_Synchronization {false} \
   CONFIG.Fifo_Implementation {Independent_Clocks_Block_RAM} \
   CONFIG.Input_Data_Width {256} \
-  CONFIG.Input_Depth {8192} \
+  CONFIG.Input_Depth {4096} \
   CONFIG.Performance_Options {Standard_FIFO} \
   CONFIG.Read_Data_Count {true} \
   CONFIG.Use_Extra_Logic {false} \

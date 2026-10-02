@@ -62,7 +62,7 @@ component adc_fifo IS
     dout : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
     full : OUT STD_LOGIC;
     empty : OUT STD_LOGIC;
-    rd_data_count : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
+    rd_data_count : OUT STD_LOGIC_VECTOR(14 DOWNTO 0)
   );
 END component;
 
@@ -79,12 +79,13 @@ END component;
   signal adc_trig_sr      : std_logic_vector(2 downto 0);  
   signal adc_trig_s       : std_logic;
   signal sample_num       : unsigned(15 downto 0);
-  signal fifo_rd_data_cnt : std_logic_vector(15 downto 0);
+  signal fifo_rd_data_cnt : std_logic_vector(14 downto 0);
   
   signal fifo_rst         : std_logic := '0';
   signal fifo_rst_cnt     : unsigned(4 downto 0) := (others => '0');  -- 0..31
   
   signal fifo_rdoutdone_sr : std_logic_vector(2 downto 0) := (others => '0');
+  signal adc_data_reg : std_logic_vector(191 downto 0) := (others => '0');
   signal fifo_rdoutdone_s  : std_logic := '0';
   
 
@@ -112,7 +113,7 @@ begin
 
 
 
-fifo_rdcnt <= 16d"0" & fifo_rd_data_cnt;
+fifo_rdcnt <= 17d"0" & fifo_rd_data_cnt;
 
 --since fifo is fall-through mode, want the rdstr
 --to happen after the current word is read.
@@ -166,6 +167,22 @@ begin
 end process;
 
 
+adc_data_reg <= adc_data;
+---- Register ADC data to improve timing
+--process(adc_clk)
+--begin
+--  if rising_edge(adc_clk) then
+--    if sys_rst = '1' then
+--      adc_data_reg <= (others => '0');
+--    else
+--      adc_data_reg <= adc_data;
+--    end if;
+--  end if;
+--end process;
+
+
+
+
 
 --write samples to fifo
 process(adc_clk)
@@ -202,12 +219,12 @@ process(adc_clk)
               --            x"8888" & x"9999" & x"AAAA" & x"BBBB" & 
               --            x"CCCC" & x"DDDD" & x"EEEE" & x"FFFF";
 
-              fifo_din <= adc_data(15 downto 0) & adc_data(31 downto 16) & adc_data(47 downto 32) & adc_data(63 downto 48) &
-                          adc_data(79 downto 64) & adc_data(95 downto 80) & adc_data(111 downto 96) & adc_data(127 downto 112) & 
-                          adc_data(143 downto 128) & adc_data(159 downto 144) & adc_data(175 downto 160) & adc_data(191 downto 176) &
+              fifo_din <= adc_data_reg(15 downto 0) & adc_data_reg(31 downto 16) & adc_data_reg(47 downto 32) & adc_data_reg(63 downto 48) &
+                          adc_data_reg(79 downto 64) & adc_data_reg(95 downto 80) & adc_data_reg(111 downto 96) & adc_data_reg(127 downto 112) & 
+                          adc_data_reg(143 downto 128) & adc_data_reg(159 downto 144) & adc_data_reg(175 downto 160) & adc_data_reg(191 downto 176) &
                           64d"0";               
                           
-              if (sample_num = to_unsigned(8100, sample_num'length)) then
+              if (sample_num = to_unsigned(4000, sample_num'length)) then
                 fifo_wren <= '0'; 
                 state <= rdout_wait;
               else

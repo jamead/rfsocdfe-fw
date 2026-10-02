@@ -273,9 +273,8 @@ begin
                 test_base <= test_base + to_unsigned(12, 64);
               else
                 -- Retain the original intended channel packing:
-                -- [767:576]=ADC2, [575:384]=ADC3,
-                -- [383:192]=ADC0, [191:0]=ADC1.
-                s_axis_tdata <= adc2_data & adc3_data & adc0_data & adc1_data;
+                -- [767:576]=ADC3, [575:384]=ADC1,  [383:192]=ADC2, [191:0]=ADC0.
+                s_axis_tdata <= adc3_data & adc2_data & adc1_data & adc0_data;
               end if;
               s_axis_tvalid <= '1';
               s_axis_tlast <= '0';

@@ -144,11 +144,13 @@ reg {
   } dma_soft_trig @0x100;
 
 reg {
-    desc="DMA ADC Enable";
+    desc="DMA FIFO Reset";
     default sw = rw;
     default hw = r;
     field {} data[1];
-  } dma_adc_enb @0x108;
+  } dma_fifo_rst @0x104;
+
+
 
 reg {
     desc="DMA ADC Length";

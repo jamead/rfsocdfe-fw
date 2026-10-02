@@ -18,7 +18,7 @@
 
 #include "math.h"
 
-
+u32 soft_trig_cnt = 0;
 
 
 
@@ -109,6 +109,8 @@ void soft_trig(u32 msgVal) {
 
 	if (msgVal == 1) {
       xil_printf("Soft Trigger...\r\n");
+      soft_trig_cnt++;
+      xil_printf("Soft Trigger...  %d\r\n",soft_trig_cnt);
       // clear the FIFO
       Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_RST_REG, 1);
       vTaskDelay(pdMS_TO_TICKS(10));

@@ -475,23 +475,23 @@ proc create_root_design { parentCell } {
     CONFIG.ADC0_Clock_Source {2} \
     CONFIG.ADC0_Outclk_Freq {156.150} \
     CONFIG.ADC0_PLL_Enable {true} \
-    CONFIG.ADC0_Refclk_Freq {416.400} \
+    CONFIG.ADC0_Refclk_Freq {499.680} \
     CONFIG.ADC0_Sampling_Rate {4.9968} \
     CONFIG.ADC1_Clock_Source {2} \
     CONFIG.ADC1_Outclk_Freq {156.150} \
     CONFIG.ADC1_PLL_Enable {true} \
-    CONFIG.ADC1_Refclk_Freq {416.400} \
+    CONFIG.ADC1_Refclk_Freq {499.680} \
     CONFIG.ADC1_Sampling_Rate {4.9968} \
     CONFIG.ADC2_Clock_Dist {1} \
     CONFIG.ADC2_Outclk_Freq {156.150} \
     CONFIG.ADC2_PLL_Enable {true} \
-    CONFIG.ADC2_Refclk_Freq {416.400} \
+    CONFIG.ADC2_Refclk_Freq {499.680} \
     CONFIG.ADC2_Sampling_Rate {4.9968} \
     CONFIG.ADC3_Clock_Dist {0} \
     CONFIG.ADC3_Clock_Source {2} \
     CONFIG.ADC3_Outclk_Freq {156.150} \
     CONFIG.ADC3_PLL_Enable {true} \
-    CONFIG.ADC3_Refclk_Freq {416.400} \
+    CONFIG.ADC3_Refclk_Freq {499.680} \
     CONFIG.ADC3_Sampling_Rate {4.9968} \
     CONFIG.ADC_Data_Width00 {12} \
     CONFIG.ADC_Data_Width02 {12} \
@@ -1622,7 +1622,7 @@ Port;FD4A0000;FD4AFFFF;0|FPD;DPDMA;FD4C0000;FD4CFFFF;0|FPD;DDR_XMPU5_CFG;FD05000
   assign_bd_address -offset 0xA0040000 -range 0x00040000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs usp_rf_data_converter_0/s_axi/Reg] -force
 
   # Exclude Address Segments
-  exclude_bd_addr_seg -target_address_space [get_bd_addr_spaces axi_dma_0/Data_S2MM] [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP2/HP0_DDR_HIGH]
+  exclude_bd_addr_seg -offset 0x000800000000 -range 0x000100000000 -target_address_space [get_bd_addr_spaces axi_dma_0/Data_S2MM] [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP2/HP0_DDR_HIGH]
   exclude_bd_addr_seg -offset 0xFF000000 -range 0x01000000 -target_address_space [get_bd_addr_spaces axi_dma_0/Data_S2MM] [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP2/HP0_LPS_OCM]
 
 
