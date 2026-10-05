@@ -20,8 +20,6 @@ extern u32 soft_trig_cnt;
 
 
 
-#define NUM_CHANNELS        4
-#define SAMPLES_PER_CHUNK  12
 
 
 
@@ -41,7 +39,7 @@ void dma_arm() {
 
 	//Read the DMA length registers, just so we can print them
 	adclen = Xil_In32(XPAR_M_AXI_BASEADDR + DMA_ADCBURSTLEN_REG);
-    adclen = 10000;
+    adclen = 240000*2;
 
 	xil_printf("Arming DMA...   DMA ADC Length = %d\r\n",adclen);
 
@@ -84,199 +82,163 @@ void dma_arm() {
 
 }
 
-
-
-
-
 /*******************************************************
-  * DMA data format:
-  *
-*   12 samples from channel 0
-*   12 samples from channel 1
-*   12 samples from channel 2
-*   12 samples from channel 3
-*
-* Then the pattern repeats.
-*
-* Each 32-bit word contains two 16-bit ADC samples:
-*
-*   bits 15:0   = first sample
-*   bits 31:16  = second sample
-********************************************************/
+ * VHDL packing:
+ *
+ *   adc3_data & adc2_data & adc1_data & adc0_data
+ *
+ * DMA transfers the lowest bits first:
+ *
+ *   12 samples from channel 0
+ *   12 samples from channel 1
+ *   12 samples from channel 2
+ *   12 samples from channel 3
+ *
+ * Then the pattern repeats.
+ *
+ * Each 32-bit word contains two 16-bit ADC samples:
+ *
+ *   bits 15:0  = first sample
+ *   bits 31:16 = second sample
+ *
+ * nsamples = number of samples PER CHANNEL.
+ *
+ * Full acquisition:
+ *   240000 samples/channel x 4 channels x 2 bytes
+ *   = 1,920,000 DMA bytes.
+ *
+ * Call after DMA completion and any required
+ * DMA cache invalidation.
+ *******************************************************/
 
-#define NSAMPLES_PER_CHANNEL 1000
-#define NUM_CHANNELS        4
-#define SAMPLES_PER_GROUP  12
-#define WORDS_PER_GROUP    6
+#define NSAMPLES_PER_CHANNEL 240000U
+#define NUM_CHANNELS         4U
+#define SAMPLES_PER_GROUP    12U
+#define WORDS_PER_GROUP      (SAMPLES_PER_GROUP / 2U)
 
 void process_ADC_dma(adcmsg_t *adcmsg, u32 nsamples)
 {
-
-
-    u32 i, j, k, regval, channel;
+    u32 i, j, k, channel;
+    u32 regval;
+    u32 total_groups;
+    u32 bytes_per_channel;
+    u32 print_samples;
     s16 sample0, sample1;
-    u32 *adc_data = (u32 *)ADC_DMA_DATA;
 
-    static s16 adc_ch0[NSAMPLES_PER_CHANNEL];
-    static s16 adc_ch1[NSAMPLES_PER_CHANNEL];
-    static s16 adc_ch2[NSAMPLES_PER_CHANNEL];
-    static s16 adc_ch3[NSAMPLES_PER_CHANNEL];
-
-
-    nsamples = 200;
-    xil_printf("DMA ADC Data...\r\n");
-
-
-    int ch0_count = 0;
-    int ch1_count = 0;
-    int ch2_count = 0;
-    int ch3_count = 0;
-
-
-for (i = 0; i < nsamples; i++) {
+    const u32 *adc_data = (const u32 *)ADC_DMA_DATA;
 
     /*
-     * Determine which ADC channel this group belongs to.
-     *
-     * i = 0  -> channel 0
-     * i = 1  -> channel 1
-     * i = 2  -> channel 2
-     * i = 3  -> channel 3
-     * i = 4  -> channel 0
-     * etc.
+     * Buffers contain network-order samples for psc_send().
      */
-    channel = i % 4;
+    static u16 adc_ch0[NSAMPLES_PER_CHANNEL];
+    static u16 adc_ch1[NSAMPLES_PER_CHANNEL];
+    static u16 adc_ch2[NSAMPLES_PER_CHANNEL];
+    static u16 adc_ch3[NSAMPLES_PER_CHANNEL];
 
+    u16 *adc_channels[NUM_CHANNELS] = {
+        adc_ch0, adc_ch1, adc_ch2, adc_ch3
+    };
+
+    u32 channel_count[NUM_CHANNELS] = {
+        0U, 0U, 0U, 0U
+    };
+
+    (void)adcmsg;  /* Retained for compatibility. */
 
     /*
-     * Each group has 12 samples.
-     *
-     * Since each 32-bit word contains two 16-bit samples,
-     * read 6 words.
+     * Validate sample count before accessing the DMA buffer.
+     * The completed DMA transfer must contain at least
+     * nsamples * NUM_CHANNELS * sizeof(u16) bytes.
      */
-    for (j = 0; j < WORDS_PER_GROUP; j++) {
+    if ((nsamples == 0U) ||
+        (nsamples > NSAMPLES_PER_CHANNEL) ||
+        ((nsamples % SAMPLES_PER_GROUP) != 0U)) {
 
-        regval = *adc_data;
-        adc_data++;
+        xil_printf(
+            "Invalid samples/channel: %u\r\n"
+            "Must be a multiple of 12, from 12 to %u.\r\n",
+            (unsigned int)nsamples,
+            (unsigned int)NSAMPLES_PER_CHANNEL);
 
+        return;
+    }
 
-        /*
-         * Extract the two ADC samples.
-         *
-         * Low 16 bits come first in time.
-         */
-        sample0 = (s16)(regval & 0xFFFF);
+    /*
+     * Each iteration processes 12 samples from one channel.
+     * For 240000 samples/channel, process 80000 groups.
+     */
+    total_groups =
+        (nsamples / SAMPLES_PER_GROUP) * NUM_CHANNELS;
 
-        sample1 = (s16)((regval >> 16) & 0xFFFF);
+    bytes_per_channel = nsamples * sizeof(u16);
 
+    xil_printf("DMA ADC Data: %u samples/channel\r\n",
+               (unsigned int)nsamples);
 
-        /*
-         * Store the samples in the correct channel array.
-         */
-        if (channel == 0) {
+    for (i = 0U; i < total_groups; i++) {
 
-            adc_ch0[ch0_count] = sample0;
-            ch0_count++;
+        channel = i % NUM_CHANNELS;
 
-            adc_ch0[ch0_count] = sample1;
-            ch0_count++;
-        }
+        for (j = 0U; j < WORDS_PER_GROUP; j++) {
 
+            regval = *adc_data++;
 
-        else if (channel == 1) {
+            sample0 = (s16)(regval & 0xFFFFU);
+            sample1 = (s16)((regval >> 16) & 0xFFFFU);
 
-            adc_ch1[ch1_count] = sample0;
-            ch1_count++;
+            // Scale samples (right shift by 2)
+            sample0 >>= 2;
+            sample1 >>= 2;
 
-            adc_ch1[ch1_count] = sample1;
-            ch1_count++;
-        }
+            adc_channels[channel][channel_count[channel]++] =
+                htons((u16)sample0);
 
-
-        else if (channel == 2) {
-
-            adc_ch2[ch2_count] = sample0;
-            ch2_count++;
-
-            adc_ch2[ch2_count] = sample1;
-            ch2_count++;
-        }
-
-
-        else if (channel == 3) {
-
-            adc_ch3[ch3_count] = sample0;
-            ch3_count++;
-
-            adc_ch3[ch3_count] = sample1;
-            ch3_count++;
+            adc_channels[channel][channel_count[channel]++] =
+                htons((u16)sample1);
         }
     }
-}
 
+    xil_printf("Sending DMA data...\r\n");
 
+    psc_send(the_server, 70, bytes_per_channel, adc_ch0);
+    psc_send(the_server, 71, bytes_per_channel, adc_ch1);
+    psc_send(the_server, 72, bytes_per_channel, adc_ch2);
+    psc_send(the_server, 73, bytes_per_channel, adc_ch3);
 
-xil_printf("\r\n");
-xil_printf("Channel 0 - First 96 Samples\r\n");
+    xil_printf("Finished\r\n");
 
-for (k = 0; k < 96; k++) {
+    /*
+     * Convert network-order samples back to signed
+     * host-order values for console output.
+     */
+    print_samples = (nsamples < 96U) ? nsamples : 96U;
 
-    xil_printf("%d   ", adc_ch0[k]);
+    for (channel = 0U; channel < NUM_CHANNELS; channel++) {
 
-    if (((k + 1) % 8) == 0) {
-        xil_printf("\r\n");
+        xil_printf("\r\nChannel %u - First %u Samples\r\n",
+                   (unsigned int)channel,
+                   (unsigned int)print_samples);
+
+        for (k = 0U; k < print_samples; k++) {
+
+            sample0 = (s16)ntohs(adc_channels[channel][k]);
+
+            xil_printf("%d   ", (int)sample0);
+
+            if (((k + 1U) % 8U) == 0U) {
+                xil_printf("\r\n");
+            }
+        }
+
+        if ((print_samples % 8U) != 0U) {
+            xil_printf("\r\n");
+        }
     }
+
+    xil_printf("\r\n");
 }
 
 
-xil_printf("\r\n");
-xil_printf("Channel 1 - First 96 Samples\r\n");
-
-for (k = 0; k < 96; k++) {
-
-    xil_printf("%d   ", adc_ch1[k]);
-
-    if (((k + 1) % 8) == 0) {
-        xil_printf("\r\n");
-    }
-}
-
-
-xil_printf("\r\n");
-xil_printf("Channel 2 - First 96 Samples\r\n");
-
-for (k = 0; k < 96; k++) {
-
-    xil_printf("%d   ", adc_ch2[k]);
-
-    if (((k + 1) % 8) == 0) {
-        xil_printf("\r\n");
-    }
-}
-
-
-xil_printf("\r\n");
-xil_printf("Channel 3 - First 96 Samples\r\n");
-
-for (k = 0; k < 96; k++) {
-
-    xil_printf("%d   ", adc_ch3[k]);
-
-    if (((k + 1) % 8) == 0) {
-        xil_printf("\r\n");
-    }
-}
-
-
-
-
-
-
-
-
-    // Send buffer (size = nsamples * sizeof(adcmsg_t))
-    //psc_send(the_server, 53, nsamples * sizeof(adcmsg_t), adcmsg);
-}
 
 
 
@@ -331,7 +293,7 @@ static void dmadata_push(void *unused)
 
 
             // Process DMA data into adcmsg array
-            process_ADC_dma(adcmsg, adclen);
+            process_ADC_dma(adcmsg, 240000);
 
 
             // Clear DMA Trigger Latch, allows for next trigger

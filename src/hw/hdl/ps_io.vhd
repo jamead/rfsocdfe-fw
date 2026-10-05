@@ -78,6 +78,7 @@ reg_o_rfdac.data <= reg_o.rfdac_dpram_data.val.data;
 
 reg_o_dma.testdata_enb <= reg_o.dma_testdata_enb.data.data(0);
 reg_o_dma.soft_trig <= reg_o.dma_soft_trig.data.data(0);
+reg_o_dma.trig_delay <= reg_o.dma_trig_delay.data.data;
 reg_o_dma.trigsrc <= reg_o.dma_trigsrc.data.data(0);
 reg_o_dma.fifo_rst <= reg_o.dma_fifo_rst.data.data(0); 
 reg_o_dma.adc_len <= reg_o.dma_adc_len.data.data;
@@ -95,6 +96,7 @@ reg_o_dma.adc_len <= reg_o.dma_adc_len.data.data;
 --reg_o_rfadcfifo.enb <= reg_o.rfadcfifo_softtrig.data.data(0); 
 reg_o_rfadcfifo.rst <= reg_o.rfadcfifo_reset.data.data(0);
 reg_o_rfadcfifo.softtrig <= reg_o.rfadcfifo_softtrig.data.data(0);
+reg_o_rfadcfifo.trig_delay <= reg_o.rfadcfifo_trig_delay.data.data;
 reg_o_rfadcfifo.rdoutdone <= reg_o.rfadcfifo_rdoutdone.data.data(0);
 reg_i.rfadcfifo_writedone.data.data(0) <= reg_i_rfadcfifo.wrdone;
 
@@ -137,7 +139,7 @@ reg_i.ts_ns.val.data <= reg_i_evr.ts_ns;
 reg_i.ts_s.val.data <= reg_i_evr.ts_s; 
 
 reg_o_evr.reset <= reg_o.evr_reset.data.data(0);
-reg_o_evr.dma_trigno <= reg_o.dma_trig_eventno.val.data;
+reg_o_evr.dma_trigno <= reg_o.evr_dma_trig_eventno.val.data;
 
 
 

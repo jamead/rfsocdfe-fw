@@ -201,6 +201,15 @@ void reg_settings(void *msg) {
             set_eventno(data.u);
             break;
 
+        case FIFO_TRIG_DLY_MSG:
+           	xil_printf("FIFO Trig Delay Message:   Value=%d\r\n",data.u);
+           	Xil_Out32(XPAR_M_AXI_BASEADDR + RFADC_FIFO_TRIGDLY_REG, data.u);
+            break;
+
+        case DMA_TRIG_DLY_MSG:
+           	xil_printf("DMA Trig Delay Message:   Value=%d\r\n",data.u);
+           	Xil_Out32(XPAR_M_AXI_BASEADDR + DMA_TRIGDLY_REG, data.u);
+            break;
 
 
         default:

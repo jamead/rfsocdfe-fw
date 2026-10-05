@@ -18,6 +18,7 @@ type t_reg_o_rfadc_fifo_rdout is record
    enb          : std_logic;
    rst          : std_logic;
    softtrig     : std_logic;
+   trig_delay   : std_logic_vector(15 downto 0);
    rdoutdone    : std_logic;
    adc0_rdstr   : std_logic;
    adc1_rdstr   : std_logic;
@@ -104,6 +105,7 @@ end record t_reg_i_freq;
 
 type t_reg_o_dma is record
     soft_trig    : std_logic;
+    trig_delay   : std_logic_vector(15 downto 0);
     trigsrc      : std_logic;
     testdata_enb : std_logic;
     adc_len      : std_logic_vector(31 downto 0);

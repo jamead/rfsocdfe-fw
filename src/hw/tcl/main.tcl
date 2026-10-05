@@ -17,6 +17,7 @@ proc setSources {} {
   variable Sources 
   lappend Sources {"../hdl/top.vhd" "VHDL 2008"} 
   lappend Sources {"../hdl/bpm_package.vhd" "VHDL 2008"} 
+  lappend Sources {"../hdl/trigger_sync.vhd" "VHDL 2008"}
   lappend Sources {"../hdl/adc_data_rdout.vhd" "VHDL 2008"}
   lappend Sources {"../hdl/adc2dma.vhd" "VHDL 2008"}
   lappend Sources {"../hdl/ps_io.vhd" "VHDL 2008"} 

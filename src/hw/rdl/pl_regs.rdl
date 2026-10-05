@@ -150,6 +150,12 @@ reg {
     field {} data[1];
   } dma_fifo_rst @0x104;
 
+reg {
+    desc="DMA Trigger Delay";
+    default sw = rw;
+    default hw = r;
+    field {} data[16];
+  } dma_trig_delay @0x108;
 
 
 reg {
@@ -216,30 +222,31 @@ reg {
     default sw = r;
     default hw = w;
     field {} val[32];
-  } dma_ts_ns @0x158;
+  } evr_dma_ts_ns @0x158;
 
 reg {
     desc="DMA Trigger Timestamp (s)";
     default sw = r;
     default hw = w;
     field {} val[32];
-  } dma_ts_s @0x15C;  
+  } evr_dma_ts_s @0x15C;  
 
 reg {
     desc="DMA Trigger Event Number";
     default sw = rw;
     default hw = r;
     field {} val[8];
-  } dma_trig_eventno @0x160;  
+  } evr_dma_trig_eventno @0x160;  
 
 reg {
     desc="DMA Trigger Delay";
     default sw = rw;
     default hw = r;
     field {} val[32];
-  } dma_trig_delay @0x164;  
+  } evr_dma_trig_delay @0x164;  
 
 
+ 
  
 /* rfSOC DAC Dual Port Memory write registers */
 
@@ -352,6 +359,14 @@ reg {
     default swmod=true;
     field {} data[1];
   } rfadcfifo_rdoutdone @0x40C;
+
+
+  reg {
+    desc="ADC FIFO Trig Delay";
+    default sw = rw;
+    default hw = r;
+    field {} data[16];
+  } rfadcfifo_trig_delay @0x410;
 
 
 

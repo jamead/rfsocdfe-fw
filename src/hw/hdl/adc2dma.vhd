@@ -52,6 +52,7 @@ entity adc2dma is
     adc2_data     : in  std_logic_vector(191 downto 0);
     adc3_data     : in  std_logic_vector(191 downto 0);
     dma_active    : out std_logic;
+    dma_write     : out std_logic;
     m_axis_tdata  : out std_logic_vector(767 downto 0);
     m_axis_tkeep  : out std_logic_vector(95 downto 0);
     m_axis_tlast  : out std_logic;
@@ -136,6 +137,10 @@ architecture rtl of adc2dma is
   
 
 begin
+
+dma_write <= s_axis_tvalid;
+
+
   assert CAPTURE_CLOCKS <= TURN_CLOCKS
     report "CAPTURE_CLOCKS must not exceed TURN_CLOCKS" severity failure;
 
@@ -168,20 +173,20 @@ begin
   -- trig must remain high long enough to be sampled (at least 2 adc_clk periods
   -- for an asynchronous source); short pulses require a source-domain stretcher
   -- or toggle handshake. Hold testdata_enb stable before asserting trig.
-  process (adc_clk, adc_rst)
-  begin
-    if adc_rst = '1' then
-      trig_sync <= (others => '0');
-      trig_d <= '0';
-      test_sync <= (others => '0');
-      done_sync <= (others => '0');
-    elsif rising_edge(adc_clk) then
-      trig_sync <= trig_sync(0) & trig;
-      trig_d <= trig_sync(1);
-      test_sync <= test_sync(0) & reg_o.testdata_enb;
-      done_sync <= done_sync(0) & done_toggle;
-    end if;
-  end process;
+--  process (adc_clk, adc_rst)
+--  begin
+--    if adc_rst = '1' then
+--      trig_sync <= (others => '0');
+--      trig_d <= '0';
+--      test_sync <= (others => '0');
+--      done_sync <= (others => '0');
+--    elsif rising_edge(adc_clk) then
+--      trig_sync <= trig_sync(0) & trig;
+--      trig_d <= trig_sync(1);
+--      test_sync <= test_sync(0) & reg_o.testdata_enb;
+--      done_sync <= done_sync(0) & done_toggle;
+--    end if;
+--  end process;
 
   busy_adc <= '0' when wr_state = IDLE else '1';
   dma_active <= busy_sync(1);
@@ -242,7 +247,7 @@ begin
 
       case wr_state is
         when IDLE =>
-          if trig_sync(1) = '1' and trig_d = '0' then
+          if trig = '1' then --trig_sync(1) = '1' and trig_d = '0' then
             turn_count <= 0;
             burst_count <= 0;
             test_base <= (others => '0');

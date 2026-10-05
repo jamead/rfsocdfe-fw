@@ -49,6 +49,8 @@
 #define SOFT_TRIG_MSG 0
 #define EVENT_SRC_SEL_MSG 4
 #define EVENT_NO_MSG 8
+#define FIFO_TRIG_DLY_MSG 12
+#define DMA_TRIG_DLY_MSG 16
 
 /*
 #define FP_LED_MSG 4

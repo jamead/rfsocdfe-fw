@@ -104,8 +104,8 @@ END component;
   attribute mark_debug of fifo_wren: signal is "true";
   attribute mark_debug of fifo_rdstr: signal is "true";
   attribute mark_debug of fifo_rd_data_cnt: signal is "true";
-  attribute mark_debug of adc_trig_sr: signal is "true";
-  attribute mark_debug of adc_trig_s: signal is "true";
+  --attribute mark_debug of adc_trig_sr: signal is "true";
+  --attribute mark_debug of adc_trig_s: signal is "true";
   attribute mark_debug of fifo_rst: signal is "true";
   
 
@@ -132,23 +132,23 @@ end process;
 
 
 -- sync adc_enb to adc clock domain
-process (adc_clk)
-begin
-  if (rising_edge(adc_clk)) then
-	if (sys_rst = '1') then
-	  adc_trig_sr <= "000";
-    else
-      adc_trig_sr(0) <= fifo_trig;
-      adc_trig_sr(1) <= adc_trig_sr(0);
-      adc_trig_sr(2) <= adc_trig_sr(1);
-    end if;
-    if (adc_trig_sr(2) = '0' and adc_trig_sr(1) = '1') then
-      adc_trig_s <= '1';
-    else
-      adc_trig_s <= '0';
-    end if;
-  end if;
-end process;
+--process (adc_clk)
+--begin
+--  if (rising_edge(adc_clk)) then
+--	if (sys_rst = '1') then
+--	  adc_trig_sr <= "000";
+--    else
+--      adc_trig_sr(0) <= fifo_trig;
+--      adc_trig_sr(1) <= adc_trig_sr(0);
+--      adc_trig_sr(2) <= adc_trig_sr(1);
+--    end if;
+--    if (adc_trig_sr(2) = '0' and adc_trig_sr(1) = '1') then
+--      adc_trig_s <= '1';
+--    else
+--      adc_trig_s <= '0';
+--    end if;
+--  end if;
+--end process;
 
 process(adc_clk)
 begin
@@ -203,7 +203,7 @@ process(adc_clk)
              fifo_wren <= '0'; 
              fifo_din <= (others => '0');
              sample_num <= (others => '0');    
-             if (adc_trig_s = '1') then
+             if (fifo_trig = '1') then --if (adc_trig_s = '1') then
                 state <= arm;
              end if;
              
