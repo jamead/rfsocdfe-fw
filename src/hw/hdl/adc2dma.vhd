@@ -64,7 +64,7 @@ end entity adc2dma;
 architecture rtl of adc2dma is
   constant CAPTURE_CLOCKS : positive := 20;
   constant TURN_CLOCKS    : positive := 1100;
-  constant NUM_BURSTS     : positive := 1000;
+  constant NUM_BURSTS     : positive := 10000;
 
   component axis_adc_fifo is
     port (

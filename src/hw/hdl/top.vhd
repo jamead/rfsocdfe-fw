@@ -30,10 +30,13 @@ generic(
     clk104_adc_refclk_n     : in std_logic; 
     clk104_dac_refclk_p     : in std_logic;  -- clk104 lmk04828 Dout6
     clk104_dac_refclk_n     : in std_logic;
-    clk104_pl_clk_p         : in std_logic;
+    clk104_pl_clk_p         : in std_logic;  -- clk104 lmk04828 Dout8  499.68MHz  PL Clock 499.68MHz
     clk104_pl_clk_n         : in std_logic;
-    clk104_pl_sysref_p      : in std_logic; -- clk104 AMS sysref SDOut3
+    clk104_pl_sysref_p      : in std_logic; -- clk104 lmk04828 SDout9   4.164MHz  PL sysref (Bank64 pins AL16, AL15) 
     clk104_pl_sysref_n      : in std_logic;   
+    clk104_ams_sysref_p     : in std_logic;  -- clk104 lmk04828 SDout3  4.164MHz  analog sysref (dedicated pins U4, U5)  
+    clk104_ams_sysref_n     : in std_logic;
+    
     
     adc0_in_p               : in std_logic; 
     adc0_in_n               : in std_logic;  
@@ -489,6 +492,11 @@ system_i: component system
     s_axis_adc_tready => dma_adc_tready,
     s_axis_adc_tvalid => dma_adc_tvalid,
     
+    --sysref inputs
+    sysref_in_diff_p => clk104_ams_sysref_p,
+    sysref_in_diff_n => clk104_ams_sysref_n,     
+    
+    --user_sysref_adc => 
     
     --adc resets
     m0_axis_aresetn => pl_resetn,  
@@ -498,8 +506,6 @@ system_i: component system
     --adc clock input
     adc2_clk_clk_p => clk104_adc_refclk_p,
     adc2_clk_clk_n => clk104_adc_refclk_n,
-    sysref_in_diff_p => clk104_pl_sysref_p,
-    sysref_in_diff_n => clk104_pl_sysref_n,
     --adc inputs
     vin0_01_v_p => adc4_in_p,
     vin0_01_v_n => adc4_in_n, 
@@ -558,11 +564,9 @@ system_i: component system
     s1_axis_aresetn => pl_resetn,    
     s2_axis_aresetn => pl_resetn,  
     s3_axis_aresetn => pl_resetn,
-    --adc clock input
+    --dac clock input
     dac0_clk_clk_p => clk104_dac_refclk_p,
     dac0_clk_clk_n => clk104_dac_refclk_n,
-    --sysref_in_diff_p => clk104_pl_sysref_p,
-    --sysref_in_diff_n => clk104_pl_sysref_n,
     --dac outputs
     vout00_v_p => dac0_out_p,
     vout00_v_n => dac0_out_n, 

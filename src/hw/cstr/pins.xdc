@@ -1,14 +1,11 @@
 
-
-
-
 set_property PACKAGE_PIN AK17 [get_ports clk104_pl_clk_p]
 set_property IOSTANDARD LVDS [get_ports clk104_pl_clk_p]
 set_property IOSTANDARD LVDS [get_ports clk104_pl_clk_n]
 
-#set_property PACKAGE_PIN AL16 [get_ports clk104_pl_sysref_p]
-#set_property IOSTANDARD LVDS [get_ports clk104_pl_sysref_p]
-#set_property IOSTANDARD LVDS [get_ports clk104_pl_sysref_n]
+set_property PACKAGE_PIN AL16 [get_ports clk104_pl_sysref_p]
+set_property IOSTANDARD LVDS [get_ports clk104_pl_sysref_p]
+set_property IOSTANDARD LVDS [get_ports clk104_pl_sysref_n]
 
 set_property PACKAGE_PIN AG17 [get_ports clk104_lmkin0_clk_p]
 set_property IOSTANDARD LVDS [get_ports clk104_lmkin0_clk_p]

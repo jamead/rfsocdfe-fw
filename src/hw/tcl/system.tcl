@@ -436,6 +436,7 @@ proc create_root_design { parentCell } {
   set s2_axis_aresetn [ create_bd_port -dir I -type rst s2_axis_aresetn ]
   set s3_axis_aclk [ create_bd_port -dir I -type clk s3_axis_aclk ]
   set s3_axis_aresetn [ create_bd_port -dir I -type rst s3_axis_aresetn ]
+  set user_sysref_adc [ create_bd_port -dir I user_sysref_adc ]
 
   # Create instance: axi_dma_0, and set properties
   set axi_dma_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_dma:7.1 axi_dma_0 ]
@@ -473,22 +474,26 @@ proc create_root_design { parentCell } {
   set usp_rf_data_converter_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:usp_rf_data_converter:2.6 usp_rf_data_converter_0 ]
   set_property -dict [list \
     CONFIG.ADC0_Clock_Source {2} \
+    CONFIG.ADC0_Multi_Tile_Sync {true} \
     CONFIG.ADC0_Outclk_Freq {156.150} \
     CONFIG.ADC0_PLL_Enable {true} \
     CONFIG.ADC0_Refclk_Freq {499.680} \
     CONFIG.ADC0_Sampling_Rate {4.9968} \
     CONFIG.ADC1_Clock_Source {2} \
+    CONFIG.ADC1_Multi_Tile_Sync {true} \
     CONFIG.ADC1_Outclk_Freq {156.150} \
     CONFIG.ADC1_PLL_Enable {true} \
     CONFIG.ADC1_Refclk_Freq {499.680} \
     CONFIG.ADC1_Sampling_Rate {4.9968} \
     CONFIG.ADC2_Clock_Dist {1} \
+    CONFIG.ADC2_Multi_Tile_Sync {true} \
     CONFIG.ADC2_Outclk_Freq {156.150} \
     CONFIG.ADC2_PLL_Enable {true} \
     CONFIG.ADC2_Refclk_Freq {499.680} \
     CONFIG.ADC2_Sampling_Rate {4.9968} \
     CONFIG.ADC3_Clock_Dist {0} \
     CONFIG.ADC3_Clock_Source {2} \
+    CONFIG.ADC3_Multi_Tile_Sync {true} \
     CONFIG.ADC3_Outclk_Freq {156.150} \
     CONFIG.ADC3_PLL_Enable {true} \
     CONFIG.ADC3_Refclk_Freq {499.680} \
@@ -1602,6 +1607,7 @@ Port;FD4A0000;FD4AFFFF;0|FPD;DPDMA;FD4C0000;FD4CFFFF;0|FPD;DDR_XMPU5_CFG;FD05000
   connect_bd_net -net s2_axis_aresetn_0_1 [get_bd_ports s2_axis_aresetn] [get_bd_pins usp_rf_data_converter_0/s2_axis_aresetn]
   connect_bd_net -net s3_axis_aclk_0_1 [get_bd_ports s3_axis_aclk] [get_bd_pins usp_rf_data_converter_0/s3_axis_aclk]
   connect_bd_net -net s3_axis_aresetn_0_1 [get_bd_ports s3_axis_aresetn] [get_bd_pins usp_rf_data_converter_0/s3_axis_aresetn]
+  connect_bd_net -net user_sysref_adc_0_1 [get_bd_ports user_sysref_adc] [get_bd_pins usp_rf_data_converter_0/user_sysref_adc]
   connect_bd_net -net usp_rf_data_converter_0_clk_adc0 [get_bd_ports clk_adc0] [get_bd_pins usp_rf_data_converter_0/clk_adc0]
   connect_bd_net -net usp_rf_data_converter_0_clk_adc1 [get_bd_ports clk_adc1] [get_bd_pins usp_rf_data_converter_0/clk_adc1]
   connect_bd_net -net usp_rf_data_converter_0_clk_adc2 [get_bd_ports clk_adc2] [get_bd_pins usp_rf_data_converter_0/clk_adc2]

@@ -39,7 +39,7 @@ void dma_arm() {
 
 	//Read the DMA length registers, just so we can print them
 	adclen = Xil_In32(XPAR_M_AXI_BASEADDR + DMA_ADCBURSTLEN_REG);
-    adclen = 240000*2;
+    adclen = 1966100*2;
 
 	xil_printf("Arming DMA...   DMA ADC Length = %d\r\n",adclen);
 
@@ -111,7 +111,7 @@ void dma_arm() {
  * DMA cache invalidation.
  *******************************************************/
 
-#define NSAMPLES_PER_CHANNEL 240000U
+#define NSAMPLES_PER_CHANNEL 1966080U //8192 turns     240000U * 4
 #define NUM_CHANNELS         4U
 #define SAMPLES_PER_GROUP    12U
 #define WORDS_PER_GROUP      (SAMPLES_PER_GROUP / 2U)
@@ -144,6 +144,9 @@ void process_ADC_dma(adcmsg_t *adcmsg, u32 nsamples)
     };
 
     (void)adcmsg;  /* Retained for compatibility. */
+
+
+
 
     /*
      * Validate sample count before accessing the DMA buffer.
@@ -293,7 +296,7 @@ static void dmadata_push(void *unused)
 
 
             // Process DMA data into adcmsg array
-            process_ADC_dma(adcmsg, 240000);
+            process_ADC_dma(adcmsg, 1966080);
 
 
             // Clear DMA Trigger Latch, allows for next trigger

@@ -24,7 +24,7 @@ void process_ADC_dma(adcmsg_t *adcmsg, u32 nsamples);
 
 
 
-#define ADC_DMA_MAX_LEN 1000000
+#define ADC_DMA_MAX_LEN 20000000
 #define TBT_DMA_MAX_LEN 1000000
 #define FA_DMA_MAX_LEN  1000000
 
