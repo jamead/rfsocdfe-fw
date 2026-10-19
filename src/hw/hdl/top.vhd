@@ -6,7 +6,7 @@ use UNISIM.VCOMPONENTS.ALL;
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
+--use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 library desyrdl;
 use desyrdl.common.all;
@@ -30,9 +30,9 @@ generic(
     clk104_adc_refclk_n     : in std_logic; 
     clk104_dac_refclk_p     : in std_logic;  -- clk104 lmk04828 Dout6
     clk104_dac_refclk_n     : in std_logic;
-    clk104_pl_clk_p         : in std_logic;  -- clk104 lmk04828 Dout8  499.68MHz  PL Clock 499.68MHz
+    clk104_pl_clk_p         : in std_logic;  -- clk104 lmk04828 Dout8  83.28MHz  PL Clock 83.28MHz
     clk104_pl_clk_n         : in std_logic;
-    clk104_pl_sysref_p      : in std_logic; -- clk104 lmk04828 SDout9   4.164MHz  PL sysref (Bank64 pins AL16, AL15) 
+    clk104_pl_sysref_p      : in std_logic;  -- clk104 lmk04828 SDout9  4.164MHz  PL sysref (Bank64 pins AL16, AL15) 
     clk104_pl_sysref_n      : in std_logic;   
     clk104_ams_sysref_p     : in std_logic;  -- clk104 lmk04828 SDout3  4.164MHz  analog sysref (dedicated pins U4, U5)  
     clk104_ams_sysref_n     : in std_logic;
@@ -97,25 +97,27 @@ end top;
 architecture behv of top is
 
   
-  signal pl_clk0      : std_logic;
-  signal pl_clk1      : std_logic;
-  signal pl_resetn    : std_logic;
-  signal pl_reset     : std_logic;
-  signal ps_leds      : std_logic_vector(7 downto 0);
+  signal pl_clk0                : std_logic;
+  signal pl_clk1                : std_logic;
+  signal pl_resetn              : std_logic;
+  signal pl_reset               : std_logic;
+  signal rfadc_reset            : std_logic;
+  signal ps_leds                : std_logic_vector(7 downto 0);
+  signal rfadc_mmcm_locked      : std_logic;
   
-  signal m_axi4_m2s : t_pl_regs_m2s;
-  signal m_axi4_s2m : t_pl_regs_s2m;
+  signal m_axi4_m2s             : t_pl_regs_m2s;
+  signal m_axi4_s2m             : t_pl_regs_s2m;
   
-  signal reg_i      : t_addrmap_pl_regs_in;
-  signal reg_o      : t_addrmap_pl_regs_out;
-  
-
+  signal reg_i                  : t_addrmap_pl_regs_in;
+  signal reg_o                  : t_addrmap_pl_regs_out;
   
   signal clk104_lmkin0_clk      : std_logic;
   signal clk104_pl_clkin        : std_logic;
   signal clk104_pl_clk          : std_logic;
+  signal clk104_pl_sysref_raw   : std_logic;
+  signal clk104_pl_sysref       : std_logic;
   
-  signal adc_data        : t_adc_raw; 
+  signal adc_data               : t_adc_raw; 
   
   signal adc0_axis_tdata        : std_logic_vector(191 downto 0); 
   signal adc0_axis_tready       : std_logic;
@@ -236,7 +238,7 @@ begin
 
 dbg(0) <= pl_clk0;
 dbg(1) <= '0';
-dbg(2) <= clk104_pl_clk;
+dbg(2) <= clk104_pl_sysref_raw; --clk104_pl_clk;
 dbg(3) <= '0';
 dbg(4) <= rfadc_out_clk;
 dbg(5) <= '0';
@@ -264,26 +266,36 @@ fp_led  <= ps_leds;
 
 
 pl_reset <= not pl_resetn;
+rfadc_reset <= pl_reset or not rfadc_mmcm_locked;
 
 --drive the CLK104 PLL with the 124.92 EVR recovered clock
 lmk_clkout : OBUFDS port map (O => clk104_lmkin0_clk_p, OB => clk104_lmkin0_clk_n, I => evr_rcvd_clk);    
 
+--clk104 lmk04828 Dout8  499.68MHz  PL Clock 499.68MHz
+--lmk_pl_clk_ibuf  : IBUFDS port map (O => clk104_pl_clkin, I => clk104_pl_clk_p, IB => clk104_pl_clk_n);
 
-lmk_pl_clkin  : IBUFDS port map (O => clk104_pl_clkin, I => clk104_pl_clk_p, IB => clk104_pl_clk_n);
-pl_clkin_bufg : BUFG   port map (O => clk104_pl_clk, I => clk104_pl_clkin);
+--May not need?  Does MMCM need bufg on input?
+--pl_clkin_bufg : BUFG   port map (O => clk104_pl_clk, I => clk104_pl_clkin);
 
-rfadc_bufg    : BUFG   port map (O => rfadc_axis_clk, I => rfadc_axis_mmcm_clk);
+--Separate PL SYSREF from LMK SDCLK9. This is NOT the analog SYSREF, which remains connected to the RFSoC dedicated pins U5/U4.
+pl_sysref_ibuf  : IBUFDS port map (O => clk104_pl_sysref_raw, I => clk104_pl_sysref_p, IB => clk104_pl_sysref_n);
+
+
+
+--MMCM already drives BUFG
+--rfadc_bufg    : BUFG   port map (O => rfadc_axis_clk, I => rfadc_axis_mmcm_clk);
+
 rfdac_bufg    : BUFG   port map (O => rfdac_axis_clk, I => rfdac_out_clk);
 
 
 
-axisclk_adc: entity work.rfadc_clk_pll  
-  port map (
-    reset => pl_reset, 
-    clk_in1 => rfadc_out_clk,   --156.15MHz
-    clk_out1 => rfadc_axis_mmcm_clk,  --416.4MHz
-    locked => open  
-);
+--axisclk_adc: entity work.rfadc_clk_pll  
+--  port map (
+--    reset => pl_reset, 
+--    clk_in1 => rfadc_out_clk,   --156.15MHz
+--    clk_out1 => rfadc_axis_mmcm_clk,  --416.4MHz
+--    locked => rfadc_mmcm_locked
+--);
 
 
 lmkclk_pll: entity work.lmk_clk_pll
@@ -293,6 +305,34 @@ lmkclk_pll: entity work.lmk_clk_pll
     clk_out1 => clk104_lmkin0_clk, --124.92MHz
     locked => open  
 );
+
+
+plclk_pll: entity work.pl_clk_pll
+  port map (
+    reset => pl_reset, 
+    clk_in1_p => clk104_pl_clk_p,   --83.28MHz
+    clk_in1_n => clk104_pl_clk_n,
+    clk_out1 => rfadc_axis_clk, --rfadc_axis_mmcm_clk, --416.4MHz
+    locked => rfadc_mmcm_locked  
+);
+
+
+-- PG269 PL SYSREF capture: sample on the shared ADC AXI clock.
+-- IMPORTANT: Validate input setup/hold with report_datasheet and tune
+-- LMK SYSREF output delay/phase. This register alone does NOT guarantee
+-- deterministic capture without timing closure.
+process(rfadc_axis_clk)
+begin
+  if rising_edge(rfadc_axis_clk) then
+    if rfadc_reset = '1' then
+      clk104_pl_sysref <= '0';
+    else
+      clk104_pl_sysref <= clk104_pl_sysref_raw;
+    end if;
+  end if;
+end process;
+
+
 
 
 
@@ -324,7 +364,7 @@ ps_pl: entity work.ps_io
 sync_trig: entity work.trigger_sync
   port map (
     adc_clk => rfadc_axis_clk,
-    adc_rst => pl_reset,
+    adc_rst => rfadc_reset, --pl_reset,
     tbt_trig => evr_tbt_trig,
     soft_trig => reg_o_rfadcfifo.softtrig,
     fifo_delay => reg_o_rfadcfifo.trig_delay,
@@ -340,7 +380,7 @@ sync_trig: entity work.trigger_sync
 rfadc_fifos:  entity work.rf_adc_fifos
   port map (
     pl_clk0 => pl_clk0,  
-    pl_reset => pl_reset, 
+    pl_reset => rfadc_reset, --pl_reset, 
     adc_clk => rfadc_axis_clk,  
     reg_i => reg_i_rfadcfifo, 
     reg_o => reg_o_rfadcfifo,
@@ -363,7 +403,7 @@ adctoddr: entity work.adc2dma
   port map(
     sys_clk => pl_clk1, 
     adc_clk => rfadc_axis_clk,  
-    reset => pl_reset,                        
+    reset => rfadc_reset, --pl_reset,                        
     trig => dma_start,  
     reg_o => reg_o_dma, 	 
     adc0_data => adc0_axis_tdata, 
@@ -496,7 +536,7 @@ system_i: component system
     sysref_in_diff_p => clk104_ams_sysref_p,
     sysref_in_diff_n => clk104_ams_sysref_n,     
     
-    --user_sysref_adc => 
+    user_sysref_adc => clk104_pl_sysref,
     
     --adc resets
     m0_axis_aresetn => pl_resetn,  
@@ -628,11 +668,11 @@ clk_meas: entity work.clk_meas_freq
   port map (
     pl_clk0 => pl_clk0,
     reset => pl_reset,
-    clk0 => rfdac_out_clk,  --pl_clk0,           --100MHz
+    clk0 => rfadc_out_clk,      --416.4MHz,
     clk1 => clk104_lmkin0_clk, --124.92MHz 
-    clk2 => clk104_pl_clk,     --426.724MHz
-    clk3 => rfadc_out_clk,     --146.686MHz
-    clk4 => rfadc_axis_clk,    --391.164MHz
+    clk2 => rfdac_out_clk,     --426.724MHz
+    clk3 => pl_clk0, --clk104_pl_sysref,  --4.164MHz
+    clk4 => rfadc_axis_clk,    --416.4MHz
     reg_i => reg_i_freq
   );
   

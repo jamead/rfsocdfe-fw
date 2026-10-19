@@ -274,7 +274,8 @@ component system is
     pl_clk1 : out std_logic;
     pl_resetn : out STD_LOGIC;
     sysref_in_diff_n : in STD_LOGIC;
-    sysref_in_diff_p : in STD_LOGIC
+    sysref_in_diff_p : in STD_LOGIC;
+    user_sysref_adc : in std_logic
 
   );
 end component system;

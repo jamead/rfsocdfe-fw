@@ -171,3 +171,54 @@ return 0;
 }
 
 
+
+int RunAdcMTS(void)
+{
+    XRFdc_MultiConverter_Sync_Config ADC_Sync_Config;
+    u32 Status;
+    int i;
+
+    xil_printf("\r\n=== ADC Multi-Tile Synchronization ===\r\n");
+
+    // Initialize MTS configuration
+    Status = XRFdc_MultiConverter_Init(
+        &ADC_Sync_Config,
+        NULL,
+        NULL,
+        XRFDC_TILE_ID0
+    );
+
+    if (Status != XRFDC_MTS_OK) {
+        xil_printf("MTS initialization failed: %d\r\n", Status);
+        return XST_FAILURE;
+    }
+
+    // Enable all four ADC tiles
+    ADC_Sync_Config.Tiles = 0xF;
+
+    // Automatically determine latency
+    ADC_Sync_Config.Target_Latency = -1;
+
+    xil_printf("Starting ADC MTS...\r\n");
+
+    Status = XRFdc_MultiConverter_Sync(
+        &RFdcInst,
+        XRFDC_ADC_TILE,
+        &ADC_Sync_Config
+    );
+
+    xil_printf("MTS Status: %d\r\n", Status);
+
+    for (i = 0; i < 4; i++) {
+        xil_printf("ADC%d: Latency=%d Offset=%d\r\n",
+                   i,
+                   ADC_Sync_Config.Latency[i],
+                   ADC_Sync_Config.Offset[i]);
+    }
+
+    return (Status == XRFDC_MTS_OK) ? XST_SUCCESS : XST_FAILURE;
+}
+
+
+
+

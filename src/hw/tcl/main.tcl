@@ -70,7 +70,8 @@ proc doOnCreate {} {
   set_property default_lib      xil_defaultlib               [current_project]
    
   source ${TclPath}/system.tcl
-  source ${TclPath}/rfadc_clk_pll.tcl 
+ # source ${TclPath}/rfadc_clk_pll.tcl 
+  source ${TclPath}/pl_clk_pll.tcl 
   source ${TclPath}/lmk_clk_pll.tcl 
   source ${TclPath}/adc_fifo.tcl 
   source ${TclPath}/axis_adc_fifo.tcl 
@@ -79,7 +80,26 @@ proc doOnCreate {} {
   
   
   addSources "Sources" 
+  
+  # FPGA implementation strategy
+  set impl_run [get_runs -quiet impl_1]
 
+  if {[llength $impl_run] > 0} {
+
+    set_property STRATEGY Performance_Explore $impl_run
+    set_property STEPS.PHYS_OPT_DESIGN.IS_ENABLED true $impl_run
+    
+    # Generate .bin file in addition to .bit
+    set_property STEPS.WRITE_BITSTREAM.ARGS.BIN_FILE true $impl_run
+
+    puts "INFO: Implementation strategy: [get_property STRATEGY $impl_run]"
+    puts "INFO: Physical optimization: [get_property STEPS.PHYS_OPT_DESIGN.IS_ENABLED $impl_run]"
+    puts "INFO: BIN file enabled: [get_property STEPS.WRITE_BITSTREAM.ARGS.BIN_FILE $impl_run]"
+
+  } else {
+    puts "WARNING: impl_1 not yet created - implementation strategy not configured"
+  }
+  
 }
 
 # ==============================================================================

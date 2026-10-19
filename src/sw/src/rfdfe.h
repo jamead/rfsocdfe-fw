@@ -36,6 +36,7 @@ typedef struct {
 
 
 u32 InitRFdc(void);
+int RunAdcMTS(void);
 void GetRFdc_Status(void);
 void WriteLMK04828(int);
 

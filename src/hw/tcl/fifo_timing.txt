@@ -1,0 +1,91 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version      : Vivado v.2022.2 (lin64) Build 3671981 Fri Oct 14 04:59:54 MDT 2022
+| Date              : Mon Oct 19 14:24:54 2026
+| Host              : mead-home running 64-bit Ubuntu 22.04.5 LTS
+| Command           : report_timing -from {rfadc_fifos/adc1_fifo/fifo_din_reg[219]/C} -to {rfadc_fifos/adc1_fifo/fifo_inst/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgc.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[23].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/DINADIN[12]} -delay_type max -path_type full_clock_expanded -file fifo_timing.txt
+| Design            : top
+| Device            : xczu47dr-ffvg1517
+| Speed File        : -1  PRODUCTION 1.32 01-31-2021
+| Temperature Grade : E
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (VIOLATED) :        -0.175ns  (required time - arrival time)
+  Source:                 rfadc_fifos/adc1_fifo/fifo_din_reg[219]/C
+                            (rising edge-triggered cell FDRE clocked by clk_out1_pl_clk_pll  {rise@0.000ns fall@1.201ns period=2.402ns})
+  Destination:            rfadc_fifos/adc1_fifo/fifo_inst/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgc.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[23].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/DINADIN[12]
+                            (rising edge-triggered cell RAMB36E2 clocked by clk_out1_pl_clk_pll  {rise@0.000ns fall@1.201ns period=2.402ns})
+  Path Group:             clk_out1_pl_clk_pll
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            2.402ns  (clk_out1_pl_clk_pll rise@2.402ns - clk_out1_pl_clk_pll rise@0.000ns)
+  Data Path Delay:        1.834ns  (logic 0.095ns (5.181%)  route 1.739ns (94.819%))
+  Logic Levels:           0  
+  Clock Path Skew:        -0.404ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    3.829ns = ( 6.231 - 2.402 ) 
+    Source Clock Delay      (SCD):    3.882ns
+    Clock Pessimism Removal (CPR):    -0.351ns
+  Clock Uncertainty:      0.057ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.090ns
+    Phase Error              (PE):    0.000ns
+  Clock Net Delay (Source):      2.455ns (routing 0.916ns, distribution 1.539ns)
+  Clock Net Delay (Destination): 1.903ns (routing 0.837ns, distribution 1.066ns)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_out1_pl_clk_pll rise edge)
+                                                      0.000     0.000 r  
+    AK17                                              0.000     0.000 r  clk104_pl_clk_p (IN)
+                         net (fo=0)                   0.100     0.100    plclk_pll/inst/clkin1_ibufds/I
+    HPIOBDIFFINBUF_X0Y13 DIFFINBUF (Prop_DIFFINBUF_HPIOBDIFFINBUF_DIFF_IN_P_O)
+                                                      0.695     0.795 r  plclk_pll/inst/clkin1_ibufds/DIFFINBUF_INST/O
+                         net (fo=1, routed)           0.050     0.845    plclk_pll/inst/clkin1_ibufds/OUT
+    AK17                 IBUFCTRL (Prop_IBUFCTRL_HPIOB_M_I_O)
+                                                      0.000     0.845 r  plclk_pll/inst/clkin1_ibufds/IBUFCTRL_INST/O
+                         net (fo=1, routed)           0.404     1.249    plclk_pll/inst/clk_in1_pl_clk_pll
+    MMCM_X0Y0            MMCME4_ADV (Prop_MMCM_CLKIN1_CLKOUT0)
+                                                     -0.106     1.143 r  plclk_pll/inst/mmcme4_adv_inst/CLKOUT0
+                         net (fo=1, routed)           0.256     1.399    plclk_pll/inst/clk_out1_pl_clk_pll
+    BUFGCE_X0Y21         BUFGCE (Prop_BUFCE_BUFGCE_I_O)
+                                                      0.028     1.427 r  plclk_pll/inst/clkout1_buf/O
+    X2Y1 (CLOCK_ROOT)    net (fo=6093, routed)        2.455     3.882    rfadc_fifos/adc1_fifo/adc_clk
+    SLICE_X109Y146       FDRE                                         r  rfadc_fifos/adc1_fifo/fifo_din_reg[219]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X109Y146       FDRE (Prop_CFF_SLICEM_C_Q)
+                                                      0.095     3.977 r  rfadc_fifos/adc1_fifo/fifo_din_reg[219]/Q
+                         net (fo=8, routed)           1.739     5.716    rfadc_fifos/adc1_fifo/fifo_inst/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgc.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[23].ram.r/prim_noinit.ram/din[58]
+    RAMB36_X6Y30         RAMB36E2                                     r  rfadc_fifos/adc1_fifo/fifo_inst/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgc.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[23].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/DINADIN[12]
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_out1_pl_clk_pll rise edge)
+                                                      2.402     2.402 r  
+    AK17                                              0.000     2.402 r  clk104_pl_clk_p (IN)
+                         net (fo=0)                   0.079     2.481    plclk_pll/inst/clkin1_ibufds/I
+    HPIOBDIFFINBUF_X0Y13 DIFFINBUF (Prop_DIFFINBUF_HPIOBDIFFINBUF_DIFF_IN_P_O)
+                                                      0.560     3.041 r  plclk_pll/inst/clkin1_ibufds/DIFFINBUF_INST/O
+                         net (fo=1, routed)           0.040     3.081    plclk_pll/inst/clkin1_ibufds/OUT
+    AK17                 IBUFCTRL (Prop_IBUFCTRL_HPIOB_M_I_O)
+                                                      0.000     3.081 r  plclk_pll/inst/clkin1_ibufds/IBUFCTRL_INST/O
+                         net (fo=1, routed)           0.351     3.432    plclk_pll/inst/clk_in1_pl_clk_pll
+    MMCM_X0Y0            MMCME4_ADV (Prop_MMCM_CLKIN1_CLKOUT0)
+                                                      0.644     4.076 r  plclk_pll/inst/mmcme4_adv_inst/CLKOUT0
+                         net (fo=1, routed)           0.228     4.304    plclk_pll/inst/clk_out1_pl_clk_pll
+    BUFGCE_X0Y21         BUFGCE (Prop_BUFCE_BUFGCE_I_O)
+                                                      0.024     4.328 r  plclk_pll/inst/clkout1_buf/O
+    X2Y1 (CLOCK_ROOT)    net (fo=6093, routed)        1.903     6.231    rfadc_fifos/adc1_fifo/fifo_inst/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgc.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[23].ram.r/prim_noinit.ram/wr_clk
+    RAMB36_X6Y30         RAMB36E2                                     r  rfadc_fifos/adc1_fifo/fifo_inst/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgc.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[23].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram/CLKBWRCLK
+                         clock pessimism             -0.351     5.880    
+                         clock uncertainty           -0.057     5.823    
+    RAMB36_X6Y30         RAMB36E2 (Setup_RAMB36E2_RAMB36_CLKBWRCLK_DINADIN[12])
+                                                     -0.282     5.541    rfadc_fifos/adc1_fifo/fifo_inst/U0/inst_fifo_gen/gconvfifo.rf/grf.rf/gntv_or_sync_fifo.mem/gbm.gbmg.gbmgc.ngecc.bmg/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[23].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SDP.WIDE_PRIM36_NO_ECC.ram
+  -------------------------------------------------------------------
+                         required time                          5.541    
+                         arrival time                          -5.716    
+  -------------------------------------------------------------------
+                         slack                                 -0.175    
+
+
+
+

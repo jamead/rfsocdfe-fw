@@ -1,0 +1,359 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------
+| Tool Version      : Vivado v.2022.2 (lin64) Build 3671981 Fri Oct 14 04:59:54 MDT 2022
+| Date              : Mon Oct 19 13:53:06 2026
+| Host              : mead-home running 64-bit Ubuntu 22.04.5 LTS
+| Command           : report_datasheet -file sysref_datasheet.txt
+| Design            : top
+| Device            : xczu47dr-ffvg1517
+| Speed File        : -1  PRODUCTION 1.32 01-31-2021
+| Temperature Grade : E
+-----------------------------------------------------------------------------------------
+
+Data Sheet Report
+
+Input Ports Setup/Hold
+
+----------------+--------------------+---------+-------+---------------+---------+---------------+---------+---------------------+
+Reference       | Input              | IO Reg  | Delay |     Setup(ns) | Process |      Hold(ns) | Process | Internal            |
+Clock           | Port               | Type    | Type  | to Clk (Edge) | Corner  | to Clk (Edge) | Corner  | Clock               |
+----------------+--------------------+---------+-------+---------------+---------+---------------+---------+---------------------+
+clk104_pl_clk_p | clk104_pl_sysref_n | FDRE    | -     |    -0.293 (r) | FAST    |     1.777 (r) | SLOW    | clk_out1_pl_clk_pll |
+clk104_pl_clk_p | clk104_pl_sysref_p | FDRE    | -     |    -0.293 (r) | FAST    |     1.777 (r) | SLOW    | clk_out1_pl_clk_pll |
+----------------+--------------------+---------+-------+---------------+---------+---------------+---------+---------------------+
+
+
+Output Ports Clock-to-out
+
+---------------------+---------------------+---------------+-------+----------------+---------+----------------+---------+---------------------+
+Reference            | Output              | IO Reg        | Delay | Max Clk (Edge) | Process | Min Clk (Edge) | Process | Internal            |
+Clock                | Port                | Type          | Type  |    to port(ns) | Corner  |    to port(ns) | Corner  | Clock               |
+---------------------+---------------------+---------------+-------+----------------+---------+----------------+---------+---------------------+
+RFADC2_CLK           | dbg[4]              | RFADC         | -     |      4.291 (r) | SLOW    |      1.992 (r) | FAST    |                     |
+RFADC2_CLK           | dbg[4]              | RFADC         | -     |      4.291 (f) | SLOW    |      1.992 (f) | FAST    |                     |
+clk104_pl_clk_p      | dbg[6]              | MMCME4_ADV    | -     |      5.463 (r) | SLOW    |      2.719 (r) | FAST    | clk_out1_pl_clk_pll |
+clk104_pl_clk_p      | dbg[6]              | MMCME4_ADV    | -     |      5.463 (f) | SLOW    |      2.719 (f) | FAST    | clk_out1_pl_clk_pll |
+clk104_pl_clk_p      | fp_out[0]           | FDCE          | -     |      8.227 (r) | SLOW    |      4.026 (r) | FAST    | clk_out1_pl_clk_pll |
+clk104_pl_clk_p      | fp_out[1]           | FDCE          | -     |      8.162 (r) | SLOW    |      4.037 (r) | FAST    | clk_out1_pl_clk_pll |
+clk_gty_evr_refclk_0 | clk104_lmkin0_clk_n | GTYE4_CHANNEL | -     |      5.128 (r) | SLOW    |      2.465 (r) | FAST    | rxoutclk_out[0]     |
+clk_gty_evr_refclk_0 | clk104_lmkin0_clk_n | GTYE4_CHANNEL | -     |      5.128 (f) | SLOW    |      2.465 (f) | FAST    | rxoutclk_out[0]     |
+clk_gty_evr_refclk_0 | clk104_lmkin0_clk_p | GTYE4_CHANNEL | -     |      5.129 (r) | SLOW    |      2.466 (r) | FAST    | rxoutclk_out[0]     |
+clk_gty_evr_refclk_0 | clk104_lmkin0_clk_p | GTYE4_CHANNEL | -     |      5.129 (f) | SLOW    |      2.466 (f) | FAST    | rxoutclk_out[0]     |
+clk_gty_evr_refclk_0 | dbg[8]              | GTYE4_CHANNEL | -     |      4.993 (r) | SLOW    |      2.370 (r) | FAST    | rxoutclk_out[0]     |
+clk_gty_evr_refclk_0 | dbg[8]              | GTYE4_CHANNEL | -     |      4.993 (f) | SLOW    |      2.370 (f) | FAST    | rxoutclk_out[0]     |
+clk_gty_evr_refclk_0 | fp_out[2]           | FDRE          | -     |      7.649 (r) | SLOW    |      3.640 (r) | FAST    | rxoutclk_out[0]     |
+clk_gty_evr_refclk_0 | fp_out[3]           | FDRE          | -     |      7.409 (r) | SLOW    |      3.490 (r) | FAST    | rxoutclk_out[0]     |
+clk_gty_evr_refclk_0 | sfp_led[0]          | FDRE          | -     |      8.164 (r) | SLOW    |      3.929 (r) | FAST    | rxoutclk_out[0]     |
+clk_pl_0             | dbg[0]              | PS8           | -     |      4.510 (r) | SLOW    |      1.974 (r) | FAST    |                     |
+clk_pl_0             | dbg[0]              | PS8           | -     |      4.510 (f) | SLOW    |      1.974 (f) | FAST    |                     |
+clk_pl_0             | fp_led[0]           | FDRE          | -     |      8.177 (r) | SLOW    |      3.774 (r) | FAST    |                     |
+clk_pl_0             | fp_led[1]           | FDRE          | -     |      8.138 (r) | SLOW    |      3.770 (r) | FAST    |                     |
+clk_pl_0             | fp_led[2]           | FDRE          | -     |      8.097 (r) | SLOW    |      3.686 (r) | FAST    |                     |
+clk_pl_0             | fp_led[3]           | FDRE          | -     |      8.389 (r) | SLOW    |      3.845 (r) | FAST    |                     |
+clk_pl_0             | fp_led[4]           | FDRE          | -     |      7.910 (r) | SLOW    |      3.673 (r) | FAST    |                     |
+clk_pl_0             | fp_led[5]           | FDRE          | -     |      7.631 (r) | SLOW    |      3.526 (r) | FAST    |                     |
+clk_pl_0             | fp_led[6]           | FDRE          | -     |      7.871 (r) | SLOW    |      3.596 (r) | FAST    |                     |
+clk_pl_0             | fp_led[7]           | FDRE          | -     |      8.187 (r) | SLOW    |      3.793 (r) | FAST    |                     |
+clk_pl_0             | sfp_led[2]          | FDRE          | -     |      8.516 (r) | SLOW    |      3.905 (r) | FAST    |                     |
+clk_pl_0             | sfp_led[4]          | FDRE          | -     |      8.441 (r) | SLOW    |      3.880 (r) | FAST    |                     |
+clk_pl_0             | sfp_led[6]          | FDRE          | -     |      8.376 (r) | SLOW    |      3.826 (r) | FAST    |                     |
+clk_pl_0             | sfp_led[8]          | FDRE          | -     |      8.868 (r) | SLOW    |      4.113 (r) | FAST    |                     |
+clk_pl_0             | sfp_led[10]         | FDRE          | -     |      8.460 (r) | SLOW    |      3.876 (r) | FAST    |                     |
+---------------------+---------------------+---------------+-------+----------------+---------+----------------+---------+---------------------+
+
+
+Combinational Delays
+
+-------------------+-------------+-----------+---------+-----------+---------+
+From               | To          |   Max     | Process |   Min     | Process |
+Port               | Port        | Delay(ns) | Corner  | Delay(ns) | Corner  |
+-------------------+-------------+-----------+---------+-----------+---------+
+clk104_pl_sysref_n | dbg[2]      |     3.507 | SLOW    |     1.468 | FAST    |
+clk104_pl_sysref_p | dbg[2]      |     3.507 | SLOW    |     1.468 | FAST    |
+sfp_rxlos[0]       | sfp_led[1]  |     5.698 | SLOW    |     2.908 | FAST    |
+sfp_rxlos[1]       | sfp_led[3]  |     5.785 | SLOW    |     2.926 | FAST    |
+sfp_rxlos[2]       | sfp_led[5]  |     5.845 | SLOW    |     2.918 | FAST    |
+sfp_rxlos[3]       | sfp_led[7]  |     6.042 | SLOW    |     3.070 | FAST    |
+sfp_rxlos[4]       | sfp_led[9]  |     5.820 | SLOW    |     2.912 | FAST    |
+sfp_rxlos[5]       | sfp_led[11] |     5.863 | SLOW    |     2.999 | FAST    |
+-------------------+-------------+-----------+---------+-----------+---------+
+
+
+Setup between Clocks
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+---------+---------------+---------+---------------+---------+---------------+---------+
+Source                                                                                                                                                                                                                                                                                       | Destination                                                                                                                                                                                                                                                                                  |  Src:Rise     | Process |  Src:Rise     | Process |  Src:Fall     | Process |  Src:Fall     | Process |
+Clock                                                                                                                                                                                                                                                                                        | Clock                                                                                                                                                                                                                                                                                        | Dest:Rise(ns) | Corner  | Dest:Fall(ns) | Corner  | Dest:Rise(ns) | Corner  | Dest:Fall(ns) | Corner  |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+---------+---------------+---------+---------------+---------+---------------+---------+
+RFADC2_CLK                                                                                                                                                                                                                                                                                   | RFADC2_CLK                                                                                                                                                                                                                                                                                   |         1.327 | SLOW    |               |         |               |         |               |         |
+clk_pl_0                                                                                                                                                                                                                                                                                     | RFADC2_CLK                                                                                                                                                                                                                                                                                   |         0.919 | SLOW    |               |         |               |         |               |         |
+RFDAC0_CLK                                                                                                                                                                                                                                                                                   | RFDAC0_CLK                                                                                                                                                                                                                                                                                   |         3.299 | SLOW    |               |         |               |         |               |         |
+clk_pl_0                                                                                                                                                                                                                                                                                     | RFDAC0_CLK                                                                                                                                                                                                                                                                                   |         3.094 | SLOW    |               |         |               |         |               |         |
+clk104_pl_clk_p                                                                                                                                                                                                                                                                              | clk104_pl_clk_p                                                                                                                                                                                                                                                                              |         2.765 | SLOW    |               |         |               |         |               |         |
+clk_gty_evr_refclk_0                                                                                                                                                                                                                                                                         | clk104_pl_clk_p                                                                                                                                                                                                                                                                              |         1.126 | SLOW    |               |         |               |         |               |         |
+clk_pl_0                                                                                                                                                                                                                                                                                     | clk104_pl_clk_p                                                                                                                                                                                                                                                                              |         1.330 | SLOW    |               |         |               |         |               |         |
+clk_pl_1                                                                                                                                                                                                                                                                                     | clk104_pl_clk_p                                                                                                                                                                                                                                                                              |         1.771 | SLOW    |               |         |               |         |               |         |
+dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_inst/SERIES7_BSCAN.bscan_inst/INTERNAL_TCK                                                                                                                                                                                          | clk104_pl_clk_p                                                                                                                                                                                                                                                                              |         4.741 | FAST    |               |         |               |         |               |         |
+clk_gty_evr_refclk_0                                                                                                                                                                                                                                                                         | clk_gty_evr_refclk_0                                                                                                                                                                                                                                                                         |         6.425 | SLOW    |               |         |               |         |               |         |
+clk_pl_0                                                                                                                                                                                                                                                                                     | clk_gty_evr_refclk_0                                                                                                                                                                                                                                                                         |         5.874 | SLOW    |               |         |               |         |               |         |
+RFADC2_CLK                                                                                                                                                                                                                                                                                   | clk_pl_0                                                                                                                                                                                                                                                                                     |         1.117 | SLOW    |               |         |               |         |               |         |
+RFDAC0_CLK                                                                                                                                                                                                                                                                                   | clk_pl_0                                                                                                                                                                                                                                                                                     |         1.209 | SLOW    |               |         |               |         |               |         |
+clk104_pl_clk_p                                                                                                                                                                                                                                                                              | clk_pl_0                                                                                                                                                                                                                                                                                     |         7.506 | SLOW    |               |         |               |         |               |         |
+clk_gty_evr_refclk_0                                                                                                                                                                                                                                                                         | clk_pl_0                                                                                                                                                                                                                                                                                     |         3.182 | SLOW    |               |         |               |         |               |         |
+clk_pl_0                                                                                                                                                                                                                                                                                     | clk_pl_0                                                                                                                                                                                                                                                                                     |         6.753 | SLOW    |               |         |               |         |               |         |
+clk_pl_1                                                                                                                                                                                                                                                                                     | clk_pl_0                                                                                                                                                                                                                                                                                     |         1.156 | SLOW    |               |         |               |         |               |         |
+evr/evr_syn.gty/gty_evr_inst/inst/gen_gtwizard_gtye4_top.gty_evr_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[0].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_14_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_14_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst/O | clk_pl_0                                                                                                                                                                                                                                                                                     |         0.012 | FAST    |               |         |               |         |               |         |
+lmkclk_pll/inst/clk_in1                                                                                                                                                                                                                                                                      | clk_pl_0                                                                                                                                                                                                                                                                                     |         2.806 | SLOW    |               |         |               |         |               |         |
+clk104_pl_clk_p                                                                                                                                                                                                                                                                              | clk_pl_1                                                                                                                                                                                                                                                                                     |         2.313 | SLOW    |               |         |               |         |               |         |
+clk_pl_0                                                                                                                                                                                                                                                                                     | clk_pl_1                                                                                                                                                                                                                                                                                     |         1.796 | SLOW    |               |         |               |         |               |         |
+clk_pl_1                                                                                                                                                                                                                                                                                     | clk_pl_1                                                                                                                                                                                                                                                                                     |         3.888 | SLOW    |               |         |               |         |               |         |
+clk104_pl_clk_p                                                                                                                                                                                                                                                                              | dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_inst/SERIES7_BSCAN.bscan_inst/INTERNAL_TCK                                                                                                                                                                                          |         1.969 | SLOW    |               |         |               |         |               |         |
+dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_inst/SERIES7_BSCAN.bscan_inst/INTERNAL_TCK                                                                                                                                                                                          | dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_inst/SERIES7_BSCAN.bscan_inst/INTERNAL_TCK                                                                                                                                                                                          |         3.527 | SLOW    |        10.337 | SLOW    |         4.237 | FAST    |         7.923 | SLOW    |
+clk_pl_0                                                                                                                                                                                                                                                                                     | evr/evr_syn.gty/gty_evr_inst/inst/gen_gtwizard_gtye4_top.gty_evr_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[0].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_14_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_14_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst/O |         1.863 | SLOW    |               |         |               |         |               |         |
+evr/evr_syn.gty/gty_evr_inst/inst/gen_gtwizard_gtye4_top.gty_evr_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[0].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_14_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_14_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst/O | evr/evr_syn.gty/gty_evr_inst/inst/gen_gtwizard_gtye4_top.gty_evr_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[0].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_14_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_14_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst/O |         1.055 | SLOW    |               |         |               |         |               |         |
+clk_pl_0                                                                                                                                                                                                                                                                                     | lmkclk_pll/inst/clk_in1                                                                                                                                                                                                                                                                      |        -0.196 | FAST    |               |         |               |         |               |         |
+lmkclk_pll/inst/clk_in1                                                                                                                                                                                                                                                                      | lmkclk_pll/inst/clk_in1                                                                                                                                                                                                                                                                      |         1.671 | SLOW    |               |         |               |         |               |         |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------+---------+---------------+---------+---------------+---------+---------------+---------+
+
+
+Max / Min delays for output bus
+Clocked by: RFADC2_CLK
+Bus Skew: 0.000 ns
+-------------------+-------------+---------+-------------+---------+----------+
+                   |     Max     | Process |     Min     | Process | Edge     |
+Pad                |   Delay(ns) | Corner  |   Delay(ns) | Corner  | Skew(ns) |
+-------------------+-------------+---------+-------------+---------+----------+
+dbg[0]             |           - | -       |           - | -       |        - |
+dbg[1]             |           - | -       |           - | -       |        - |
+dbg[2]             |           - | -       |           - | -       |        - |
+dbg[3]             |           - | -       |           - | -       |        - |
+dbg[4]             |   4.291 (r) | SLOW    |   1.992 (r) | FAST    |    0.000 |
+dbg[4]             |   4.291 (f) | SLOW    |   1.992 (f) | FAST    |    0.000 |
+dbg[5]             |           - | -       |           - | -       |        - |
+dbg[6]             |           - | -       |           - | -       |        - |
+dbg[7]             |           - | -       |           - | -       |        - |
+dbg[8]             |           - | -       |           - | -       |        - |
+dbg[9]             |           - | -       |           - | -       |        - |
+dbg[10]            |           - | -       |           - | -       |        - |
+dbg[11]            |           - | -       |           - | -       |        - |
+dbg[12]            |           - | -       |           - | -       |        - |
+dbg[13]            |           - | -       |           - | -       |        - |
+dbg[14]            |           - | -       |           - | -       |        - |
+dbg[15]            |           - | -       |           - | -       |        - |
+dbg[16]            |           - | -       |           - | -       |        - |
+dbg[17]            |           - | -       |           - | -       |        - |
+dbg[18]            |           - | -       |           - | -       |        - |
+dbg[19]            |           - | -       |           - | -       |        - |
+-------------------+-------------+---------+-------------+---------+----------+
+Worst Case Summary |   4.291 (r) | SLOW    |   1.992 (r) | FAST    |    0.000 |
+-------------------+-------------+---------+-------------+---------+----------+
+
+
+
+Max / Min delays for output bus
+Clocked by: clk104_pl_clk_p
+Bus Skew: 0.000 ns
+-------------------+-------------+---------+-------------+---------+----------+
+                   |     Max     | Process |     Min     | Process | Edge     |
+Pad                |   Delay(ns) | Corner  |   Delay(ns) | Corner  | Skew(ns) |
+-------------------+-------------+---------+-------------+---------+----------+
+dbg[0]             |           - | -       |           - | -       |        - |
+dbg[1]             |           - | -       |           - | -       |        - |
+dbg[2]             |           - | -       |           - | -       |        - |
+dbg[3]             |           - | -       |           - | -       |        - |
+dbg[4]             |           - | -       |           - | -       |        - |
+dbg[5]             |           - | -       |           - | -       |        - |
+dbg[6]             |   5.463 (r) | SLOW    |   2.719 (r) | FAST    |    0.000 |
+dbg[6]             |   5.463 (f) | SLOW    |   2.719 (f) | FAST    |    0.000 |
+dbg[7]             |           - | -       |           - | -       |        - |
+dbg[8]             |           - | -       |           - | -       |        - |
+dbg[9]             |           - | -       |           - | -       |        - |
+dbg[10]            |           - | -       |           - | -       |        - |
+dbg[11]            |           - | -       |           - | -       |        - |
+dbg[12]            |           - | -       |           - | -       |        - |
+dbg[13]            |           - | -       |           - | -       |        - |
+dbg[14]            |           - | -       |           - | -       |        - |
+dbg[15]            |           - | -       |           - | -       |        - |
+dbg[16]            |           - | -       |           - | -       |        - |
+dbg[17]            |           - | -       |           - | -       |        - |
+dbg[18]            |           - | -       |           - | -       |        - |
+dbg[19]            |           - | -       |           - | -       |        - |
+-------------------+-------------+---------+-------------+---------+----------+
+Worst Case Summary |   5.463 (r) | SLOW    |   2.719 (r) | FAST    |    0.000 |
+-------------------+-------------+---------+-------------+---------+----------+
+
+
+
+Max / Min delays for output bus
+Clocked by: clk_gty_evr_refclk_0
+Bus Skew: 0.000 ns
+-------------------+-------------+---------+-------------+---------+----------+
+                   |     Max     | Process |     Min     | Process | Edge     |
+Pad                |   Delay(ns) | Corner  |   Delay(ns) | Corner  | Skew(ns) |
+-------------------+-------------+---------+-------------+---------+----------+
+dbg[0]             |           - | -       |           - | -       |        - |
+dbg[1]             |           - | -       |           - | -       |        - |
+dbg[2]             |           - | -       |           - | -       |        - |
+dbg[3]             |           - | -       |           - | -       |        - |
+dbg[4]             |           - | -       |           - | -       |        - |
+dbg[5]             |           - | -       |           - | -       |        - |
+dbg[6]             |           - | -       |           - | -       |        - |
+dbg[7]             |           - | -       |           - | -       |        - |
+dbg[8]             |   4.993 (r) | SLOW    |   2.370 (r) | FAST    |    0.000 |
+dbg[8]             |   4.993 (f) | SLOW    |   2.370 (f) | FAST    |    0.000 |
+dbg[9]             |           - | -       |           - | -       |        - |
+dbg[10]            |           - | -       |           - | -       |        - |
+dbg[11]            |           - | -       |           - | -       |        - |
+dbg[12]            |           - | -       |           - | -       |        - |
+dbg[13]            |           - | -       |           - | -       |        - |
+dbg[14]            |           - | -       |           - | -       |        - |
+dbg[15]            |           - | -       |           - | -       |        - |
+dbg[16]            |           - | -       |           - | -       |        - |
+dbg[17]            |           - | -       |           - | -       |        - |
+dbg[18]            |           - | -       |           - | -       |        - |
+dbg[19]            |           - | -       |           - | -       |        - |
+-------------------+-------------+---------+-------------+---------+----------+
+Worst Case Summary |   4.993 (r) | SLOW    |   2.370 (r) | FAST    |    0.000 |
+-------------------+-------------+---------+-------------+---------+----------+
+
+
+
+Max / Min delays for output bus
+Clocked by: clk_pl_0
+Bus Skew: 0.000 ns
+-------------------+-------------+---------+-------------+---------+----------+
+                   |     Max     | Process |     Min     | Process | Edge     |
+Pad                |   Delay(ns) | Corner  |   Delay(ns) | Corner  | Skew(ns) |
+-------------------+-------------+---------+-------------+---------+----------+
+dbg[0]             |   4.510 (r) | SLOW    |   1.974 (r) | FAST    |    0.000 |
+dbg[0]             |   4.510 (f) | SLOW    |   1.974 (f) | FAST    |    0.000 |
+dbg[1]             |           - | -       |           - | -       |        - |
+dbg[2]             |           - | -       |           - | -       |        - |
+dbg[3]             |           - | -       |           - | -       |        - |
+dbg[4]             |           - | -       |           - | -       |        - |
+dbg[5]             |           - | -       |           - | -       |        - |
+dbg[6]             |           - | -       |           - | -       |        - |
+dbg[7]             |           - | -       |           - | -       |        - |
+dbg[8]             |           - | -       |           - | -       |        - |
+dbg[9]             |           - | -       |           - | -       |        - |
+dbg[10]            |           - | -       |           - | -       |        - |
+dbg[11]            |           - | -       |           - | -       |        - |
+dbg[12]            |           - | -       |           - | -       |        - |
+dbg[13]            |           - | -       |           - | -       |        - |
+dbg[14]            |           - | -       |           - | -       |        - |
+dbg[15]            |           - | -       |           - | -       |        - |
+dbg[16]            |           - | -       |           - | -       |        - |
+dbg[17]            |           - | -       |           - | -       |        - |
+dbg[18]            |           - | -       |           - | -       |        - |
+dbg[19]            |           - | -       |           - | -       |        - |
+-------------------+-------------+---------+-------------+---------+----------+
+Worst Case Summary |   4.510 (r) | SLOW    |   1.974 (r) | FAST    |    0.000 |
+-------------------+-------------+---------+-------------+---------+----------+
+
+
+
+Max / Min delays for output bus
+Clocked by: clk_pl_0
+Bus Skew: 0.759 ns
+-------------------+-------------+---------+-------------+---------+----------+
+                   |     Max     | Process |     Min     | Process | Edge     |
+Pad                |   Delay(ns) | Corner  |   Delay(ns) | Corner  | Skew(ns) |
+-------------------+-------------+---------+-------------+---------+----------+
+fp_led[0]          |   8.177 (r) | SLOW    |   3.774 (r) | FAST    |    0.547 |
+fp_led[1]          |   8.138 (r) | SLOW    |   3.770 (r) | FAST    |    0.508 |
+fp_led[2]          |   8.097 (r) | SLOW    |   3.686 (r) | FAST    |    0.467 |
+fp_led[3]          |   8.389 (r) | SLOW    |   3.845 (r) | FAST    |    0.759 |
+fp_led[4]          |   7.910 (r) | SLOW    |   3.673 (r) | FAST    |    0.280 |
+fp_led[5]          |   7.631 (r) | SLOW    |   3.526 (r) | FAST    |    0.000 |
+fp_led[6]          |   7.871 (r) | SLOW    |   3.596 (r) | FAST    |    0.240 |
+fp_led[7]          |   8.187 (r) | SLOW    |   3.793 (r) | FAST    |    0.557 |
+-------------------+-------------+---------+-------------+---------+----------+
+Worst Case Summary |   8.389 (r) | SLOW    |   3.526 (r) | FAST    |    0.759 |
+-------------------+-------------+---------+-------------+---------+----------+
+
+
+
+Max / Min delays for output bus
+Clocked by: clk104_pl_clk_p
+Bus Skew: 0.064 ns
+-------------------+-------------+---------+-------------+---------+----------+
+                   |     Max     | Process |     Min     | Process | Edge     |
+Pad                |   Delay(ns) | Corner  |   Delay(ns) | Corner  | Skew(ns) |
+-------------------+-------------+---------+-------------+---------+----------+
+fp_out[0]          |   8.227 (r) | SLOW    |   4.026 (r) | FAST    |    0.064 |
+fp_out[1]          |   8.162 (r) | SLOW    |   4.037 (r) | FAST    |    0.011 |
+fp_out[2]          |           - | -       |           - | -       |        - |
+fp_out[3]          |           - | -       |           - | -       |        - |
+-------------------+-------------+---------+-------------+---------+----------+
+Worst Case Summary |   8.227 (r) | SLOW    |   4.026 (r) | FAST    |    0.064 |
+-------------------+-------------+---------+-------------+---------+----------+
+
+
+
+Max / Min delays for output bus
+Clocked by: clk_gty_evr_refclk_0
+Bus Skew: 0.240 ns
+-------------------+-------------+---------+-------------+---------+----------+
+                   |     Max     | Process |     Min     | Process | Edge     |
+Pad                |   Delay(ns) | Corner  |   Delay(ns) | Corner  | Skew(ns) |
+-------------------+-------------+---------+-------------+---------+----------+
+fp_out[0]          |           - | -       |           - | -       |        - |
+fp_out[1]          |           - | -       |           - | -       |        - |
+fp_out[2]          |   7.649 (r) | SLOW    |   3.640 (r) | FAST    |    0.240 |
+fp_out[3]          |   7.409 (r) | SLOW    |   3.490 (r) | FAST    |    0.000 |
+-------------------+-------------+---------+-------------+---------+----------+
+Worst Case Summary |   7.649 (r) | SLOW    |   3.490 (r) | FAST    |    0.240 |
+-------------------+-------------+---------+-------------+---------+----------+
+
+
+
+Max / Min delays for output bus
+Clocked by: clk_gty_evr_refclk_0
+Bus Skew: 0.000 ns
+-------------------+-------------+---------+-------------+---------+----------+
+                   |     Max     | Process |     Min     | Process | Edge     |
+Pad                |   Delay(ns) | Corner  |   Delay(ns) | Corner  | Skew(ns) |
+-------------------+-------------+---------+-------------+---------+----------+
+sfp_led[0]         |   8.164 (r) | SLOW    |   3.929 (r) | FAST    |    0.000 |
+sfp_led[1]         |           - | -       |           - | -       |        - |
+sfp_led[2]         |           - | -       |           - | -       |        - |
+sfp_led[3]         |           - | -       |           - | -       |        - |
+sfp_led[4]         |           - | -       |           - | -       |        - |
+sfp_led[5]         |           - | -       |           - | -       |        - |
+sfp_led[6]         |           - | -       |           - | -       |        - |
+sfp_led[7]         |           - | -       |           - | -       |        - |
+sfp_led[8]         |           - | -       |           - | -       |        - |
+sfp_led[9]         |           - | -       |           - | -       |        - |
+sfp_led[10]        |           - | -       |           - | -       |        - |
+sfp_led[11]        |           - | -       |           - | -       |        - |
+-------------------+-------------+---------+-------------+---------+----------+
+Worst Case Summary |   8.164 (r) | SLOW    |   3.929 (r) | FAST    |    0.000 |
+-------------------+-------------+---------+-------------+---------+----------+
+
+
+
+Max / Min delays for output bus
+Clocked by: clk_pl_0
+Bus Skew: 0.492 ns
+-------------------+-------------+---------+-------------+---------+----------+
+                   |     Max     | Process |     Min     | Process | Edge     |
+Pad                |   Delay(ns) | Corner  |   Delay(ns) | Corner  | Skew(ns) |
+-------------------+-------------+---------+-------------+---------+----------+
+sfp_led[0]         |           - | -       |           - | -       |        - |
+sfp_led[1]         |           - | -       |           - | -       |        - |
+sfp_led[2]         |   8.516 (r) | SLOW    |   3.905 (r) | FAST    |    0.140 |
+sfp_led[3]         |           - | -       |           - | -       |        - |
+sfp_led[4]         |   8.441 (r) | SLOW    |   3.880 (r) | FAST    |    0.065 |
+sfp_led[5]         |           - | -       |           - | -       |        - |
+sfp_led[6]         |   8.376 (r) | SLOW    |   3.826 (r) | FAST    |    0.000 |
+sfp_led[7]         |           - | -       |           - | -       |        - |
+sfp_led[8]         |   8.868 (r) | SLOW    |   4.113 (r) | FAST    |    0.492 |
+sfp_led[9]         |           - | -       |           - | -       |        - |
+sfp_led[10]        |   8.460 (r) | SLOW    |   3.876 (r) | FAST    |    0.084 |
+sfp_led[11]        |           - | -       |           - | -       |        - |
+-------------------+-------------+---------+-------------+---------+----------+
+Worst Case Summary |   8.868 (r) | SLOW    |   3.826 (r) | FAST    |    0.492 |
+-------------------+-------------+---------+-------------+---------+----------+
+
+
+

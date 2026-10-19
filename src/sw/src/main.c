@@ -251,8 +251,24 @@ int main()
     //}
 
     // Initialize the RFdc subsystem
-    InitRFdc();
+    //InitRFdc();
+    //sleep(2);
+    // Initialize the RFdc subsystem
+    if (InitRFdc() != XST_SUCCESS) {
+        xil_printf("ERROR: RFdc initialization failed!\r\n");
+        return XST_FAILURE;
+    }
+
     sleep(2);
+
+    // Run MTS on ADC tiles 0, 1, 2 and 3
+    if (RunAdcMTS() != XST_SUCCESS) {
+        xil_printf("WARNING: ADC MTS failed!\r\n");
+    }
+
+
+
+
 
 
 	//EVR reset
