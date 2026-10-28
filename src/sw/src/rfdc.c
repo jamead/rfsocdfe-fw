@@ -222,3 +222,32 @@ int RunAdcMTS(void)
 
 
 
+void print_adc_dsa(XRFdc *RFdcInstPtr)
+{
+    XRFdc_DSA_Settings dsa;
+
+    xil_printf("\r\nRFSoC ADC DSA Settings\r\n");
+    xil_printf("-----------------------\r\n");
+
+    for (u32 tile = 0; tile < 4; tile++) {
+        for (u32 block = 0; block < 4; block++) {
+
+            int status = XRFdc_GetDSA(
+                RFdcInstPtr,
+                tile,
+                block,
+                &dsa
+            );
+
+            if (status == XRFDC_SUCCESS) {
+                xil_printf(
+                    "ADC Tile %d Block %d: DSA = %d.%02d dB\r\n",
+                    tile,
+                    block,
+                    (int)dsa.Attenuation,
+                    ((int)(dsa.Attenuation * 100)) % 100
+                );
+            }
+        }
+    }
+}
